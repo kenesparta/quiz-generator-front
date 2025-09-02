@@ -1,6 +1,6 @@
-import { createBrowserRouter } from 'react-router-dom'
-import App from './App.tsx'
-import Dashboard from './Dashboard.tsx'
+import { createBrowserRouter } from "react-router-dom";
+import App from "./App.tsx";
+import Dashboard from "./components/ui/Dashboard";
 
 export const router = createBrowserRouter([
   {
@@ -37,4 +37,4 @@ export const router = createBrowserRouter([
     path: "/login",
     element: <div>Login Page</div>,
   },
-])
+]);

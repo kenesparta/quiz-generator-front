@@ -1,12 +1,7 @@
-import './styles/globals.css'
+import "./styles/globals.css";
 
 function App() {
-
-  return (
-    <>
-      Quiz
-    </>
-  )
+  return <>Quiz</>;
 }
 
-export default App
+export default App;

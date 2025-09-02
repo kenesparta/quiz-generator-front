@@ -1,9 +1,9 @@
-import React from 'react';
-import styles from './Button.module.css';
+import React from "react";
+import styles from "./Button.module.css";
 
-export type ButtonVariant = 'primary' | 'secondary' | 'success' | 'error' | 'warning';
-export type ButtonSize = 'small' | 'medium' | 'large';
-export type ButtonType = 'button' | 'submit' | 'reset';
+export type ButtonVariant = "primary" | "secondary" | "success" | "error" | "warning";
+export type ButtonSize = "small" | "medium" | "large";
+export type ButtonType = "button" | "submit" | "reset";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /**
@@ -48,37 +48,33 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 export const Button: React.FC<ButtonProps> = ({
-                                                variant = 'primary',
-                                                size = 'medium',
-                                                type = 'button',
-                                                fullWidth = false,
-                                                loading = false,
-                                                startIcon,
-                                                endIcon,
-                                                disabled,
-                                                className = '',
-                                                children,
-                                                ...props
-                                              }) => {
+  variant = "primary",
+  size = "medium",
+  type = "button",
+  fullWidth = false,
+  loading = false,
+  startIcon,
+  endIcon,
+  disabled,
+  className = "",
+  children,
+  ...props
+}) => {
   const buttonClasses = [
     styles.button,
     styles[variant],
     styles[size],
     fullWidth && styles.fullWidth,
     loading && styles.loading,
-    className
-  ].filter(Boolean).join(' ');
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   const isDisabled = disabled || loading;
 
   return (
-    <button
-      type={type}
-      className={buttonClasses}
-      disabled={isDisabled}
-      aria-disabled={isDisabled}
-      {...props}
-    >
+    <button type={type} className={buttonClasses} disabled={isDisabled} aria-disabled={isDisabled} {...props}>
       {!loading && startIcon && <span className={styles.icon}>{startIcon}</span>}
       <span>{children}</span>
       {!loading && endIcon && <span className={styles.icon}>{endIcon}</span>}

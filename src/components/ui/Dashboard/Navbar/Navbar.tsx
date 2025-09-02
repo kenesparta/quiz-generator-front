@@ -1,6 +1,6 @@
-import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
-import styles from './Navbar.module.css';
+import React from "react";
+import { NavLink, Outlet } from "react-router-dom";
+import styles from "./Navbar.module.css";
 
 const Navbar: React.FC = () => {
   return (
@@ -14,43 +14,27 @@ const Navbar: React.FC = () => {
         <nav className={styles.nav}>
           <ul className={styles.navList}>
             <li className={styles.navItem}>
-              <NavLink
-                to="/dashboard"
-                className={styles.navLink}
-                end
-              >
+              <NavLink to="/dashboard" className={styles.navLink} end>
                 Inicio
               </NavLink>
             </li>
             <li className={styles.navItem}>
-              <NavLink
-                to="/dashboard/postulante"
-                className={styles.navLink}
-              >
+              <NavLink to="/dashboard/postulante" className={styles.navLink}>
                 Postulante
               </NavLink>
             </li>
             <li className={styles.navItem}>
-              <NavLink
-                to="/dashboard/evaluacion"
-                className={styles.navLink}
-              >
+              <NavLink to="/dashboard/evaluacion" className={styles.navLink}>
                 Evaluación
               </NavLink>
             </li>
             <li className={styles.navItem}>
-              <NavLink
-                to="/dashboard/examen"
-                className={styles.navLink}
-              >
+              <NavLink to="/dashboard/examen" className={styles.navLink}>
                 Examen
               </NavLink>
             </li>
             <li className={styles.navItem}>
-              <NavLink
-                to="/login"
-                className={styles.navLink}
-              >
+              <NavLink to="/login" className={styles.navLink}>
                 Salir
               </NavLink>
             </li>
