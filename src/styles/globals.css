@@ -4,37 +4,37 @@
 }
 
 :root {
-  /* Primary colors */
-  --color-primary: #0014e0;
-  --color-primary-hover: #0014e0bb;
+  /* Primary colors - Classic blue */
+  --color-primary: #0066cc;
+  --color-primary-hover: #0052a3;
 
-  /* Secondary colors */
-  --color-secondary: #444661;
-  --color-secondary-hover: #44466155;
+  /* Secondary colors - Classic navy */
+  --color-secondary: #2c3e50;
+  --color-secondary-hover: #1a252f;
 
-  /* Accent colors */
-  --color-accent-success: #50e100;
-  --color-accent-success-hover: #50e10066;
-  --color-accent-error: #e04100;
-  --color-accent-error-hover: #e04100bb;
-  --color-accent-warning: #613f30;
-  --color-accent-warning-hover: #613f30bb;
+  /* Accent colors - Traditional RGB palette */
+  --color-accent-success: #28a745;
+  --color-accent-success-hover: #218838;
+  --color-accent-error: #dc3545;
+  --color-accent-error-hover: #c82333;
+  --color-accent-warning: #ffc107;
+  --color-accent-warning-hover: #e0a800;
 
-  /* Neutral colors */
+  /* Neutral colors - Clean and classic */
   --color-background: #ffffff;
-  --color-text: #333333;
+  --color-text: #212529;
   --color-text-light: #ffffff;
 
-  /* UI Element colors */
-  --color-border: #000000;
-  --color-input-border: #aaaaaa;
-  --color-input-focus: #4d90fe;
-  --color-input-shadow-overlay: rgba(33, 150, 243, 0.6);
+  /* UI Element colors - Classic styling */
+  --color-border: #dee2e6;
+  --color-input-border: #ced4da;
+  --color-input-focus: #0066cc;
+  --color-input-shadow-overlay: rgba(0, 102, 204, 0.25);
 
-  /* Feedback colors */
-  --color-error-background: #ffebee;
-  --color-error-text: #e04100;
+  /* Feedback colors - Traditional error styling */
+  --color-error-background: #f8d7da;
+  --color-error-text: #dc3545;
 
   /* Overlay colors */
-  --color-overlay: rgba(255, 255, 255, 0.1);
+  --color-overlay: rgba(33, 37, 41, 0.1);
 }

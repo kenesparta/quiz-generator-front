@@ -5,10 +5,9 @@ import styles from "./Navbar.module.css";
 const Navbar: React.FC = () => {
   return (
     <div className={styles.navbarLayout}>
-      {/* Left Sidebar */}
       <aside className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
-          <h1 className={styles.sidebarTitle}>Quiz Dashboard</h1>
+          <h1 className={styles.sidebarTitle}>Dashboard</h1>
         </div>
 
         <nav className={styles.nav}>
@@ -33,16 +32,16 @@ const Navbar: React.FC = () => {
                 Examen
               </NavLink>
             </li>
-            <li className={styles.navItem}>
-              <NavLink to="/login" className={styles.navLink}>
-                Salir
-              </NavLink>
-            </li>
           </ul>
+
+          <div className={styles.logoutSection}>
+            <NavLink to="/login" className={styles.navLink}>
+              Salir
+            </NavLink>
+          </div>
         </nav>
       </aside>
 
-      {/* Main Content Area */}
       <main className={styles.content}>
         <Outlet />
       </main>
