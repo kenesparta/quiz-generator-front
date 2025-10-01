@@ -59,20 +59,6 @@ export const ExamSection = ({
             <p className="text-sm text-blue-100">{exam.instrucciones}</p>
           </div>
         )}
-
-        {/* Progress Bar */}
-        <div className="mt-4">
-          <div className="flex justify-between text-sm mb-2">
-            <span>Progreso</span>
-            <span>{completionPercentage}%</span>
-          </div>
-          <div className="w-full bg-blue-500 rounded-full h-2">
-            <div
-              className="bg-white h-2 rounded-full transition-all duration-300"
-              style={{ width: `${completionPercentage}%` }}
-            />
-          </div>
-        </div>
       </div>
 
       {/* Questions */}
