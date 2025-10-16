@@ -5,28 +5,34 @@ import { ExamSection } from "@/components/ExamSection";
 import { useState, useEffect } from "react";
 
 export default function EvaluationPage() {
+  const postulanteId = "e17439e0-79e1-47e3-b5f9-5b54367fa290";
   const {
-    evaluation,
+    initialResponses,
     responses,
     loading,
     error,
     submitting,
     updateResponse,
     submitEvaluation,
-  } = useEvaluation();
+  } = useEvaluation(postulanteId);
 
   const [submitted, setSubmitted] = useState(false);
   const [selectedExamId, setSelectedExamId] = useState<string | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
-  const [startTime] = useState(Date.now());
+
+  useEffect(() => {
+    if (initialResponses?.fecha_tiempo_transcurrido) {
+      setElapsedTime(initialResponses.fecha_tiempo_transcurrido * 1000);
+    }
+  }, [initialResponses]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setElapsedTime(Date.now() - startTime);
+      setElapsedTime(prev => prev + 1000);
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [startTime]);
+  }, []);
 
   const formatTime = (milliseconds: number) => {
     const totalSeconds = Math.floor(milliseconds / 1000);
@@ -65,7 +71,7 @@ export default function EvaluationPage() {
 
   const getTotalQuestions = () => {
     return (
-      evaluation?.evaluacion.examenes.reduce(
+      initialResponses?.evaluacion.examenes.reduce(
         (total, exam) => total + exam.preguntas.length,
         0,
       ) || 0
@@ -79,7 +85,7 @@ export default function EvaluationPage() {
   };
 
   const getExamProgress = (examId: string) => {
-    const exam = evaluation?.evaluacion.examenes.find(e => e._id === examId);
+    const exam = initialResponses?.evaluacion.examenes.find(e => e._id === examId);
     if (!exam) return { answered: 0, total: 0 };
 
     const answered = exam.preguntas.filter(q => responses[q._id] && responses[q._id].length > 0).length;
@@ -87,7 +93,7 @@ export default function EvaluationPage() {
   };
 
   const handleSubmitExam = async (examId: string) => {
-    const exam = evaluation?.evaluacion.examenes.find(e => e._id === examId);
+    const exam = initialResponses?.evaluacion.examenes.find(e => e._id === examId);
     if (!exam) return;
 
     const { answered, total } = getExamProgress(examId);
@@ -98,8 +104,6 @@ export default function EvaluationPage() {
       }
     }
 
-    // Here you would implement the logic to submit individual exam
-    // For now, we'll just show an alert
     alert(`Examen "${exam.titulo}" enviado correctamente!`);
   };
 
@@ -168,7 +172,7 @@ export default function EvaluationPage() {
     );
   }
 
-  if (!evaluation) {
+  if (!initialResponses) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <p className="text-gray-600">No se encontró la evaluación.</p>
@@ -209,18 +213,16 @@ export default function EvaluationPage() {
   }
 
   const currentExam = selectedExamId
-    ? evaluation.evaluacion.examenes.find(e => e._id === selectedExamId)
-    : evaluation.evaluacion.examenes[0];
+    ? initialResponses.evaluacion.examenes.find(e => e._id === selectedExamId)
+    : initialResponses.evaluacion.examenes[0];
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      {/* Left Sidebar - Fixed */}
       <div className="w-80 bg-white shadow-lg border-r border-gray-200 fixed left-0 top-0 h-full z-10">
         <div className="flex flex-col h-full">
-          {/* Evaluation Details Header */}
           <div className="p-4 border-b border-gray-200 bg-blue-50">
             <h2 className="text-lg font-semibold text-gray-900 mb-2">
-              {evaluation.evaluacion.nombre}
+              {initialResponses.evaluacion.nombre}
             </h2>
             <div className="space-y-2 text-sm">
               <div>
@@ -228,7 +230,7 @@ export default function EvaluationPage() {
                 <span className="ml-2 text-gray-900">
                   {/* todo: fix this */}
                   {/*{evaluation.postulante?.nombre || "Usuario"}*/}
-                  {"Usuario"}
+                  {"Juan Perez"}
                 </span>
               </div>
               <div>
@@ -278,12 +280,11 @@ export default function EvaluationPage() {
             </div>
           </div>
 
-          {/* Exam List - Scrollable */}
           <div className="flex-1 overflow-y-auto">
             <div className="p-4">
               <h3 className="font-medium text-gray-900 mb-3">Exámenes</h3>
               <div className="space-y-3">
-                {evaluation.evaluacion.examenes.map((exam, index) => {
+                {initialResponses.evaluacion.examenes.map((exam, index) => {
                   const progress = getExamProgress(exam._id);
                   const isSelected = selectedExamId === exam._id || (selectedExamId === null && index === 0);
 
@@ -320,20 +321,6 @@ export default function EvaluationPage() {
                           }}
                         ></div>
                       </div>
-
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleSubmitExam(exam._id);
-                        }}
-                        className={`w-full py-2 px-3 text-xs font-medium rounded-md transition-colors ${
-                          progress.answered === progress.total
-                            ? 'bg-green-600 hover:bg-green-700 text-white'
-                            : 'bg-blue-600 hover:bg-blue-700 text-white'
-                        }`}
-                      >
-                        {progress.answered === progress.total ? 'Enviar Examen' : 'Enviar Parcial'}
-                      </button>
                     </div>
                   );
                 })}
@@ -341,7 +328,6 @@ export default function EvaluationPage() {
             </div>
           </div>
 
-          {/* Submit All Button - Fixed at bottom */}
           <div className="p-4 border-t border-gray-200 bg-white">
             <button
               onClick={handleSubmit}
@@ -358,15 +344,9 @@ export default function EvaluationPage() {
                   Enviando...
                 </div>
               ) : (
-                "Enviar Evaluación Completa"
+                "Enviar Evaluación"
               )}
             </button>
-
-            {getTotalAnswered() < getTotalQuestions() && (
-              <p className="text-xs text-gray-500 mt-2 text-center">
-                {/*{getTotalQuestions() - getTotalAnswered()} preguntas pendientes*/}
-              </p>
-            )}
           </div>
         </div>
       </div>
@@ -374,19 +354,13 @@ export default function EvaluationPage() {
       {/* Main Content - With left margin to account for fixed sidebar */}
       <div className="flex-1 ml-80 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-6 py-8">
-          {/*<EvaluationProgress*/}
-          {/*  totalQuestions={getTotalQuestions()}*/}
-          {/*  answeredQuestions={getTotalAnswered()}*/}
-          {/*  evaluationName={evaluation.evaluacion.nombre}*/}
-          {/*  startTime={evaluation.fecha_tiempo_inicio}*/}
-          {/*/>*/}
-
           {currentExam && (
             <ExamSection
               exam={currentExam}
               responses={responses}
               onResponseChange={updateResponse}
-              examNumber={evaluation.evaluacion.examenes.findIndex(e => e._id === currentExam._id) + 1}
+              postulanteId={postulanteId}
+              examNumber={initialResponses.evaluacion.examenes.findIndex(e => e._id === currentExam._id) + 1}
             />
           )}
         </div>

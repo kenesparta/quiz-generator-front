@@ -6,8 +6,9 @@ import { QuestionCard } from "./QuestionCard";
 interface ExamSectionProps {
   exam: Exam;
   responses: Record<string, string[]>;
-  onResponseChange: (questionId: string, response: string[]) => void;
+  onResponseChange: (postulanteId: string, questionId: string, response: string[]) => void;
   examNumber: number;
+  postulanteId: string;
 }
 
 export const ExamSection = ({
@@ -15,15 +16,13 @@ export const ExamSection = ({
   responses,
   onResponseChange,
   examNumber,
+  postulanteId,
 }: ExamSectionProps) => {
   const answeredQuestions = exam.preguntas.filter(
     (q) => responses[q._id] && responses[q._id].length > 0,
   ).length;
 
   const totalQuestions = exam.preguntas.length;
-  const completionPercentage = Math.round(
-    (answeredQuestions / totalQuestions) * 100,
-  );
 
   return (
     <div className="mb-12">
@@ -69,7 +68,7 @@ export const ExamSection = ({
             question={question}
             response={responses[question._id] || []}
             onResponseChange={(response) =>
-              onResponseChange(question._id, response)
+              onResponseChange(postulanteId, question._id, response)
             }
             questionNumber={index + 1}
           />

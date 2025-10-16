@@ -6,21 +6,18 @@ import { EvaluationResponse } from "@/types/evaluacion";
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8008";
 
-export const useEvaluation = () => {
-  const [evaluation, setEvaluation] = useState<EvaluationResponse | null>(null);
+export const useEvaluation = (postulanteId: string) => {
+  const [initialResponses, setInitialResponses] = useState<EvaluationResponse | null>(null);
   const [responses, setResponses] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-
   useEffect(() => {
     const loadEvaluation = async () => {
       try {
         // todo: get postulanteId from session storage
         // const postulanteId = localStorage.getItem('postulanteId') ||
         //   sessionStorage.getItem('postulanteId');
-        const postulanteId = "e17439e0-79e1-47e3-b5f9-5b54367fa290";
-
         if (!postulanteId) {
           setError(
             "No se encontró ID de postulante. Por favor, inicie sesión.",
@@ -41,7 +38,7 @@ export const useEvaluation = () => {
         }
 
         const data: EvaluationResponse = await response.json();
-        setEvaluation(data);
+        setInitialResponses(data);
 
         // Initialize responses with existing answers
         const initialResponses: Record<string, string[]> = {};
@@ -60,18 +57,54 @@ export const useEvaluation = () => {
       }
     };
 
-    loadEvaluation();
+    void loadEvaluation();
   }, []);
 
-  const updateResponse = (questionId: string, response: string[]) => {
-    setResponses((prev) => ({
-      ...prev,
-      [questionId]: response,
-    }));
+  const updateResponse = async (postulanteId: string, questionId: string, response: string[]) => {
+    if (!initialResponses) return;
+
+    const exam = initialResponses.evaluacion.examenes.find(exam =>
+      exam.preguntas.some(q => q._id === questionId)
+    );
+
+    if (!exam) {
+      console.error('Could not find exam for question:', questionId);
+      return;
+    }
+
+    try {
+      const requestBody = {
+        id: initialResponses._id,
+        evaluacion_id: initialResponses.evaluacion._id,
+        examen_id: exam._id,
+        pregunta_id: questionId,
+        respuestas: response
+      };
+
+      const apiResponse = await fetch(`${BASE_URL}/respuesta/${postulanteId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!apiResponse.ok) {
+        throw new Error(`Error ${apiResponse.status}: ${apiResponse.statusText}`);
+      }
+
+      setResponses((prev) => ({
+        ...prev,
+        [questionId]: response,
+      }));
+    } catch (error) {
+      console.error('Error updating response:', error);
+      setError(error instanceof Error ? error.message : 'Error updating response');
+    }
   };
 
   const submitEvaluation = async () => {
-    if (!evaluation) return;
+    if (!initialResponses) return;
 
     const postulanteId =
       localStorage.getItem("postulanteId") ||
@@ -87,11 +120,11 @@ export const useEvaluation = () => {
 
     try {
       const updatedEvaluation = {
-        ...evaluation,
+        ...initialResponses,
         fecha_tiempo_fin: new Date().toISOString(),
         evaluacion: {
-          ...evaluation.evaluacion,
-          examenes: evaluation.evaluacion.examenes.map((exam) => ({
+          ...initialResponses.evaluacion,
+          examenes: initialResponses.evaluacion.examenes.map((exam) => ({
             ...exam,
             preguntas: exam.preguntas.map((question) => ({
               ...question,
@@ -125,7 +158,7 @@ export const useEvaluation = () => {
   };
 
   return {
-    evaluation,
+    initialResponses,
     responses,
     loading,
     error,

@@ -1,6 +1,7 @@
 export interface EvaluationResponse {
   _id: string;
   fecha_tiempo_inicio: string;
+  fecha_tiempo_transcurrido: number;
   fecha_tiempo_fin: string;
   postulante_id: string;
   evaluacion: Evaluation;

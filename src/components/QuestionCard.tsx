@@ -33,7 +33,7 @@ export const QuestionCard = ({
   };
 
   const renderAlternatives = () => {
-    const alternatives = Object.entries(question.alternativas);
+    const alternatives = Object.entries(question.alternativas).sort(([a], [b]) => a.localeCompare(b));
 
     if (
       question.tipo_de_pregunta === "alternativa_unica" ||
