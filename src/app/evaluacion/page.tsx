@@ -3,9 +3,37 @@
 import { useEvaluation } from "@/hooks/useEvaluation";
 import { ExamSection } from "@/components/ExamSection";
 import { useState, useEffect } from "react";
+import { usePostulante } from "@/hooks/usePostulante";
+
+const getSubFromJWT = (token: string | null): string | null => {
+  if (!token) return null;
+
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+    const payload = JSON.parse(atob(parts[1]));
+    return payload.sub || null;
+  } catch (error) {
+    console.error("Error decoding JWT:", error);
+    return null;
+  }
+};
 
 export default function EvaluationPage() {
-  const postulanteId = "e17439e0-79e1-47e3-b5f9-5b54367fa290";
+  const [postulanteId, setPostulanteId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const id = getSubFromJWT(token);
+    setPostulanteId(id);
+  }, []);
+
+  const {
+    postulante,
+    isLoading: postulanteLoading,
+    error: postulanteError,
+  } = usePostulante(postulanteId);
+
   const {
     initialResponses,
     responses,
@@ -28,7 +56,7 @@ export default function EvaluationPage() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setElapsedTime(prev => prev + 1000);
+      setElapsedTime((prev) => prev + 1000);
     }, 1000);
 
     return () => clearInterval(interval);
@@ -41,9 +69,9 @@ export default function EvaluationPage() {
     const seconds = totalSeconds % 60;
 
     return {
-      hours: hours.toString().padStart(2, '0'),
-      minutes: minutes.toString().padStart(2, '0'),
-      seconds: seconds.toString().padStart(2, '0')
+      hours: hours.toString().padStart(2, "0"),
+      minutes: minutes.toString().padStart(2, "0"),
+      seconds: seconds.toString().padStart(2, "0"),
     };
   };
 
@@ -85,21 +113,31 @@ export default function EvaluationPage() {
   };
 
   const getExamProgress = (examId: string) => {
-    const exam = initialResponses?.evaluacion.examenes.find(e => e._id === examId);
+    const exam = initialResponses?.evaluacion.examenes.find(
+      (e) => e._id === examId,
+    );
     if (!exam) return { answered: 0, total: 0 };
 
-    const answered = exam.preguntas.filter(q => responses[q._id] && responses[q._id].length > 0).length;
+    const answered = exam.preguntas.filter(
+      (q) => responses[q._id] && responses[q._id].length > 0,
+    ).length;
     return { answered, total: exam.preguntas.length };
   };
 
   const handleSubmitExam = async (examId: string) => {
-    const exam = initialResponses?.evaluacion.examenes.find(e => e._id === examId);
+    const exam = initialResponses?.evaluacion.examenes.find(
+      (e) => e._id === examId,
+    );
     if (!exam) return;
 
     const { answered, total } = getExamProgress(examId);
 
     if (answered < total) {
-      if (!confirm(`Tienes ${total - answered} preguntas sin responder en este examen. ¿Estás seguro de que quieres enviarlo?`)) {
+      if (
+        !confirm(
+          `Tienes ${total - answered} preguntas sin responder en este examen. ¿Estás seguro de que quieres enviarlo?`,
+        )
+      ) {
         return;
       }
     }
@@ -119,7 +157,7 @@ export default function EvaluationPage() {
     }
 
     try {
-      await submitEvaluation();
+      await submitEvaluation(postulanteId);
       setSubmitted(true);
       alert("¡Evaluación enviada correctamente!");
     } catch (err) {
@@ -213,7 +251,7 @@ export default function EvaluationPage() {
   }
 
   const currentExam = selectedExamId
-    ? initialResponses.evaluacion.examenes.find(e => e._id === selectedExamId)
+    ? initialResponses.evaluacion.examenes.find((e) => e._id === selectedExamId)
     : initialResponses.evaluacion.examenes[0];
 
   return (
@@ -227,18 +265,12 @@ export default function EvaluationPage() {
             <div className="space-y-2 text-sm">
               <div>
                 <span className="font-medium text-gray-700">Postulante:</span>
-                <span className="ml-2 text-gray-900">
-                  {/* todo: fix this */}
-                  {/*{evaluation.postulante?.nombre || "Usuario"}*/}
-                  {"Juan Perez"}
-                </span>
+                <span className="ml-2 text-gray-900">{postulante?.nombre}</span>
               </div>
               <div>
                 <span className="font-medium text-gray-700">DNI:</span>
                 <span className="ml-2 text-gray-900">
-                  {/* todo: fix this */}
-                  {/*{evaluation.postulante?.nombre || "Usuario"}*/}
-                  {"12345678"}
+                  {postulante?.documento}
                 </span>
               </div>
               <div>
@@ -258,7 +290,9 @@ export default function EvaluationPage() {
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Respondidas:</span>
-                <span className="font-medium text-green-600">{getTotalAnswered()}</span>
+                <span className="font-medium text-green-600">
+                  {getTotalAnswered()}
+                </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Pendientes:</span>
@@ -270,12 +304,15 @@ export default function EvaluationPage() {
                 <div
                   className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                   style={{
-                    width: `${getTotalQuestions() > 0 ? (getTotalAnswered() / getTotalQuestions()) * 100 : 0}%`
+                    width: `${getTotalQuestions() > 0 ? (getTotalAnswered() / getTotalQuestions()) * 100 : 0}%`,
                   }}
                 ></div>
               </div>
               <div className="text-center text-xs text-gray-500 mt-1">
-                {getTotalQuestions() > 0 ? Math.round((getTotalAnswered() / getTotalQuestions()) * 100) : 0}% completado
+                {getTotalQuestions() > 0
+                  ? Math.round((getTotalAnswered() / getTotalQuestions()) * 100)
+                  : 0}
+                % completado
               </div>
             </div>
           </div>
@@ -286,15 +323,17 @@ export default function EvaluationPage() {
               <div className="space-y-3">
                 {initialResponses.evaluacion.examenes.map((exam, index) => {
                   const progress = getExamProgress(exam._id);
-                  const isSelected = selectedExamId === exam._id || (selectedExamId === null && index === 0);
+                  const isSelected =
+                    selectedExamId === exam._id ||
+                    (selectedExamId === null && index === 0);
 
                   return (
                     <div
                       key={exam._id}
                       className={`border rounded-lg p-4 transition-all duration-200 cursor-pointer ${
                         isSelected
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50'
+                          ? "border-blue-500 bg-blue-50"
+                          : "border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50"
                       }`}
                       onClick={() => setSelectedExamId(exam._id)}
                     >
@@ -302,13 +341,15 @@ export default function EvaluationPage() {
                         <h4 className="font-medium text-sm text-gray-900 leading-tight">
                           {exam.titulo}
                         </h4>
-                        <span className={`text-xs px-2 py-1 rounded-full ${
-                          progress.answered === progress.total
-                            ? 'bg-green-100 text-green-800'
-                            : progress.answered > 0
-                              ? 'bg-yellow-100 text-yellow-800'
-                              : 'bg-gray-100 text-gray-600'
-                        }`}>
+                        <span
+                          className={`text-xs px-2 py-1 rounded-full ${
+                            progress.answered === progress.total
+                              ? "bg-green-100 text-green-800"
+                              : progress.answered > 0
+                                ? "bg-yellow-100 text-yellow-800"
+                                : "bg-gray-100 text-gray-600"
+                          }`}
+                        >
                           {progress.answered}/{progress.total}
                         </span>
                       </div>
@@ -317,7 +358,7 @@ export default function EvaluationPage() {
                         <div
                           className="bg-blue-600 h-1.5 rounded-full transition-all duration-300"
                           style={{
-                            width: `${progress.total > 0 ? (progress.answered / progress.total) * 100 : 0}%`
+                            width: `${progress.total > 0 ? (progress.answered / progress.total) * 100 : 0}%`,
                           }}
                         ></div>
                       </div>
@@ -360,7 +401,11 @@ export default function EvaluationPage() {
               responses={responses}
               onResponseChange={updateResponse}
               postulanteId={postulanteId}
-              examNumber={initialResponses.evaluacion.examenes.findIndex(e => e._id === currentExam._id) + 1}
+              examNumber={
+                initialResponses.evaluacion.examenes.findIndex(
+                  (e) => e._id === currentExam._id,
+                ) + 1
+              }
             />
           )}
         </div>

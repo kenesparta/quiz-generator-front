@@ -6,9 +6,13 @@ import { QuestionCard } from "./QuestionCard";
 interface ExamSectionProps {
   exam: Exam;
   responses: Record<string, string[]>;
-  onResponseChange: (postulanteId: string, questionId: string, response: string[]) => void;
+  onResponseChange: (
+    postulanteId: string | null,
+    questionId: string,
+    response: string[],
+  ) => void;
   examNumber: number;
-  postulanteId: string;
+  postulanteId: string | null;
 }
 
 export const ExamSection = ({
