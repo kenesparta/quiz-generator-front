@@ -27,7 +27,7 @@ export const useEvaluation = (postulanteId: string | null) => {
         setError(null);
         setLoading(true);
 
-        const response = await fetch(`${BASE_URL}/respuesta/${postulanteId}`, {
+        const response = await fetch(`${BASE_URL}/respuesta/postulante/${postulanteId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -79,14 +79,14 @@ export const useEvaluation = (postulanteId: string | null) => {
 
     try {
       const requestBody = {
-        id: initialResponses._id,
+        postulante_id: postulanteId,
         evaluacion_id: initialResponses.evaluacion._id,
         examen_id: exam._id,
         pregunta_id: questionId,
         respuestas: response,
       };
 
-      const apiResponse = await fetch(`${BASE_URL}/respuesta/${postulanteId}`, {
+      const apiResponse = await fetch(`${BASE_URL}/respuesta/${initialResponses._id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
