@@ -27,12 +27,15 @@ export const useEvaluation = (postulanteId: string | null) => {
         setError(null);
         setLoading(true);
 
-        const response = await fetch(`${BASE_URL}/respuesta/postulante/${postulanteId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
+        const response = await fetch(
+          `${BASE_URL}/respuesta/postulante/${postulanteId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
           },
-        });
+        );
 
         if (!response.ok) {
           throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -86,13 +89,16 @@ export const useEvaluation = (postulanteId: string | null) => {
         respuestas: response,
       };
 
-      const apiResponse = await fetch(`${BASE_URL}/respuesta/${initialResponses._id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
+      const apiResponse = await fetch(
+        `${BASE_URL}/respuesta/${initialResponses._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
         },
-        body: JSON.stringify(requestBody),
-      });
+      );
 
       if (!apiResponse.ok) {
         throw new Error(

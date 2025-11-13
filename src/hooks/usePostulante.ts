@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 interface PostulanteData {
   documento: string;
   nombre: string;
-  // Add other properties from the API response as needed
 }
 
 interface UsePostulanteReturn {

@@ -19,6 +19,7 @@ export interface Exam {
   titulo: string;
   descripcion: string;
   instrucciones: string;
+  puntos_obtenidos: number;
   preguntas: Question[];
 }
 
@@ -29,4 +30,5 @@ export interface Question {
   etiqueta: string;
   alternativas: Record<string, string>;
   respuestas: string[];
+  puntos: number;
 }

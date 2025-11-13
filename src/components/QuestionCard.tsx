@@ -7,6 +7,7 @@ interface QuestionCardProps {
   response: string[];
   onResponseChange: (response: string[]) => void;
   questionNumber: number;
+  disabled: boolean;
 }
 
 export const QuestionCard = ({
@@ -14,11 +15,12 @@ export const QuestionCard = ({
   response,
   onResponseChange,
   questionNumber,
+  disabled = false,
 }: QuestionCardProps) => {
   const handleSingleChoice = (value: string) => {
     onResponseChange([value]);
   };
-
+  question.puntos = 3;
   const handleMultipleChoice = (optionKey: string, checked: boolean) => {
     if (checked) {
       onResponseChange([...response, optionKey]);
@@ -49,6 +51,7 @@ export const QuestionCard = ({
               className="flex items-start space-x-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <input
+                disabled={disabled}
                 type="radio"
                 name={question._id}
                 value={key}
@@ -85,6 +88,7 @@ export const QuestionCard = ({
       {question.tipo_de_pregunta === "sola_respuesta" ? (
         <div className="mt-4">
           <input
+            disabled={disabled}
             type="text"
             value={response[0] || ""}
             onChange={(e) => handleTextResponse(e.target.value)}
@@ -112,6 +116,11 @@ export const QuestionCard = ({
             </svg>
             Respondida
           </span>
+        )}
+        {disabled && (
+          <span className="bg-white text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
+              Puntaje: {question.puntos}
+            </span>
         )}
       </div>
     </div>
