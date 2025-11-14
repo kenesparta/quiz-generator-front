@@ -14,6 +14,8 @@ interface ExamSectionProps {
   examNumber: number;
   postulanteId: string | null;
   disabled?: boolean;
+  comment?: string;
+  onCommentChange?: (comment: string) => void;
 }
 
 export const ExamSection = ({
@@ -23,6 +25,8 @@ export const ExamSection = ({
   examNumber,
   postulanteId,
   disabled = false,
+  comment = "",
+  onCommentChange,
 }: ExamSectionProps) => {
   const answeredQuestions = exam.preguntas.filter(
     (q) => responses[q._id] && responses[q._id].length > 0,
@@ -91,6 +95,8 @@ export const ExamSection = ({
             <textarea
               id={`comments-${exam._id}`}
               rows={4}
+              value={comment}
+              onChange={(e) => onCommentChange?.(e.target.value)}
               className="bg-white w-full px-3 py-2 text-gray-900 border border-blue-400 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-transparent resize-none"
               placeholder="Escribe tus comentarios aquí..."
             />

@@ -20,6 +20,48 @@ export const Revision = ({ postulanteId }: RevisionProps) => {
   } = useEvaluation(postulanteId);
 
   const [selectedExamId, setSelectedExamId] = useState<string | null>(null);
+  const [examComments, setExamComments] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleCommentChange = (examId: string, comment: string) => {
+    setExamComments((prev) => ({
+      ...prev,
+      [examId]: comment,
+    }));
+  };
+
+  const handleFinalize = async () => {
+    if (
+      !confirm(
+        "¿Estás seguro de que quieres finalizar la revisión? Los comentarios serán enviados."
+      )
+    ) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      // Here you would send the comments to your API
+      console.log("Sending comments:", examComments);
+      // await sendComments(postulanteId, examComments);
+      alert("Revisión finalizada correctamente!");
+    } catch (err) {
+      alert("Error al enviar los comentarios. Por favor, inténtalo de nuevo.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Cargando evaluación...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!initialResponses) {
     return (
@@ -32,10 +74,104 @@ export const Revision = ({ postulanteId }: RevisionProps) => {
   const currentExam = selectedExamId
     ? initialResponses.evaluacion.examenes.find((e) => e._id === selectedExamId)
     : initialResponses.evaluacion.examenes[0];
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      <div> small sticky left nav</div>
-      <div className="flex-1 overflow-y-auto">
+      {/* Sticky Left Sidebar */}
+      <div className="w-64 bg-white shadow-lg border-r border-gray-200 fixed left-0 top-0 h-full z-10">
+        <div className="flex flex-col h-full">
+          {/* Return Button */}
+          <div className="p-4 border-b border-gray-200">
+            <a
+              href="/admin/dashboard/revision"
+              className="flex items-center text-sm text-gray-600 hover:text-blue-600 transition-colors"
+            >
+              <svg
+                className="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                />
+              </svg>
+              Volver a lista de revisiones
+            </a>
+          </div>
+
+          {/* Header */}
+          <div className="p-4 border-b border-gray-200 bg-blue-50">
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">
+              Revisión
+            </h2>
+            <div className="text-sm text-gray-600">
+              {initialResponses.evaluacion.nombre}
+            </div>
+          </div>
+
+          {/* Exams List */}
+          <div className="flex-1 overflow-y-auto p-4">
+            <h3 className="font-medium text-gray-900 mb-3 text-sm">
+              Exámenes
+            </h3>
+            <div className="space-y-2">
+              {initialResponses.evaluacion.examenes.map((exam, index) => {
+                const isSelected =
+                  selectedExamId === exam._id ||
+                  (selectedExamId === null && index === 0);
+
+                return (
+                  <button
+                    key={exam._id}
+                    onClick={() => setSelectedExamId(exam._id)}
+                    className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-all duration-200 ${
+                      isSelected
+                        ? "border-green-500 bg-green-50 text-green-900"
+                        : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
+                    }`}
+                  >
+                    <div className="font-medium text-sm">
+                      Examen {index + 1}
+                    </div>
+                    <div className="text-xs text-gray-600 mt-1 truncate">
+                      {exam.titulo}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Finalizar Button */}
+          <div className="p-4 border-t border-gray-200 bg-white">
+            <button
+              onClick={handleFinalize}
+              disabled={isSubmitting}
+              className={`w-full py-3 rounded-lg text-white font-semibold shadow-lg transition-all duration-300 ${
+                isSubmitting
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 hover:shadow-xl"
+              }`}
+            >
+              {isSubmitting ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Enviando...
+                </div>
+              ) : (
+                "Finalizar"
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content - With left margin to account for fixed sidebar */}
+      <div className="flex-1 ml-64 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-6 py-8">
           {currentExam && (
             <ExamSection
@@ -49,6 +185,10 @@ export const Revision = ({ postulanteId }: RevisionProps) => {
                 ) + 1
               }
               disabled
+              comment={examComments[currentExam._id] || ""}
+              onCommentChange={(comment) =>
+                handleCommentChange(currentExam._id, comment)
+              }
             />
           )}
         </div>
