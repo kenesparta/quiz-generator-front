@@ -145,8 +145,8 @@ export const useEvaluation = (postulanteId: string | null) => {
         },
       };
 
-      const response = await fetch(`${BASE_URL}/respuesta/${postulanteId}`, {
-        method: "PUT",
+      const response = await fetch(`${BASE_URL}/respuesta/${initialResponses._id}/finalizar`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -157,7 +157,6 @@ export const useEvaluation = (postulanteId: string | null) => {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
 
-      return await response.json();
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Error al enviar la evaluación",
