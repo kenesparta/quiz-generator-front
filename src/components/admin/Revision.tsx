@@ -20,20 +20,20 @@ export const Revision = ({ postulanteId }: RevisionProps) => {
   } = useEvaluation(postulanteId);
 
   const [selectedExamId, setSelectedExamId] = useState<string | null>(null);
-  const [examComments, setExamComments] = useState<Record<string, string>>({});
+  const [examObservaciones, setExamObservaciones] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleCommentChange = (examId: string, comment: string) => {
-    setExamComments((prev) => ({
+  const handleObservacionChange = (examId: string, observacion: string) => {
+    setExamObservaciones((prev) => ({
       ...prev,
-      [examId]: comment,
+      [examId]: observacion,
     }));
   };
 
   const handleFinalize = async () => {
     if (
       !confirm(
-        "¿Estás seguro de que quieres finalizar la revisión? Los comentarios serán enviados."
+        "¿Estás seguro de que quieres finalizar la revisión? Las observaciones serán enviadas."
       )
     ) {
       return;
@@ -41,12 +41,44 @@ export const Revision = ({ postulanteId }: RevisionProps) => {
 
     setIsSubmitting(true);
     try {
-      // Here you would send the comments to your API
-      console.log("Sending comments:", examComments);
-      // await sendComments(postulanteId, examComments);
-      alert("Revisión finalizada correctamente!");
+      const BASE_URL =
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8008";
+
+      // Build the payload with observaciones for each exam
+      const examenes = initialResponses.evaluacion.examenes.map((exam) => ({
+        examen_id: exam._id,
+        observacion: examObservaciones[exam._id] || "",
+      }));
+
+      const payload = {
+        respuesta_id: initialResponses._id,
+        evaluacion_id: initialResponses.evaluacion._id,
+        examenes: examenes,
+      };
+
+      const response = await fetch(`${BASE_URL}/revision`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.status === 200) {
+        alert("Revisión finalizada correctamente!");
+        window.location.href = "/admin/dashboard/revision";
+      } else if (response.status === 403) {
+        alert("No tienes permisos para finalizar esta revisión.");
+      } else if (response.status === 500) {
+        alert(
+          "Error del servidor al finalizar la revisión. Por favor, inténtalo de nuevo."
+        );
+      } else {
+        alert("Error inesperado. Por favor, inténtalo de nuevo.");
+      }
     } catch (err) {
-      alert("Error al enviar los comentarios. Por favor, inténtalo de nuevo.");
+      alert("Error al enviar las observaciones. Por favor, inténtalo de nuevo.");
+      console.error("Error submitting revision:", err);
     } finally {
       setIsSubmitting(false);
     }
@@ -185,9 +217,9 @@ export const Revision = ({ postulanteId }: RevisionProps) => {
                 ) + 1
               }
               disabled
-              comment={examComments[currentExam._id] || ""}
-              onCommentChange={(comment) =>
-                handleCommentChange(currentExam._id, comment)
+              comment={examObservaciones[currentExam._id] || ""}
+              onCommentChange={(observacion) =>
+                handleObservacionChange(currentExam._id, observacion)
               }
             />
           )}
