@@ -8,6 +8,7 @@ interface PostulanteData {
 }
 
 interface RevisionItem {
+  revision_id: string,
   nombre_evaluacion: string;
   descripcion_evaluacion: string;
   estado_revision: "sin_iniciar" | "en_proceso" | "finalizada";

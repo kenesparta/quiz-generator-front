@@ -6,7 +6,7 @@ import { EvaluationResponse } from "@/types/evaluacion";
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8008";
 
-export const useEvaluation = (postulanteId: string | null) => {
+export const useEvaluation = (postulanteId: string | null, revisionId: string | null) => {
   const [initialResponses, setInitialResponses] =
     useState<EvaluationResponse | null>(null);
   const [responses, setResponses] = useState<Record<string, string[]>>({});
@@ -28,7 +28,7 @@ export const useEvaluation = (postulanteId: string | null) => {
         setLoading(true);
 
         const response = await fetch(
-          `${BASE_URL}/respuesta/postulante/${postulanteId}`,
+          `${BASE_URL}/respuesta/${revisionId}/postulante/${postulanteId}`,
           {
             method: "GET",
             headers: {

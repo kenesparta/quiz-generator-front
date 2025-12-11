@@ -33,7 +33,6 @@ export const ExamSection = ({
   ).length;
 
   const totalQuestions = exam.preguntas.length;
-  exam.puntos_obtenidos = 100;
 
   return (
     <div className="mb-12">

@@ -114,7 +114,7 @@ export default function RevisionPage() {
                       </button>
                     ) : (
                       <Link
-                        href={`/admin/dashboard/revision/${revision.postulante_id}`}
+                        href={`/admin/dashboard/revision/${revision.revision_id}/${revision.postulante_id}`}
                         className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
                       >
                         Revisar

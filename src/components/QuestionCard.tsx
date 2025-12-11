@@ -20,7 +20,7 @@ export const QuestionCard = ({
   const handleSingleChoice = (value: string) => {
     onResponseChange([value]);
   };
-  question.puntos = 3;
+
   const handleMultipleChoice = (optionKey: string, checked: boolean) => {
     if (checked) {
       onResponseChange([...response, optionKey]);

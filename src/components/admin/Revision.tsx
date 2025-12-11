@@ -6,9 +6,10 @@ import { useEvaluation } from "@/hooks/useEvaluation";
 
 interface RevisionProps {
   postulanteId: string;
+  revisionId: string
 }
 
-export const Revision = ({ postulanteId }: RevisionProps) => {
+export const Revision = ({ revisionId, postulanteId  }: RevisionProps) => {
   const {
     initialResponses,
     responses,
@@ -17,7 +18,7 @@ export const Revision = ({ postulanteId }: RevisionProps) => {
     submitting,
     updateResponse,
     submitEvaluation,
-  } = useEvaluation(postulanteId);
+  } = useEvaluation(postulanteId, revisionId);
 
   const [selectedExamId, setSelectedExamId] = useState<string | null>(null);
   const [examObservaciones, setExamObservaciones] = useState<Record<string, string>>({});
@@ -31,6 +32,11 @@ export const Revision = ({ postulanteId }: RevisionProps) => {
   };
 
   const handleFinalize = async () => {
+    if (!initialResponses) {
+      alert("No se encontró la evaluación.");
+      return;
+    }
+
     if (
       !confirm(
         "¿Estás seguro de que quieres finalizar la revisión? Las observaciones serán enviadas."
