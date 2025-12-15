@@ -1,9 +1,9 @@
 "use client";
 
-import { useEvaluation } from "@/hooks/useEvaluation";
 import { ExamSection } from "@/components/ExamSection";
-import { useState, useEffect } from "react";
+import { useEvaluation } from "@/hooks/useEvaluation";
 import { usePostulante } from "@/hooks/usePostulante";
+import { use, useEffect, useState } from "react";
 
 interface PageProps {
   params: Promise<{
@@ -25,8 +25,8 @@ const getSubFromJWT = (token: string | null): string | null => {
   }
 };
 
-export default async function EvaluationPage({ params }: PageProps) {
-  const { respuestaId } = await params;
+export default function EvaluationPage({ params }: PageProps) {
+  const { respuestaId } = use(params);
   const [postulanteId, setPostulanteId] = useState<string | null>(null);
 
   useEffect(() => {

@@ -119,8 +119,8 @@ export const QuestionCard = ({
         )}
         {disabled && (
           <span className="bg-white text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
-              Puntaje: {question.puntos}
-            </span>
+            Puntaje: {question.puntos}
+          </span>
         )}
       </div>
     </div>

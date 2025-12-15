@@ -6,10 +6,10 @@ import { useEvaluation } from "@/hooks/useEvaluation";
 
 interface RevisionProps {
   postulanteId: string;
-  revisionId: string
+  revisionId: string;
 }
 
-export const Revision = ({ revisionId, postulanteId  }: RevisionProps) => {
+export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
   const {
     initialResponses,
     responses,
@@ -21,7 +21,9 @@ export const Revision = ({ revisionId, postulanteId  }: RevisionProps) => {
   } = useEvaluation(postulanteId, revisionId);
 
   const [selectedExamId, setSelectedExamId] = useState<string | null>(null);
-  const [examObservaciones, setExamObservaciones] = useState<Record<string, string>>({});
+  const [examObservaciones, setExamObservaciones] = useState<
+    Record<string, string>
+  >({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleObservacionChange = (examId: string, observacion: string) => {
@@ -39,7 +41,7 @@ export const Revision = ({ revisionId, postulanteId  }: RevisionProps) => {
 
     if (
       !confirm(
-        "¿Estás seguro de que quieres finalizar la revisión? Las observaciones serán enviadas."
+        "¿Estás seguro de que quieres finalizar la revisión? Las observaciones serán enviadas.",
       )
     ) {
       return;
@@ -77,13 +79,15 @@ export const Revision = ({ revisionId, postulanteId  }: RevisionProps) => {
         alert("No tienes permisos para finalizar esta revisión.");
       } else if (response.status === 500) {
         alert(
-          "Error del servidor al finalizar la revisión. Por favor, inténtalo de nuevo."
+          "Error del servidor al finalizar la revisión. Por favor, inténtalo de nuevo.",
         );
       } else {
         alert("Error inesperado. Por favor, inténtalo de nuevo.");
       }
     } catch (err) {
-      alert("Error al enviar las observaciones. Por favor, inténtalo de nuevo.");
+      alert(
+        "Error al enviar las observaciones. Por favor, inténtalo de nuevo.",
+      );
       console.error("Error submitting revision:", err);
     } finally {
       setIsSubmitting(false);
@@ -153,9 +157,7 @@ export const Revision = ({ revisionId, postulanteId  }: RevisionProps) => {
 
           {/* Exams List */}
           <div className="flex-1 overflow-y-auto p-4">
-            <h3 className="font-medium text-gray-900 mb-3 text-sm">
-              Exámenes
-            </h3>
+            <h3 className="font-medium text-gray-900 mb-3 text-sm">Exámenes</h3>
             <div className="space-y-2">
               {initialResponses.evaluacion.examenes.map((exam, index) => {
                 const isSelected =

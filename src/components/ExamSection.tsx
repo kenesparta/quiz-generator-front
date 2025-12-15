@@ -77,7 +77,10 @@ export const ExamSection = ({
 
         {disabled && (
           <div className="bg-blue-500 rounded-lg p-3">
-            <label htmlFor={`comments-${exam._id}`} className="flex items-center text-sm font-medium mb-2">
+            <label
+              htmlFor={`comments-${exam._id}`}
+              className="flex items-center text-sm font-medium mb-2"
+            >
               <svg
                 className="w-4 h-4 mr-2"
                 fill="currentColor"

@@ -6,7 +6,10 @@ import { EvaluationResponse } from "@/types/evaluacion";
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8008";
 
-export const useEvaluation = (postulanteId: string | null, revisionId: string | null) => {
+export const useEvaluation = (
+  postulanteId: string | null,
+  revisionId: string | null,
+) => {
   const [initialResponses, setInitialResponses] =
     useState<EvaluationResponse | null>(null);
   const [responses, setResponses] = useState<Record<string, string[]>>({});
@@ -145,18 +148,20 @@ export const useEvaluation = (postulanteId: string | null, revisionId: string | 
         },
       };
 
-      const response = await fetch(`${BASE_URL}/respuesta/${initialResponses._id}/finalizar`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${BASE_URL}/respuesta/${initialResponses._id}/finalizar`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedEvaluation),
         },
-        body: JSON.stringify(updatedEvaluation),
-      });
+      );
 
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
-
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Error al enviar la evaluación",

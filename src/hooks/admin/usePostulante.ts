@@ -48,7 +48,7 @@ export const usePostulante = (): UsePostulanteReturn => {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(
-          errorData.message || "Error al obtener los postulantes"
+          errorData.message || "Error al obtener los postulantes",
         );
       }
 
@@ -56,7 +56,7 @@ export const usePostulante = (): UsePostulanteReturn => {
       setPostulantes(data);
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Error al cargar los postulantes"
+        err instanceof Error ? err.message : "Error al cargar los postulantes",
       );
     } finally {
       setIsLoading(false);
@@ -64,7 +64,7 @@ export const usePostulante = (): UsePostulanteReturn => {
   };
 
   const createPostulante = async (
-    data: CreatePostulanteRequest
+    data: CreatePostulanteRequest,
   ): Promise<boolean> => {
     setIsCreating(true);
     setError(null);
@@ -84,12 +84,31 @@ export const usePostulante = (): UsePostulanteReturn => {
         throw new Error(errorData.message || "Error al crear el postulante");
       }
 
+      // Create respuesta for the new postulante
+      const respuestaResponse = await fetch(`${BASE_URL}/respuesta`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          evaluacion_id: "2cf52b7a-0ee3-43a9-9b89-4a8baaa22250",
+          postulante_id: uuid,
+        }),
+      });
+
+      if (!respuestaResponse.ok) {
+        const errorData = await respuestaResponse.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || "Error al crear la respuesta del postulante",
+        );
+      }
+
       // Refresh the list after creating
       await fetchPostulantes();
       return true;
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Error al crear el postulante"
+        err instanceof Error ? err.message : "Error al crear el postulante",
       );
       return false;
     } finally {
