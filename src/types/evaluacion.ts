@@ -4,6 +4,7 @@ export interface EvaluationResponse {
   fecha_tiempo_transcurrido: number;
   fecha_tiempo_fin: string;
   postulante_id: string;
+  resultado: string;
   evaluacion: Evaluation;
 }
 
@@ -21,6 +22,7 @@ export interface Exam {
   instrucciones: string;
   puntos_obtenidos: number;
   preguntas: Question[];
+  observacion?: string;
 }
 
 export interface Question {

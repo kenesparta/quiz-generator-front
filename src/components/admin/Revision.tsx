@@ -3,6 +3,10 @@
 import { ExamSection } from "@/components/ExamSection";
 import { useState } from "react";
 import { useEvaluation } from "@/hooks/useEvaluation";
+import {
+  ResultadoDelExamen,
+  type ResultadoTipo,
+} from "@/components/admin/ResultadoDelExamen";
 
 interface RevisionProps {
   postulanteId: string;
@@ -25,6 +29,7 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
     Record<string, string>
   >({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [resultado, setResultado] = useState<ResultadoTipo>("apto");
 
   const handleObservacionChange = (examId: string, observacion: string) => {
     setExamObservaciones((prev) => ({
@@ -62,6 +67,7 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
         respuesta_id: initialResponses._id,
         evaluacion_id: initialResponses.evaluacion._id,
         examenes: examenes,
+        resultado: resultado,
       };
 
       const response = await fetch(`${BASE_URL}/revision`, {
@@ -186,6 +192,11 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
             </div>
           </div>
 
+          <ResultadoDelExamen
+            resultado={resultado}
+            onResultadoChange={setResultado}
+          />
+
           {/* Finalizar Button */}
           <div className="p-4 border-t border-gray-200 bg-white">
             <button
@@ -211,7 +222,7 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
       </div>
 
       {/* Main Content - With left margin to account for fixed sidebar */}
-      <div className="flex-1 ml-64 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-6 py-8">
           {currentExam && (
             <ExamSection

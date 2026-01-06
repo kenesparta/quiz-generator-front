@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useRevision } from "@/hooks/admin/useRevision";
+import { generatePDFReport } from "@/utils/pdfReportGenerator";
 
 const getEstadoBadge = (estado: string) => {
   switch (estado) {
@@ -30,6 +32,20 @@ const getEstadoBadge = (estado: string) => {
 
 export default function RevisionPage() {
   const { revisions, isLoading, error } = useRevision();
+  const [generatingPDF, setGeneratingPDF] = useState<string | null>(null);
+
+  const handleGeneratePDF = async (
+    revisionId: string,
+    postulanteId: string,
+    postulante?: { documento: string; nombre: string },
+  ) => {
+    setGeneratingPDF(postulanteId);
+    try {
+      await generatePDFReport(revisionId, postulanteId, postulante);
+    } finally {
+      setGeneratingPDF(null);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -104,22 +120,40 @@ export default function RevisionPage() {
                         </div>
                       )}
                     </div>
-                    {isFinalized ? (
+                    <div className="flex gap-2">
                       <button
                         type="button"
-                        disabled
-                        className="px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed text-sm"
+                        onClick={() =>
+                          handleGeneratePDF(
+                            revision.revision_id,
+                            revision.postulante_id,
+                            revision.postulante,
+                          )
+                        }
+                        disabled={generatingPDF === revision.postulante_id}
+                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm disabled:bg-gray-400 disabled:cursor-not-allowed"
                       >
-                        Revisar
+                        {generatingPDF === revision.postulante_id
+                          ? "Generando..."
+                          : "PDF"}
                       </button>
-                    ) : (
-                      <Link
-                        href={`/admin/dashboard/revision/${revision.revision_id}/${revision.postulante_id}`}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
-                      >
-                        Revisar
-                      </Link>
-                    )}
+                      {isFinalized ? (
+                        <button
+                          type="button"
+                          disabled
+                          className="px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed text-sm"
+                        >
+                          Revisar
+                        </button>
+                      ) : (
+                        <Link
+                          href={`/admin/dashboard/revision/${revision.revision_id}/${revision.postulante_id}`}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                        >
+                          Revisar
+                        </Link>
+                      )}
+                    </div>
                   </div>
                 </div>
               );

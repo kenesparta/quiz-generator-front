@@ -12,12 +12,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
 
   const sections = [
-    {
-      id: "evaluacion",
-      name: "Evaluación",
-      href: "/admin/dashboard/evaluacion",
-    },
-    { id: "examen", name: "Examen", href: "/admin/dashboard/examen" },
+    // {
+    //   id: "evaluacion",
+    //   name: "Evaluación",
+    //   href: "/admin/dashboard/evaluacion",
+    // },
+    // { id: "examen", name: "Examen", href: "/admin/dashboard/examen" },
     {
       id: "postulante",
       name: "Postulante",
