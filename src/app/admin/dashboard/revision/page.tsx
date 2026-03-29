@@ -5,29 +5,22 @@ import { useState } from "react";
 import { useRevision } from "@/hooks/admin/useRevision";
 import { generatePDFReport } from "@/utils/pdfReportGenerator";
 
-const getEstadoBadge = (estado: string) => {
-  switch (estado) {
-    case "sin_iniciar":
-      return (
-        <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">
-          Sin Iniciar
-        </span>
-      );
-    case "en_proceso":
-      return (
-        <span className="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 rounded">
-          En Proceso
-        </span>
-      );
-    case "finalizada":
-      return (
-        <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded">
-          Finalizada
-        </span>
-      );
-    default:
-      return null;
-  }
+const getEstadoDot = (estado: string) => {
+  const config: Record<string, { color: string; label: string }> = {
+    sin_iniciar: { color: "bg-gray-400", label: "Sin Iniciar" },
+    en_proceso: { color: "bg-amber-400", label: "En Proceso" },
+    finalizada: { color: "bg-green-500", label: "Finalizada" },
+  };
+  const { color, label } = config[estado] || {
+    color: "bg-gray-400",
+    label: estado,
+  };
+  return (
+    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--text-secondary)]">
+      <span className={`w-2 h-2 rounded-full ${color}`} />
+      {label}
+    </span>
+  );
 };
 
 export default function RevisionPage() {
@@ -49,12 +42,16 @@ export default function RevisionPage() {
 
   if (isLoading) {
     return (
-      <div className="p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">
-          Lista de Evaluaciones
-        </h1>
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <p className="text-gray-600">Cargando evaluaciones...</p>
+      <div className="p-6">
+        <div className="mb-6">
+          <h1 className="text-2xl font-semibold text-[var(--text-primary)]">
+            Lista de Evaluaciones
+          </h1>
+        </div>
+        <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)] p-6">
+          <p className="text-[var(--text-secondary)]">
+            Cargando evaluaciones...
+          </p>
         </div>
       </div>
     );
@@ -62,105 +59,182 @@ export default function RevisionPage() {
 
   if (error) {
     return (
-      <div className="p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">
-          Lista de Evaluaciones
-        </h1>
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <p className="text-red-600">{error}</p>
+      <div className="p-6">
+        <div className="mb-6">
+          <h1 className="text-2xl font-semibold text-[var(--text-primary)]">
+            Lista de Evaluaciones
+          </h1>
+        </div>
+        <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)] p-6">
+          <p className="text-[var(--danger)]">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">
-        Lista de Evaluaciones
-      </h1>
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <p className="text-gray-600 mb-6">
-          Selecciona una evaluación para revisar las respuestas de los
-          postulantes.
-        </p>
-        {revisions.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">
+    <div className="p-6">
+      {/* Header */}
+      <div className="flex justify-between items-start mb-6">
+        <div>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-semibold text-[var(--text-primary)]">
+              Lista de Evaluaciones
+            </h1>
+            {revisions.length > 0 && (
+              <span className="px-2 py-0.5 text-xs font-medium bg-[var(--table-header-bg)] text-[var(--text-secondary)] rounded-full">
+                {revisions.length}
+              </span>
+            )}
+          </div>
+          <p className="text-sm text-[var(--text-tertiary)] mt-1">
+            Selecciona una evaluación para revisar las respuestas de los
+            postulantes.
+          </p>
+        </div>
+      </div>
+
+      {/* Revision List */}
+      {revisions.length === 0 ? (
+        <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)] text-center py-12">
+          <svg
+            aria-hidden="true"
+            className="w-12 h-12 text-gray-300 mx-auto mb-3"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.5}
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            />
+          </svg>
+          <p className="text-[var(--text-tertiary)] text-sm">
             No hay evaluaciones disponibles para revisar
           </p>
-        ) : (
-          <div className="space-y-4">
-            {revisions.map((revision) => {
-              const isFinalized = revision.estado_revision === "finalizada";
-              return (
-                <div
-                  key={revision.postulante_id}
-                  className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-semibold text-gray-900">
-                          {revision.nombre_evaluacion}
-                        </h3>
-                        {getEstadoBadge(revision.estado_revision)}
-                      </div>
-                      <p className="text-sm text-gray-600 mb-2">
-                        {revision.descripcion_evaluacion}
-                      </p>
-                      {revision.postulante && (
-                        <div className="flex gap-4 text-sm mt-3">
-                          <span className="text-gray-700">
-                            <span className="font-medium">Postulante:</span>{" "}
-                            {revision.postulante.nombre}
-                          </span>
-                          <span className="text-gray-700">
-                            <span className="font-medium">Documento:</span>{" "}
-                            {revision.postulante.documento}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleGeneratePDF(
-                            revision.revision_id,
-                            revision.postulante_id,
-                            revision.postulante,
-                          )
-                        }
-                        disabled={generatingPDF === revision.postulante_id}
-                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm disabled:bg-gray-400 disabled:cursor-not-allowed"
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {revisions.map((revision) => {
+            const isFinalized = revision.estado_revision === "finalizada";
+            return (
+              <div
+                key={revision.postulante_id}
+                className="bg-white rounded-lg p-5 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)] hover:shadow-md transition-shadow"
+              >
+                {/* Top row */}
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500 shrink-0">
+                      <svg
+                        aria-hidden="true"
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        viewBox="0 0 24 24"
                       >
-                        {generatingPDF === revision.postulante_id
-                          ? "Generando..."
-                          : "PDF"}
-                      </button>
-                      {isFinalized ? (
-                        <button
-                          type="button"
-                          disabled
-                          className="px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed text-sm"
-                        >
-                          Revisar
-                        </button>
-                      ) : (
-                        <Link
-                          href={`/admin/dashboard/revision/${revision.revision_id}/${revision.postulante_id}`}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
-                        >
-                          Revisar
-                        </Link>
-                      )}
+                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
+                        <path d="M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        <path d="M9 14l2 2 4-4" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-[var(--text-primary)]">
+                        {revision.nombre_evaluacion}
+                      </h3>
+                      {getEstadoDot(revision.estado_revision)}
                     </div>
                   </div>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleGeneratePDF(
+                          revision.revision_id,
+                          revision.postulante_id,
+                          revision.postulante,
+                        )
+                      }
+                      disabled={generatingPDF === revision.postulante_id}
+                      className="px-3 py-1.5 bg-white border border-[var(--border-color)] text-[var(--text-primary)] rounded-md hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {generatingPDF === revision.postulante_id
+                        ? "Generando..."
+                        : "PDF"}
+                    </button>
+                    {isFinalized ? (
+                      <button
+                        type="button"
+                        disabled
+                        className="px-3 py-1.5 bg-gray-100 text-[var(--text-tertiary)] rounded-md cursor-not-allowed text-sm"
+                      >
+                        Revisar
+                      </button>
+                    ) : (
+                      <Link
+                        href={`/admin/dashboard/revision/${revision.revision_id}/${revision.postulante_id}`}
+                        className="px-3 py-1.5 bg-[var(--primary)] text-white rounded-md hover:bg-[var(--primary-dark)] transition-colors text-sm"
+                      >
+                        Revisar
+                      </Link>
+                    )}
+                  </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
+
+                {/* Description */}
+                <p className="text-sm text-[var(--text-tertiary)] mt-2">
+                  {revision.descripcion_evaluacion}
+                </p>
+
+                {/* Postulante info */}
+                {revision.postulante && (
+                  <div className="flex gap-4 text-sm mt-3 pt-3 border-t border-[var(--border-color-light)]">
+                    <span className="flex items-center gap-1.5 text-[var(--text-secondary)]">
+                      <svg
+                        aria-hidden="true"
+                        className="w-4 h-4 text-[var(--text-tertiary)]"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        />
+                      </svg>
+                      {revision.postulante.nombre}
+                    </span>
+                    <span className="flex items-center gap-1.5 text-[var(--text-secondary)]">
+                      <svg
+                        aria-hidden="true"
+                        className="w-4 h-4 text-[var(--text-tertiary)]"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0"
+                        />
+                      </svg>
+                      {revision.postulante.documento}
+                    </span>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

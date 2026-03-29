@@ -1,6 +1,7 @@
 "use client";
 
-import { Question } from "@/types/evaluacion";
+import Markdown from "react-markdown";
+import type { Question } from "@/types/evaluacion";
 
 interface QuestionCardProps {
   question: Question;
@@ -21,15 +22,6 @@ export const QuestionCard = ({
     onResponseChange([value]);
   };
 
-  const handleMultipleChoice = (optionKey: string, checked: boolean) => {
-    if (checked) {
-      onResponseChange([...response, optionKey]);
-      return;
-    }
-
-    onResponseChange(response.filter((r) => r !== optionKey));
-  };
-
   const handleTextResponse = (value: string) => {
     onResponseChange([value]);
   };
@@ -44,26 +36,35 @@ export const QuestionCard = ({
       question.tipo_de_pregunta === "alternativa_peso"
     ) {
       return (
-        <div className="space-y-3 mt-4">
-          {alternatives.map(([key, value]) => (
-            <label
-              key={key}
-              className="flex items-start space-x-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              <input
-                disabled={disabled}
-                type="radio"
-                name={question._id}
-                value={key}
-                checked={response[0] === key}
-                onChange={(e) => handleSingleChoice(e.target.value)}
-                className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-              />
-              <div className="flex-1">
-                <span className="text-gray-700">{value}</span>
-              </div>
-            </label>
-          ))}
+        <div className="space-y-2 mt-4">
+          {alternatives.map(([key, value]) => {
+            const isSelected = response[0] === key;
+            return (
+              <label
+                key={key}
+                className={`flex items-start space-x-3 cursor-pointer p-3 rounded-md border transition-colors ${
+                  isSelected
+                    ? "border-[var(--primary)] bg-blue-50"
+                    : "border-[var(--border-color-light)] hover:bg-[var(--table-header-bg)]"
+                } ${disabled ? "cursor-default" : ""}`}
+              >
+                <input
+                  disabled={disabled}
+                  type="radio"
+                  name={question._id}
+                  value={key}
+                  checked={isSelected}
+                  onChange={(e) => handleSingleChoice(e.target.value)}
+                  className="mt-0.5 h-4 w-4 text-[var(--primary)] border-[var(--border-color)] focus:ring-[var(--primary)] focus:ring-1"
+                />
+                <div className="flex-1">
+                  <span className="text-sm text-[var(--text-primary)]">
+                    {value}
+                  </span>
+                </div>
+              </label>
+            );
+          })}
         </div>
       );
     }
@@ -72,19 +73,20 @@ export const QuestionCard = ({
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6 shadow-sm hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-lg border border-[var(--border-color-light)] p-6 mb-4 shadow-[0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-md transition-shadow">
+      {/* Question header */}
       <div className="flex items-start gap-4 mb-4">
-        <span className="flex-shrink-0 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+        <span className="flex-shrink-0 bg-[var(--primary)] text-white w-7 h-7 rounded-full text-sm font-medium flex items-center justify-center">
           {questionNumber}
         </span>
         <div className="flex-1">
-          <div
-            className="text-gray-900 font-medium leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: question.contenido }}
-          />
+          <div className="text-[var(--text-primary)] font-medium leading-relaxed text-sm prose prose-sm max-w-none">
+            <Markdown>{question.contenido}</Markdown>
+          </div>
         </div>
       </div>
 
+      {/* Answer input */}
       {question.tipo_de_pregunta === "sola_respuesta" ? (
         <div className="mt-4">
           <input
@@ -93,32 +95,37 @@ export const QuestionCard = ({
             value={response[0] || ""}
             onChange={(e) => handleTextResponse(e.target.value)}
             placeholder="Escriba su respuesta aquí..."
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2.5 border border-[var(--border-color)] rounded-md text-sm focus:ring-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] outline-none transition-colors disabled:bg-[var(--table-header-bg)] disabled:text-[var(--text-secondary)]"
           />
         </div>
       ) : (
         renderAlternatives()
       )}
 
-      <div className="mt-4 flex justify-between items-center text-xs text-gray-500">
+      {/* Footer */}
+      <div className="mt-4 flex justify-between items-center">
         {response.length > 0 && (
-          <span className="text-green-600 font-medium flex items-center">
+          <span className="text-[var(--success)] text-xs font-medium flex items-center gap-1">
             <svg
-              className="w-3 h-3 mr-1"
-              fill="currentColor"
-              viewBox="0 0 20 20"
+              aria-hidden="true"
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
             >
               <path
-                fillRule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clipRule="evenodd"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 12l2 2 4-4"
               />
+              <circle cx="12" cy="12" r="10" />
             </svg>
             Respondida
           </span>
         )}
         {disabled && (
-          <span className="bg-white text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
+          <span className="bg-[var(--table-header-bg)] text-[var(--primary)] px-3 py-1 rounded-full text-xs font-semibold">
             Puntaje: {question.puntos}
           </span>
         )}

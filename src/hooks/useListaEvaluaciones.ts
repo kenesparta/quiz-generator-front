@@ -3,6 +3,23 @@
 import { useEffect, useState } from "react";
 import { BASE_URL } from "@/config/api";
 
+interface EvaluacionItem {
+  id: string;
+  nombre_evaluacion: string;
+  descripcion_evaluacion: string;
+  estado: string;
+  _links: {
+    self: { href: string; method: string };
+  };
+}
+
+interface EvaluacionesResponse {
+  _links: {
+    self: { href: string; method: string };
+  };
+  items: EvaluacionItem[];
+}
+
 interface Evaluacion {
   respuesta_id: string;
   nombre_evaluacion: string;
@@ -18,7 +35,7 @@ interface UseEvaluacionesReturn {
   isStarting: boolean;
 }
 
-export const useEvaluaciones = (
+export const useListaEvaluaciones = (
   postulanteId: string | null,
 ): UseEvaluacionesReturn => {
   const [evaluaciones, setEvaluaciones] = useState<Evaluacion[]>([]);
@@ -36,8 +53,9 @@ export const useEvaluaciones = (
       try {
         const token = localStorage.getItem("token");
         const response = await fetch(
-          `${BASE_URL}/respuesta/postulante/${postulanteId}`,
+          `${BASE_URL}/respuestas?postulante_id=${postulanteId}`,
           {
+            method: "GET",
             headers: {
               "Content-Type": "application/json",
               ...(token && { Authorization: `Bearer ${token}` }),
@@ -49,8 +67,14 @@ export const useEvaluaciones = (
           throw new Error("Error al cargar las evaluaciones");
         }
 
-        const data: Evaluacion[] = await response.json();
-        setEvaluaciones(data);
+        const data: EvaluacionesResponse = await response.json();
+        const mapped: Evaluacion[] = data.items.map((item) => ({
+          respuesta_id: item.id,
+          nombre_evaluacion: item.nombre_evaluacion,
+          descripcion_evaluacion: item.descripcion_evaluacion,
+          estado: item.estado,
+        }));
+        setEvaluaciones(mapped);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Error al cargar evaluaciones",
@@ -68,14 +92,14 @@ export const useEvaluaciones = (
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `${BASE_URL}/respuesta/${respuestaId}/empezar`,
+        `${BASE_URL}/respuestas/${respuestaId}/estado`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
             ...(token && { Authorization: `Bearer ${token}` }),
           },
-          body: JSON.stringify({}),
+          body: JSON.stringify({ accion: "empezar" }),
         },
       );
 

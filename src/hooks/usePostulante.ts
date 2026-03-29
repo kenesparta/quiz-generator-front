@@ -33,7 +33,7 @@ export const usePostulante = (
 
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `${BASE_URL}/postulante?id=${postulanteId}`,
+        `${BASE_URL}/postulantes?id=${postulanteId}`,
         {
           method: "GET",
           headers: {

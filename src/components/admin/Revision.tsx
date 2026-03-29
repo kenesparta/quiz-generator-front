@@ -2,7 +2,7 @@
 
 import { ExamSection } from "@/components/ExamSection";
 import { useState } from "react";
-import { useEvaluation } from "@/hooks/useEvaluation";
+import { useRespuestaEvaluacion } from "@/hooks/useRespuestaEvaluacion";
 import { BASE_URL } from "@/config/api";
 import {
   ResultadoDelExamen,
@@ -23,7 +23,7 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
     submitting,
     updateResponse,
     submitEvaluation,
-  } = useEvaluation(postulanteId, revisionId);
+  } = useRespuestaEvaluacion(postulanteId, revisionId);
 
   const [selectedExamId, setSelectedExamId] = useState<string | null>(null);
   const [examObservaciones, setExamObservaciones] = useState<

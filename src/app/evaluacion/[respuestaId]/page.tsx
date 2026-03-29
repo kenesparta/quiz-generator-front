@@ -1,9 +1,9 @@
 "use client";
 
-import { ExamSection } from "@/components/ExamSection";
-import { useEvaluation } from "@/hooks/useEvaluation";
-import { usePostulante } from "@/hooks/usePostulante";
 import { use, useEffect, useState } from "react";
+import { ExamSection } from "@/components/ExamSection";
+import { usePostulante } from "@/hooks/usePostulante";
+import { useRespuestaEvaluacion } from "@/hooks/useRespuestaEvaluacion";
 
 interface PageProps {
   params: Promise<{
@@ -35,11 +35,8 @@ export default function EvaluationPage({ params }: PageProps) {
     setPostulanteId(id);
   }, []);
 
-  const {
-    postulante,
-    isLoading: postulanteLoading,
-    error: postulanteError,
-  } = usePostulante(postulanteId);
+  const { postulante, isLoading: postulanteLoading } =
+    usePostulante(postulanteId);
 
   const {
     initialResponses,
@@ -49,7 +46,7 @@ export default function EvaluationPage({ params }: PageProps) {
     submitting,
     updateResponse,
     submitEvaluation,
-  } = useEvaluation(postulanteId, respuestaId);
+  } = useRespuestaEvaluacion(postulanteId, respuestaId);
 
   const [submitted, setSubmitted] = useState(false);
   const [selectedExamId, setSelectedExamId] = useState<string | null>(null);
@@ -88,15 +85,15 @@ export default function EvaluationPage({ params }: PageProps) {
     return (
       <div className="flex items-center space-x-1 font-mono font-bold">
         <div className="flex items-center space-x-0.5">
-          <span className="bg-blue-700 text-white px-1.5 py-0.5 rounded">
+          <span className="bg-[var(--sidebar-bg)] text-white px-1.5 py-0.5 rounded text-sm">
             {time.hours}
           </span>
-          <span className="text-blue-600 animate-pulse">:</span>
-          <span className="bg-blue-600 text-white px-1.5 py-0.5 rounded">
+          <span className="text-[var(--primary)] animate-pulse">:</span>
+          <span className="bg-[var(--sidebar-bg)]/80 text-white px-1.5 py-0.5 rounded text-sm">
             {time.minutes}
           </span>
-          <span className="text-blue-600 animate-pulse">:</span>
-          <span className="bg-blue-500 text-white px-1.5 py-0.5 rounded">
+          <span className="text-[var(--primary)] animate-pulse">:</span>
+          <span className="bg-[var(--primary)] text-white px-1.5 py-0.5 rounded text-sm">
             {time.seconds}
           </span>
         </div>
@@ -146,30 +143,35 @@ export default function EvaluationPage({ params }: PageProps) {
       await submitEvaluation(postulanteId);
       setSubmitted(true);
       alert("¡Evaluación enviada correctamente!");
-    } catch (err) {
+    } catch {
       alert("Error al enviar la evaluación. Por favor, inténtalo de nuevo.");
     }
   };
 
-  if (loading) {
+  // Loading state
+  if (loading || postulanteLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando evaluación...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-2 border-[var(--border-color-light)] border-t-[var(--primary)] mx-auto mb-4" />
+          <p className="text-[var(--text-secondary)] text-sm">
+            Cargando evaluación...
+          </p>
         </div>
       </div>
     );
   }
 
+  // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-lg border border-red-200">
+      <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
+        <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)]">
           <div className="text-center">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-50 mb-4">
               <svg
-                className="h-6 w-6 text-red-600"
+                aria-hidden="true"
+                className="h-6 w-6 text-[var(--danger)]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -182,11 +184,14 @@ export default function EvaluationPage({ params }: PageProps) {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Error</h3>
-            <p className="text-gray-600 mb-4">{error}</p>
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
+              Error
+            </h3>
+            <p className="text-[var(--text-secondary)] text-sm mb-4">{error}</p>
             <button
+              type="button"
               onClick={() => window.location.reload()}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="bg-[var(--primary)] text-white px-4 py-2 rounded-md hover:bg-[var(--primary-dark)] transition-colors text-sm font-medium"
             >
               Reintentar
             </button>
@@ -196,22 +201,27 @@ export default function EvaluationPage({ params }: PageProps) {
     );
   }
 
+  // No data state
   if (!initialResponses) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-600">No se encontró la evaluación.</p>
+      <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
+        <p className="text-[var(--text-secondary)] text-sm">
+          No se encontró la evaluación.
+        </p>
       </div>
     );
   }
 
+  // Submitted state
   if (submitted) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-lg">
+      <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
+        <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)]">
           <div className="text-center">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-50 mb-4">
               <svg
-                className="h-6 w-6 text-green-600"
+                aria-hidden="true"
+                className="h-6 w-6 text-[var(--success)]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -224,10 +234,10 @@ export default function EvaluationPage({ params }: PageProps) {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
               ¡Evaluación Enviada!
             </h3>
-            <p className="text-gray-600">
+            <p className="text-[var(--text-secondary)] text-sm">
               Tu evaluación ha sido enviada correctamente.
             </p>
           </div>
@@ -240,134 +250,194 @@ export default function EvaluationPage({ params }: PageProps) {
     ? initialResponses.evaluacion.examenes.find((e) => e._id === selectedExamId)
     : initialResponses.evaluacion.examenes[0];
 
+  const progressPercent =
+    getTotalQuestions() > 0
+      ? Math.round((getTotalAnswered() / getTotalQuestions()) * 100)
+      : 0;
+
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <div className="w-80 bg-white shadow-lg border-r border-gray-200 fixed left-0 top-0 h-full z-10">
+    <div className="min-h-screen bg-[var(--page-bg)] flex">
+      {/* Sidebar */}
+      <div className="w-80 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.06)] border-r border-[var(--border-color-light)] fixed left-0 top-0 h-full z-10">
         <div className="flex flex-col h-full">
-          <div className="p-4 border-b border-gray-200 bg-blue-50">
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">
-              {initialResponses.evaluacion.nombre}
-            </h2>
-            <div className="space-y-2 text-sm">
-              <div>
-                <span className="font-medium text-gray-700">Postulante:</span>
-                <span className="ml-2 text-gray-900">{postulante?.nombre}</span>
+          {/* Header */}
+          <div className="p-5 border-b border-[var(--border-color-light)] bg-[var(--sidebar-bg)] text-white">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-[var(--primary)] flex items-center justify-center">
+                <svg
+                  aria-hidden="true"
+                  className="w-4 h-4 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 12l-2 2 4-4"
+                  />
+                </svg>
               </div>
-              <div>
-                <span className="font-medium text-gray-700">DNI:</span>
-                <span className="ml-2 text-gray-900">
-                  {postulante?.documento}
-                </span>
+              <h2 className="text-base font-semibold leading-tight">
+                {initialResponses.evaluacion.nombre}
+              </h2>
+            </div>
+            <div className="space-y-1.5 text-sm">
+              <div className="flex items-center gap-2 text-white/70">
+                <svg
+                  aria-hidden="true"
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+                <span>{postulante?.nombre}</span>
               </div>
-              <div>
-                <span className="text-blue-800 rounded-full text-xl">
-                  <FancyClockSVG />
-                </span>
+              <div className="flex items-center gap-2 text-white/70">
+                <svg
+                  aria-hidden="true"
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0"
+                  />
+                </svg>
+                <span>{postulante?.documento}</span>
+              </div>
+              <div className="pt-2">
+                <FancyClockSVG />
               </div>
             </div>
           </div>
 
           {/* Progress Summary */}
-          <div className="p-4 border-b border-gray-200">
+          <div className="p-4 border-b border-[var(--border-color-light)]">
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Total de preguntas:</span>
-                <span className="font-medium">{getTotalQuestions()}</span>
+                <span className="text-[var(--text-tertiary)]">
+                  Total de preguntas:
+                </span>
+                <span className="font-medium text-[var(--text-primary)]">
+                  {getTotalQuestions()}
+                </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Respondidas:</span>
-                <span className="font-medium text-green-600">
+                <span className="text-[var(--text-tertiary)]">
+                  Respondidas:
+                </span>
+                <span className="font-medium text-[var(--success)]">
                   {getTotalAnswered()}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Pendientes:</span>
-                <span className="font-medium text-orange-600">
+                <span className="text-[var(--text-tertiary)]">Pendientes:</span>
+                <span className="font-medium text-[var(--warning)]">
                   {getTotalQuestions() - getTotalAnswered()}
                 </span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+              <div className="w-full bg-[var(--border-color-light)] rounded-full h-2 mt-2">
                 <div
-                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                  style={{
-                    width: `${getTotalQuestions() > 0 ? (getTotalAnswered() / getTotalQuestions()) * 100 : 0}%`,
-                  }}
-                ></div>
+                  className="bg-[var(--primary)] h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${progressPercent}%` }}
+                />
               </div>
-              <div className="text-center text-xs text-gray-500 mt-1">
-                {getTotalQuestions() > 0
-                  ? Math.round((getTotalAnswered() / getTotalQuestions()) * 100)
-                  : 0}
-                % completado
+              <div className="text-center text-xs text-[var(--text-tertiary)] mt-1">
+                {progressPercent}% completado
               </div>
             </div>
           </div>
 
+          {/* Exam List */}
           <div className="flex-1 overflow-y-auto">
             <div className="p-4">
-              <h3 className="font-medium text-gray-900 mb-3">Exámenes</h3>
-              <div className="space-y-3">
+              <h3 className="font-medium text-[var(--text-primary)] mb-3 text-sm">
+                Exámenes
+              </h3>
+              <div className="space-y-2">
                 {initialResponses.evaluacion.examenes.map((exam, index) => {
                   const progress = getExamProgress(exam._id);
                   const isSelected =
                     selectedExamId === exam._id ||
                     (selectedExamId === null && index === 0);
+                  const progressPct =
+                    progress.total > 0
+                      ? (progress.answered / progress.total) * 100
+                      : 0;
 
                   return (
-                    <div
+                    <button
+                      type="button"
                       key={exam._id}
-                      className={`border rounded-lg p-4 transition-all duration-200 cursor-pointer ${
+                      className={`w-full text-left border rounded-lg p-3 transition-all duration-200 ${
                         isSelected
-                          ? "border-blue-500 bg-blue-50"
-                          : "border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50"
+                          ? "border-[var(--primary)] bg-blue-50"
+                          : "border-[var(--border-color-light)] hover:border-[var(--border-color)] bg-white hover:bg-[var(--table-header-bg)]"
                       }`}
                       onClick={() => setSelectedExamId(exam._id)}
                     >
                       <div className="flex items-start justify-between mb-2">
-                        <h4 className="font-medium text-sm text-gray-900 leading-tight">
+                        <h4 className="font-medium text-sm text-[var(--text-primary)] leading-tight">
                           {exam.titulo}
                         </h4>
                         <span
-                          className={`text-xs px-2 py-1 rounded-full ${
+                          className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                             progress.answered === progress.total
-                              ? "bg-green-100 text-green-800"
+                              ? "bg-green-50 text-green-700"
                               : progress.answered > 0
-                                ? "bg-yellow-100 text-yellow-800"
-                                : "bg-gray-100 text-gray-600"
+                                ? "bg-amber-50 text-amber-700"
+                                : "bg-gray-100 text-[var(--text-tertiary)]"
                           }`}
                         >
                           {progress.answered}/{progress.total}
                         </span>
                       </div>
-
-                      <div className="w-full bg-gray-200 rounded-full h-1.5 mb-3">
+                      <div className="w-full bg-[var(--border-color-light)] rounded-full h-1.5">
                         <div
-                          className="bg-blue-600 h-1.5 rounded-full transition-all duration-300"
-                          style={{
-                            width: `${progress.total > 0 ? (progress.answered / progress.total) * 100 : 0}%`,
-                          }}
-                        ></div>
+                          className="bg-[var(--primary)] h-1.5 rounded-full transition-all duration-300"
+                          style={{ width: `${progressPct}%` }}
+                        />
                       </div>
-                    </div>
+                    </button>
                   );
                 })}
               </div>
             </div>
           </div>
 
-          <div className="p-4 border-t border-gray-200 bg-white">
+          {/* Submit Button */}
+          <div className="p-4 border-t border-[var(--border-color-light)] bg-white">
             <button
+              type="button"
               onClick={handleSubmit}
               disabled={submitting}
-              className={`w-full py-3 rounded-lg text-white font-semibold shadow-lg transition-all duration-300 ${
+              className={`w-full py-3 rounded-md text-white font-medium text-sm transition-colors ${
                 submitting
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 hover:shadow-xl"
+                  : "bg-[var(--success)] hover:bg-green-600"
               }`}
             >
               {submitting ? (
                 <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white mr-2" />
                   Enviando...
                 </div>
               ) : (
@@ -378,7 +448,7 @@ export default function EvaluationPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* Main Content - With left margin to account for fixed sidebar */}
+      {/* Main Content */}
       <div className="flex-1 ml-80 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-6 py-8">
           {currentExam && (

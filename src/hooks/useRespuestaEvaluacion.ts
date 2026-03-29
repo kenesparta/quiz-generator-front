@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { EvaluationResponse } from "@/types/evaluacion";
 import { BASE_URL } from "@/config/api";
 
-export const useEvaluation = (
+export const useRespuestaEvaluacion = (
   postulanteId: string | null,
   revisionId: string | null,
 ) => {
@@ -28,12 +28,14 @@ export const useEvaluation = (
         setError(null);
         setLoading(true);
 
+        const token = localStorage.getItem("token");
         const response = await fetch(
-          `${BASE_URL}/respuesta/${revisionId}/postulante/${postulanteId}`,
+          `${BASE_URL}/respuestas/${revisionId}`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+              ...(token && { Authorization: `Bearer ${token}` }),
             },
           },
         );
@@ -89,13 +91,14 @@ export const useEvaluation = (
         pregunta_id: questionId,
         respuestas: response,
       };
-
+      const token = localStorage.getItem("token");
       const apiResponse = await fetch(
-        `${BASE_URL}/respuesta/${initialResponses._id}`,
+        `${BASE_URL}/respuestas/${initialResponses._id}`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }),
           },
           body: JSON.stringify(requestBody),
         },

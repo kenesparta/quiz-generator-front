@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useEvaluaciones } from "@/hooks/useEvaluaciones";
+import { useListaEvaluaciones } from "@/hooks/useListaEvaluaciones";
 import { usePostulante } from "@/hooks/usePostulante";
 
 const getSubFromJWT = (token: string | null): string | null => {
@@ -17,6 +17,24 @@ const getSubFromJWT = (token: string | null): string | null => {
     console.error("Error decoding JWT:", error);
     return null;
   }
+};
+
+const getEstadoDot = (estado: string) => {
+  const config: Record<string, { color: string; label: string }> = {
+    creado: { color: "bg-[var(--primary)]", label: "Pendiente" },
+    en_progreso: { color: "bg-amber-400", label: "En Progreso" },
+    completado: { color: "bg-green-500", label: "Completado" },
+  };
+  const { color, label } = config[estado] || {
+    color: "bg-gray-400",
+    label: estado,
+  };
+  return (
+    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--text-secondary)]">
+      <span className={`w-2 h-2 rounded-full ${color}`} />
+      {label}
+    </span>
+  );
 };
 
 export default function EvaluacionesPage() {
@@ -36,7 +54,7 @@ export default function EvaluacionesPage() {
   const { postulante, isLoading: postulanteLoading } =
     usePostulante(postulanteId);
   const { evaluaciones, isLoading, error, startEvaluacion, isStarting } =
-    useEvaluaciones(postulanteId);
+    useListaEvaluaciones(postulanteId);
 
   const handleStartEvaluacion = async (respuestaId: string) => {
     const success = await startEvaluacion(respuestaId);
@@ -45,41 +63,14 @@ export default function EvaluacionesPage() {
     }
   };
 
-  const getEstadoBadge = (estado: string) => {
-    switch (estado) {
-      case "creado":
-        return (
-          <span className="px-3 py-1 text-sm font-medium rounded-full bg-blue-100 text-blue-800">
-            Pendiente
-          </span>
-        );
-      case "en_progreso":
-        return (
-          <span className="px-3 py-1 text-sm font-medium rounded-full bg-yellow-100 text-yellow-800">
-            En Progreso
-          </span>
-        );
-      case "completado":
-        return (
-          <span className="px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800">
-            Completado
-          </span>
-        );
-      default:
-        return (
-          <span className="px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-800">
-            {estado}
-          </span>
-        );
-    }
-  };
-
   if (isLoading || postulanteLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4" />
-          <p className="text-gray-600">Cargando evaluaciones...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-2 border-[var(--border-color-light)] border-t-[var(--primary)] mx-auto mb-4" />
+          <p className="text-[var(--text-secondary)] text-sm">
+            Cargando evaluaciones...
+          </p>
         </div>
       </div>
     );
@@ -87,16 +78,16 @@ export default function EvaluacionesPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-lg border border-red-200">
+      <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
+        <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)]">
           <div className="text-center">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-50 mb-4">
               <svg
-                className="h-6 w-6 text-red-600"
+                aria-hidden="true"
+                className="h-6 w-6 text-[var(--danger)]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -106,12 +97,14 @@ export default function EvaluacionesPage() {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Error</h3>
-            <p className="text-gray-600 mb-4">{error}</p>
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
+              Error
+            </h3>
+            <p className="text-[var(--text-secondary)] text-sm mb-4">{error}</p>
             <button
               type="button"
               onClick={() => window.location.reload()}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="bg-[var(--primary)] text-white px-4 py-2 rounded-md hover:bg-[var(--primary-dark)] transition-colors text-sm font-medium"
             >
               Reintentar
             </button>
@@ -122,19 +115,41 @@ export default function EvaluacionesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white shadow">
-        <div className="max-w-4xl mx-auto px-4 py-6">
+    <div className="min-h-screen bg-[var(--page-bg)]">
+      {/* Top Bar */}
+      <header className="bg-[var(--sidebar-bg)] text-white">
+        <div className="max-w-5xl mx-auto px-6 py-5">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Mis Evaluaciones
-              </h1>
-              {postulante && (
-                <p className="text-gray-600 mt-1">
-                  Bienvenido, {postulante.nombre}
-                </p>
-              )}
+            <div className="flex items-center gap-4">
+              <div className="w-9 h-9 rounded-lg bg-[var(--primary)] flex items-center justify-center">
+                <svg
+                  aria-hidden="true"
+                  className="w-5 h-5 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 12l-2 2 4-4"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h1 className="text-lg font-semibold">Mis Evaluaciones</h1>
+                {postulante && (
+                  <p className="text-white/60 text-sm">
+                    Bienvenido, {postulante.nombre}
+                  </p>
+                )}
+              </div>
             </div>
             <button
               type="button"
@@ -143,15 +158,15 @@ export default function EvaluacionesPage() {
                 localStorage.removeItem("expires_in");
                 router.push("/login");
               }}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 hover:text-red-700 transition-colors"
+              className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white/70 hover:text-white border border-white/20 rounded-md hover:bg-white/10 transition-colors"
             >
               <svg
+                aria-hidden="true"
                 className="h-4 w-4"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={2}
-                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -163,59 +178,76 @@ export default function EvaluacionesPage() {
             </button>
           </div>
         </div>
-      </div>
+      </header>
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      {/* Content */}
+      <div className="max-w-5xl mx-auto px-6 py-8">
         {evaluaciones.length === 0 ? (
-          <div className="bg-white rounded-lg p-8 text-center shadow">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-gray-100 mb-4">
-              <svg
-                className="h-6 w-6 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <div className="bg-white rounded-lg p-12 text-center shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)]">
+            <svg
+              aria-hidden="true"
+              className="w-12 h-12 text-gray-300 mx-auto mb-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.5}
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            <h3 className="text-base font-semibold text-[var(--text-primary)] mb-1">
               No hay evaluaciones disponibles
             </h3>
-            <p className="text-gray-600">
+            <p className="text-sm text-[var(--text-tertiary)]">
               No tienes evaluaciones asignadas en este momento.
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {evaluaciones.map((evaluacion) => (
               <div
                 key={evaluacion.respuesta_id}
-                className="bg-white rounded-lg shadow p-6 border border-gray-200 hover:border-blue-300 transition-colors"
+                className="bg-white rounded-lg p-5 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)] hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h2 className="text-lg font-semibold text-gray-900">
-                        {evaluacion.nombre_evaluacion}
-                      </h2>
-                      {getEstadoBadge(evaluacion.estado)}
+                  <div className="flex items-start gap-4 flex-1">
+                    <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-[var(--primary)] shrink-0 mt-0.5">
+                      <svg
+                        aria-hidden="true"
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
+                        <path d="M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        <path d="M9 14l2 2 4-4" />
+                      </svg>
                     </div>
-                    <p className="text-gray-600 text-sm">
-                      {evaluacion.descripcion_evaluacion}
-                    </p>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-1">
+                        <h2 className="text-base font-semibold text-[var(--text-primary)]">
+                          {evaluacion.nombre_evaluacion}
+                        </h2>
+                        {getEstadoDot(evaluacion.estado)}
+                      </div>
+                      <p className="text-sm text-[var(--text-tertiary)]">
+                        {evaluacion.descripcion_evaluacion}
+                      </p>
+                    </div>
                   </div>
-                  <div className="ml-4">
+                  <div className="ml-4 shrink-0">
                     {evaluacion.estado === "completado" ? (
                       <button
                         type="button"
                         disabled
-                        className="px-4 py-2 bg-gray-100 text-gray-500 rounded-lg cursor-not-allowed"
+                        className="px-4 py-2 bg-gray-100 text-[var(--text-tertiary)] rounded-md cursor-not-allowed text-sm"
                       >
                         Completado
                       </button>
@@ -225,7 +257,7 @@ export default function EvaluacionesPage() {
                         onClick={() =>
                           router.push(`/evaluacion/${evaluacion.respuesta_id}`)
                         }
-                        className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors font-medium"
+                        className="px-4 py-2 bg-white border border-[var(--warning)] text-amber-700 rounded-md hover:bg-amber-50 transition-colors text-sm font-medium"
                       >
                         Continuar
                       </button>
@@ -236,15 +268,15 @@ export default function EvaluacionesPage() {
                           handleStartEvaluacion(evaluacion.respuesta_id)
                         }
                         disabled={isStarting}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:bg-blue-400 disabled:cursor-not-allowed"
+                        className="px-4 py-2 bg-[var(--primary)] text-white rounded-md hover:bg-[var(--primary-dark)] transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {isStarting ? (
                           <span className="flex items-center">
                             <svg
+                              aria-hidden="true"
                               className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
                               fill="none"
                               viewBox="0 0 24 24"
-                              aria-hidden="true"
                             >
                               <circle
                                 className="opacity-25"

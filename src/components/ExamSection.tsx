@@ -1,6 +1,6 @@
 "use client";
 
-import { Exam } from "@/types/evaluacion";
+import type { Exam } from "@/types/evaluacion";
 import { QuestionCard } from "./QuestionCard";
 
 interface ExamSectionProps {
@@ -36,29 +36,31 @@ export const ExamSection = ({
 
   return (
     <div className="mb-12">
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-lg p-6 mb-6">
+      {/* Exam Header */}
+      <div className="bg-[var(--sidebar-bg)] text-white rounded-t-lg p-6 mb-6">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-xl font-bold">
             {examNumber}. {exam.titulo}
           </h2>
           <div className="flex items-center gap-3">
-            <span className="bg-white text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
+            <span className="bg-[var(--primary)] text-white px-3 py-1 rounded-full text-sm font-semibold">
               {answeredQuestions}/{totalQuestions}
             </span>
             {disabled && (
-              <span className="bg-white text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
+              <span className="bg-white text-[var(--sidebar-bg)] px-3 py-1 rounded-full text-sm font-semibold">
                 Puntaje: {exam.puntos_obtenidos}
               </span>
             )}
           </div>
         </div>
 
-        <p className="text-blue-100 mb-4">{exam.descripcion}</p>
+        <p className="text-white/60 mb-4">{exam.descripcion}</p>
 
         {!disabled && exam.instrucciones && (
-          <div className="bg-blue-500 rounded-lg p-3">
+          <div className="bg-white/10 rounded-lg p-3">
             <div className="flex items-center text-sm font-medium mb-1">
               <svg
+                aria-hidden="true"
                 className="w-4 h-4 mr-2"
                 fill="currentColor"
                 viewBox="0 0 20 20"
@@ -71,17 +73,18 @@ export const ExamSection = ({
               </svg>
               Instrucciones:
             </div>
-            <p className="text-sm text-blue-100">{exam.instrucciones}</p>
+            <p className="text-sm text-white/70">{exam.instrucciones}</p>
           </div>
         )}
 
         {disabled && (
-          <div className="bg-blue-500 rounded-lg p-3">
+          <div className="bg-white/10 rounded-lg p-3">
             <label
               htmlFor={`comments-${exam._id}`}
               className="flex items-center text-sm font-medium mb-2"
             >
               <svg
+                aria-hidden="true"
                 className="w-4 h-4 mr-2"
                 fill="currentColor"
                 viewBox="0 0 20 20"
@@ -99,7 +102,7 @@ export const ExamSection = ({
               rows={4}
               value={comment}
               onChange={(e) => onCommentChange?.(e.target.value)}
-              className="bg-white w-full px-3 py-2 text-gray-900 border border-blue-400 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-transparent resize-none"
+              className="bg-white w-full px-3 py-2 text-[var(--text-primary)] border border-[var(--border-color)] rounded-md focus:ring-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] outline-none resize-none text-sm"
               placeholder="Escribe tus observaciones aquí..."
             />
           </div>
