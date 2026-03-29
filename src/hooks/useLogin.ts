@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { BASE_URL } from "@/config/api";
 
 interface LoginRequest {
   user_name: string;
@@ -18,10 +19,6 @@ interface UseLoginReturn {
   error: string | null;
   clearError: () => void;
 }
-
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8008";
-
 export const useLogin = (): UseLoginReturn => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

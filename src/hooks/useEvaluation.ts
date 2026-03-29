@@ -2,9 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { EvaluationResponse } from "@/types/evaluacion";
-
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8008";
+import { BASE_URL } from "@/config/api";
 
 export const useEvaluation = (
   postulanteId: string | null,

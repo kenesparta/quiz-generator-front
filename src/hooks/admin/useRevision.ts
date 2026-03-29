@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { BASE_URL } from "@/config/api";
 
 interface PostulanteData {
   documento: string;
@@ -22,9 +23,6 @@ interface UseRevisionReturn {
   error: string | null;
   refetch: () => Promise<void>;
 }
-
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8008";
 
 export const useRevision = (): UseRevisionReturn => {
   const [revisions, setRevisions] = useState<RevisionItem[]>([]);

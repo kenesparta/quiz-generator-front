@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { BASE_URL } from "@/config/api";
 
 interface PostulanteData {
   documento: string;
@@ -13,9 +14,6 @@ interface UsePostulanteReturn {
   error: string | null;
   refetch: () => Promise<void>;
 }
-
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8008";
 
 export const usePostulante = (
   postulanteId: string | null,
@@ -33,12 +31,14 @@ export const usePostulante = (
         throw new Error("No se encontró ID válido en el token");
       }
 
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `${BASE_URL}/postulante?id=${postulanteId}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }),
           },
         },
       );

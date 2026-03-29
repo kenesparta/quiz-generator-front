@@ -5,6 +5,7 @@ import type {
   PostulanteListItem,
   CreatePostulanteRequest,
 } from "@/types/postulante";
+import { BASE_URL } from "@/config/api";
 
 interface UsePostulanteReturn {
   postulantes: PostulanteListItem[];
@@ -14,9 +15,6 @@ interface UsePostulanteReturn {
   createPostulante: (data: CreatePostulanteRequest) => Promise<boolean>;
   refetch: () => Promise<void>;
 }
-
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8008";
 
 // Generate UUID v4
 const generateUUID = (): string => {

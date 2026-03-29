@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { BASE_URL } from "@/config/api";
 
 interface Evaluacion {
   respuesta_id: string;
@@ -16,9 +17,6 @@ interface UseEvaluacionesReturn {
   startEvaluacion: (respuestaId: string) => Promise<boolean>;
   isStarting: boolean;
 }
-
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8008";
 
 export const useEvaluaciones = (
   postulanteId: string | null,

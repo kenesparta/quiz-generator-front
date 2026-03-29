@@ -2,6 +2,7 @@
 
 import jsPDF from "jspdf";
 import type { EvaluationResponse } from "@/types/evaluacion";
+import { BASE_URL } from "@/config/api";
 
 interface PostulanteData {
   documento: string;
@@ -11,9 +12,6 @@ interface PostulanteData {
 interface RevisionData {
   resultado: "apto" | "no_apto" | "evaluacion_especializada";
 }
-
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8008";
 
 export const generatePDFReport = async (
   revisionId: string,
@@ -171,7 +169,9 @@ const createPDF = (
 
   drawSectionTitle("Informacion de la Evaluacion");
 
-  const fechaInicio = new Date(data.fecha_tiempo_inicio).toLocaleString("es-PE");
+  const fechaInicio = new Date(data.fecha_tiempo_inicio).toLocaleString(
+    "es-PE",
+  );
   drawInfoRow("Fecha Inicio:", fechaInicio);
 
   if (data.fecha_tiempo_fin) {
@@ -186,7 +186,11 @@ const createPDF = (
   drawInfoRow("Resultado Final:", data.resultado);
   yPosition += 10;
 
-  for (let examIndex = 0; examIndex < data.evaluacion.examenes.length; examIndex++) {
+  for (
+    let examIndex = 0;
+    examIndex < data.evaluacion.examenes.length;
+    examIndex++
+  ) {
     const exam = data.evaluacion.examenes[examIndex];
     const observacion = exam.observacion;
 
@@ -198,7 +202,11 @@ const createPDF = (
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(11);
     doc.setFont("helvetica", "bold");
-    doc.text(`EXAMEN ${examIndex + 1}: ${exam.titulo.toUpperCase()}`, margin + 5, yPosition + 8);
+    doc.text(
+      `EXAMEN ${examIndex + 1}: ${exam.titulo.toUpperCase()}`,
+      margin + 5,
+      yPosition + 8,
+    );
 
     doc.setTextColor(0, 0, 0);
     yPosition += 18;
@@ -233,7 +241,10 @@ const createPDF = (
       doc.setFontSize(9);
       doc.setFont("helvetica", "italic");
       doc.setTextColor(100, 100, 100);
-      const descripcionLines = doc.splitTextToSize(exam.descripcion, contentWidth - 10);
+      const descripcionLines = doc.splitTextToSize(
+        exam.descripcion,
+        contentWidth - 10,
+      );
       doc.text(descripcionLines, margin + 5, yPosition);
       yPosition += descripcionLines.length * 4 + 5;
       doc.setTextColor(0, 0, 0);
@@ -257,7 +268,10 @@ const createPDF = (
       doc.setFont("helvetica", "normal");
       doc.setFontSize(10);
       const contenidoClean = stripHtml(pregunta.contenido);
-      const contenidoLines = doc.splitTextToSize(contenidoClean, contentWidth - 10);
+      const contenidoLines = doc.splitTextToSize(
+        contenidoClean,
+        contentWidth - 10,
+      );
       doc.text(contenidoLines, margin + 5, yPosition);
       yPosition += contenidoLines.length * 5 + 4;
 
@@ -282,7 +296,10 @@ const createPDF = (
 
           const marker = isSelected ? "[X]" : "[  ]";
           const alternativaText = `${marker} ${key}: ${value}`;
-          const altLines = doc.splitTextToSize(alternativaText, contentWidth - 20);
+          const altLines = doc.splitTextToSize(
+            alternativaText,
+            contentWidth - 20,
+          );
           doc.text(altLines, margin + 10, yPosition);
           yPosition += altLines.length * 4 + 3;
 

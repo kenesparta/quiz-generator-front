@@ -3,6 +3,7 @@
 import { ExamSection } from "@/components/ExamSection";
 import { useState } from "react";
 import { useEvaluation } from "@/hooks/useEvaluation";
+import { BASE_URL } from "@/config/api";
 import {
   ResultadoDelExamen,
   type ResultadoTipo,
@@ -54,9 +55,6 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
 
     setIsSubmitting(true);
     try {
-      const BASE_URL =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8008";
-
       // Build the payload with observaciones for each exam
       const examenes = initialResponses.evaluacion.examenes.map((exam) => ({
         examen_id: exam._id,
