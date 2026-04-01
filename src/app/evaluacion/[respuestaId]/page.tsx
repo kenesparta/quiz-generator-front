@@ -386,7 +386,7 @@ export default function EvaluationPage({ params }: PageProps) {
                   return (
                     <button
                       type="button"
-                      key={exam._id}
+                      key={`exam-${exam._id}-${index}`}
                       className={`w-full text-left border rounded-lg p-3 transition-all duration-200 ${
                         isSelected
                           ? "border-[var(--primary)] bg-blue-50"
