@@ -83,19 +83,42 @@ export default function EvaluationPage({ params }: PageProps) {
     const time = formatTime(elapsedTime);
 
     return (
-      <div className="flex items-center space-x-1 font-mono font-bold">
-        <div className="flex items-center space-x-0.5">
-          <span className="bg-[var(--sidebar-bg)] text-white px-1.5 py-0.5 rounded text-sm">
-            {time.hours}
-          </span>
-          <span className="text-[var(--primary)] animate-pulse">:</span>
-          <span className="bg-[var(--sidebar-bg)]/80 text-white px-1.5 py-0.5 rounded text-sm">
-            {time.minutes}
-          </span>
-          <span className="text-[var(--primary)] animate-pulse">:</span>
-          <span className="bg-[var(--primary)] text-white px-1.5 py-0.5 rounded text-sm">
-            {time.seconds}
-          </span>
+      <div className="bg-white/10 rounded-lg p-3">
+        <div className="flex items-center gap-2 mb-2">
+          <svg
+            aria-hidden="true"
+            className="w-4 h-4 text-white/70"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
+          </svg>
+          <span className="text-xs text-white/70 font-medium">Tiempo transcurrido</span>
+        </div>
+        <div className="flex items-center justify-center gap-2 font-mono">
+          <div className="text-center">
+            <span className="block bg-[var(--primary)] text-white text-lg font-bold px-3 py-1.5 rounded-md min-w-[3rem]">
+              {time.hours}
+            </span>
+            <span className="text-[10px] text-white/50 mt-1 block">HRS</span>
+          </div>
+          <span className="text-white/60 text-lg font-bold pb-4">:</span>
+          <div className="text-center">
+            <span className="block bg-[var(--primary)] text-white text-lg font-bold px-3 py-1.5 rounded-md min-w-[3rem]">
+              {time.minutes}
+            </span>
+            <span className="text-[10px] text-white/50 mt-1 block">MIN</span>
+          </div>
+          <span className="text-white/60 text-lg font-bold pb-4">:</span>
+          <div className="text-center">
+            <span className="block bg-white/15 text-white text-lg font-bold px-3 py-1.5 rounded-md min-w-[3rem]">
+              {time.seconds}
+            </span>
+            <span className="text-[10px] text-white/50 mt-1 block">SEG</span>
+          </div>
         </div>
       </div>
     );
@@ -118,12 +141,12 @@ export default function EvaluationPage({ params }: PageProps) {
 
   const getExamProgress = (examId: string) => {
     const exam = initialResponses?.evaluacion.examenes.find(
-      (e) => e._id === examId,
+      (e) => e.id === examId,
     );
     if (!exam) return { answered: 0, total: 0 };
 
     const answered = exam.preguntas.filter(
-      (q) => responses[q._id] && responses[q._id].length > 0,
+      (q) => responses[q.id] && responses[q.id].length > 0,
     ).length;
     return { answered, total: exam.preguntas.length };
   };
@@ -168,7 +191,7 @@ export default function EvaluationPage({ params }: PageProps) {
       <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
         <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)]">
           <div className="text-center">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-50 mb-4">
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-[var(--danger-light)] mb-4">
               <svg
                 aria-hidden="true"
                 className="h-6 w-6 text-[var(--danger)]"
@@ -218,7 +241,7 @@ export default function EvaluationPage({ params }: PageProps) {
       <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
         <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)]">
           <div className="text-center">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-50 mb-4">
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-[var(--success-light)] mb-4">
               <svg
                 aria-hidden="true"
                 className="h-6 w-6 text-[var(--success)]"
@@ -247,7 +270,7 @@ export default function EvaluationPage({ params }: PageProps) {
   }
 
   const currentExam = selectedExamId
-    ? initialResponses.evaluacion.examenes.find((e) => e._id === selectedExamId)
+    ? initialResponses.evaluacion.examenes.find((e) => e.id === selectedExamId)
     : initialResponses.evaluacion.examenes[0];
 
   const progressPercent =
@@ -354,7 +377,7 @@ export default function EvaluationPage({ params }: PageProps) {
                   {getTotalQuestions() - getTotalAnswered()}
                 </span>
               </div>
-              <div className="w-full bg-[var(--border-color-light)] rounded-full h-2 mt-2">
+              <div className="w-full bg-[var(--border-color)] rounded-full h-2 mt-2">
                 <div
                   className="bg-[var(--primary)] h-2 rounded-full transition-all duration-300"
                   style={{ width: `${progressPercent}%` }}
@@ -374,9 +397,9 @@ export default function EvaluationPage({ params }: PageProps) {
               </h3>
               <div className="space-y-2">
                 {initialResponses.evaluacion.examenes.map((exam, index) => {
-                  const progress = getExamProgress(exam._id);
+                  const progress = getExamProgress(exam.id);
                   const isSelected =
-                    selectedExamId === exam._id ||
+                    selectedExamId === exam.id ||
                     (selectedExamId === null && index === 0);
                   const progressPct =
                     progress.total > 0
@@ -386,13 +409,13 @@ export default function EvaluationPage({ params }: PageProps) {
                   return (
                     <button
                       type="button"
-                      key={`exam-${exam._id}-${index}`}
+                      key={`exam-${exam.id}-${index}`}
                       className={`w-full text-left border rounded-lg p-3 transition-all duration-200 ${
                         isSelected
-                          ? "border-[var(--primary)] bg-blue-50"
+                          ? "border-[var(--primary)] bg-[var(--primary-light)]"
                           : "border-[var(--border-color-light)] hover:border-[var(--border-color)] bg-white hover:bg-[var(--table-header-bg)]"
                       }`}
-                      onClick={() => setSelectedExamId(exam._id)}
+                      onClick={() => setSelectedExamId(exam.id)}
                     >
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium text-sm text-[var(--text-primary)] leading-tight">
@@ -401,16 +424,16 @@ export default function EvaluationPage({ params }: PageProps) {
                         <span
                           className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                             progress.answered === progress.total
-                              ? "bg-green-50 text-green-700"
+                              ? "bg-[var(--success-light)] text-[var(--success-text)]"
                               : progress.answered > 0
-                                ? "bg-amber-50 text-amber-700"
-                                : "bg-gray-100 text-[var(--text-tertiary)]"
+                                ? "bg-[var(--warning-light)] text-[var(--warning-text)]"
+                                : "bg-[var(--neutral-100)] text-[var(--text-tertiary)]"
                           }`}
                         >
                           {progress.answered}/{progress.total}
                         </span>
                       </div>
-                      <div className="w-full bg-[var(--border-color-light)] rounded-full h-1.5">
+                      <div className="w-full bg-[var(--border-color)] rounded-full h-1.5">
                         <div
                           className="bg-[var(--primary)] h-1.5 rounded-full transition-all duration-300"
                           style={{ width: `${progressPct}%` }}
@@ -431,8 +454,8 @@ export default function EvaluationPage({ params }: PageProps) {
               disabled={submitting}
               className={`w-full py-3 rounded-md text-white font-medium text-sm transition-colors ${
                 submitting
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-[var(--success)] hover:bg-green-600"
+                  ? "bg-[var(--neutral-400)] cursor-not-allowed"
+                  : "bg-[var(--primary)] hover:bg-[var(--primary-dark)]"
               }`}
             >
               {submitting ? (
@@ -441,7 +464,7 @@ export default function EvaluationPage({ params }: PageProps) {
                   Enviando...
                 </div>
               ) : (
-                "Enviar Evaluación"
+                "Finalizar Evaluación"
               )}
             </button>
           </div>
@@ -459,7 +482,7 @@ export default function EvaluationPage({ params }: PageProps) {
               postulanteId={postulanteId}
               examNumber={
                 initialResponses.evaluacion.examenes.findIndex(
-                  (e) => e._id === currentExam._id,
+                  (e) => e.id === currentExam.id,
                 ) + 1
               }
             />

@@ -44,21 +44,21 @@ export const QuestionCard = ({
                 key={key}
                 className={`flex items-start space-x-3 cursor-pointer p-3 rounded-md border transition-colors ${
                   isSelected
-                    ? "border-[var(--primary)] bg-blue-50"
-                    : "border-[var(--border-color-light)] hover:bg-[var(--table-header-bg)]"
+                    ? "border-[var(--primary)] bg-[var(--primary-light)]"
+                    : "border-[var(--border-color)] hover:bg-[var(--table-header-bg)] hover:border-[var(--primary)]"
                 } ${disabled ? "cursor-default" : ""}`}
               >
                 <input
                   disabled={disabled}
                   type="radio"
-                  name={question._id}
+                  name={question.id}
                   value={key}
                   checked={isSelected}
                   onChange={(e) => handleSingleChoice(e.target.value)}
                   className="mt-0.5 h-4 w-4 text-[var(--primary)] border-[var(--border-color)] focus:ring-[var(--primary)] focus:ring-1"
                 />
                 <div className="flex-1">
-                  <span className="text-sm text-[var(--text-primary)]">
+                  <span className="text-base text-[var(--text-primary)]">
                     {value}
                   </span>
                 </div>
@@ -76,11 +76,11 @@ export const QuestionCard = ({
     <div className="bg-white rounded-lg border border-[var(--border-color-light)] p-6 mb-4 shadow-[0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-md transition-shadow">
       {/* Question header */}
       <div className="flex items-start gap-4 mb-4">
-        <span className="flex-shrink-0 bg-[var(--primary)] text-white w-7 h-7 rounded-full text-sm font-medium flex items-center justify-center">
+        <span className="flex-shrink-0 bg-[var(--sidebar-bg)] text-white w-7 h-7 rounded-md text-sm font-medium flex items-center justify-center">
           {questionNumber}
         </span>
         <div className="flex-1">
-          <div className="text-[var(--text-primary)] font-medium leading-relaxed text-sm prose prose-sm max-w-none">
+          <div className="text-[var(--text-primary)] font-medium leading-relaxed text-base prose prose-base max-w-none">
             <Markdown>{question.contenido}</Markdown>
           </div>
         </div>

@@ -106,7 +106,7 @@ export default function Login() {
           <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)] p-6">
             <form className="space-y-5" onSubmit={handleSubmit}>
               {error && (
-                <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-[var(--danger)] px-4 py-3 rounded-md text-sm">
+                <div className="flex items-center gap-2 bg-[var(--danger-light)] border border-[var(--danger-border)] text-[var(--danger)] px-4 py-3 rounded-md text-sm">
                   <svg
                     aria-hidden="true"
                     className="w-4 h-4 shrink-0"

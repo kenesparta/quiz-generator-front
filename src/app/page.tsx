@@ -177,7 +177,7 @@ export default function Home() {
           </div>
 
           <div className="bg-white rounded-lg border border-[var(--border-color-light)] p-6 shadow-[0_1px_2px_rgba(0,0,0,0.06)]">
-            <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center mb-4">
+            <div className="w-10 h-10 rounded-lg bg-[var(--success-light)] flex items-center justify-center mb-4">
               <svg
                 aria-hidden="true"
                 className="w-5 h-5 text-[var(--success)]"
@@ -203,7 +203,7 @@ export default function Home() {
           </div>
 
           <div className="bg-white rounded-lg border border-[var(--border-color-light)] p-6 shadow-[0_1px_2px_rgba(0,0,0,0.06)]">
-            <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center mb-4">
+            <div className="w-10 h-10 rounded-lg bg-[var(--warning-light)] flex items-center justify-center mb-4">
               <svg
                 aria-hidden="true"
                 className="w-5 h-5 text-[var(--warning)]"

@@ -52,7 +52,7 @@ export const useRespuestaEvaluacion = (
         const initialResponses: Record<string, string[]> = {};
         data.evaluacion.examenes.forEach((exam) => {
           exam.preguntas.forEach((question) => {
-            initialResponses[question._id] = question.respuestas || [];
+            initialResponses[question.id] = question.respuestas || [];
           });
         });
         setResponses(initialResponses);
@@ -76,7 +76,7 @@ export const useRespuestaEvaluacion = (
     if (!initialResponses) return;
 
     const exam = initialResponses.evaluacion.examenes.find((exam) =>
-      exam.preguntas.some((q) => q._id === questionId),
+      exam.preguntas.some((q) => q.id === questionId),
     );
 
     if (!exam) {
@@ -87,14 +87,14 @@ export const useRespuestaEvaluacion = (
     try {
       const requestBody = {
         postulante_id: postulanteId,
-        evaluacion_id: initialResponses.evaluacion._id,
-        examen_id: exam._id,
+        evaluacion_id: initialResponses.evaluacion.id,
+        examen_id: exam.id,
         pregunta_id: questionId,
         respuestas: response,
       };
       const token = localStorage.getItem("token");
       const apiResponse = await fetch(
-        `${BASE_URL}/respuestas/${initialResponses._id}`,
+        `${BASE_URL}/respuestas/${initialResponses.id}`,
         {
           method: "PATCH",
           headers: {
@@ -145,14 +145,14 @@ export const useRespuestaEvaluacion = (
             ...exam,
             preguntas: exam.preguntas.map((question) => ({
               ...question,
-              respuestas: responses[question._id] || [],
+              respuestas: responses[question.id] || [],
             })),
           })),
         },
       };
 
       const response = await fetch(
-        `${BASE_URL}/respuesta/${initialResponses._id}/finalizar`,
+        `${BASE_URL}/respuesta/${initialResponses.id}/finalizar`,
         {
           method: "PATCH",
           headers: {

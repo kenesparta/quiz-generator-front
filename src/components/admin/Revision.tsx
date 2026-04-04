@@ -57,13 +57,13 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
     try {
       // Build the payload with observaciones for each exam
       const examenes = initialResponses.evaluacion.examenes.map((exam) => ({
-        examen_id: exam._id,
-        observacion: examObservaciones[exam._id] || "",
+        examen_id: exam.id,
+        observacion: examObservaciones[exam.id] || "",
       }));
 
       const payload = {
-        respuesta_id: initialResponses._id,
-        evaluacion_id: initialResponses.evaluacion._id,
+        respuesta_id: initialResponses.id,
+        evaluacion_id: initialResponses.evaluacion.id,
         examenes: examenes,
         resultado: resultado,
       };
@@ -100,10 +100,10 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando evaluación...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[var(--primary)] mx-auto mb-4"></div>
+          <p className="text-[var(--text-secondary)]">Cargando evaluación...</p>
         </div>
       </div>
     );
@@ -111,26 +111,26 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
 
   if (!initialResponses) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-600">No se encontró la evaluación.</p>
+      <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
+        <p className="text-[var(--text-secondary)]">No se encontró la evaluación.</p>
       </div>
     );
   }
 
   const currentExam = selectedExamId
-    ? initialResponses.evaluacion.examenes.find((e) => e._id === selectedExamId)
+    ? initialResponses.evaluacion.examenes.find((e) => e.id === selectedExamId)
     : initialResponses.evaluacion.examenes[0];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-[var(--page-bg)] flex">
       {/* Sticky Left Sidebar */}
-      <div className="w-64 bg-white shadow-lg border-r border-gray-200 fixed left-0 top-0 h-full z-10">
+      <div className="w-64 bg-white shadow-lg border-r border-[var(--border-color)] fixed left-0 top-0 h-full z-10">
         <div className="flex flex-col h-full">
           {/* Return Button */}
-          <div className="p-4 border-b border-gray-200">
+          <div className="p-4 border-b border-[var(--border-color)]">
             <a
               href="/admin/dashboard/revision"
-              className="flex items-center text-sm text-gray-600 hover:text-blue-600 transition-colors"
+              className="flex items-center text-sm text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors"
             >
               <svg
                 className="w-4 h-4 mr-2"
@@ -150,38 +150,38 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
           </div>
 
           {/* Header */}
-          <div className="p-4 border-b border-gray-200 bg-blue-50">
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">
+          <div className="p-4 border-b border-[var(--border-color)] bg-[var(--primary-light)]">
+            <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
               Revisión
             </h2>
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-[var(--text-secondary)]">
               {initialResponses.evaluacion.nombre}
             </div>
           </div>
 
           {/* Exams List */}
           <div className="flex-1 overflow-y-auto p-4">
-            <h3 className="font-medium text-gray-900 mb-3 text-sm">Exámenes</h3>
+            <h3 className="font-medium text-[var(--text-primary)] mb-3 text-sm">Exámenes</h3>
             <div className="space-y-2">
               {initialResponses.evaluacion.examenes.map((exam, index) => {
                 const isSelected =
-                  selectedExamId === exam._id ||
+                  selectedExamId === exam.id ||
                   (selectedExamId === null && index === 0);
 
                 return (
                   <button
-                    key={exam._id}
-                    onClick={() => setSelectedExamId(exam._id)}
+                    key={exam.id}
+                    onClick={() => setSelectedExamId(exam.id)}
                     className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-all duration-200 ${
                       isSelected
-                        ? "border-green-500 bg-green-50 text-green-900"
-                        : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
+                        ? "border-[var(--success)] bg-[var(--success-light)] text-[var(--success-text)]"
+                        : "border-[var(--border-color)] bg-white hover:border-[var(--border-color)] hover:bg-[var(--page-bg)]"
                     }`}
                   >
                     <div className="font-medium text-sm">
                       Examen {index + 1}
                     </div>
-                    <div className="text-xs text-gray-600 mt-1 truncate">
+                    <div className="text-xs text-[var(--text-secondary)] mt-1 truncate">
                       {exam.titulo}
                     </div>
                   </button>
@@ -196,14 +196,14 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
           />
 
           {/* Finalizar Button */}
-          <div className="p-4 border-t border-gray-200 bg-white">
+          <div className="p-4 border-t border-[var(--border-color)] bg-white">
             <button
               onClick={handleFinalize}
               disabled={isSubmitting}
               className={`w-full py-3 rounded-lg text-white font-semibold shadow-lg transition-all duration-300 ${
                 isSubmitting
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 hover:shadow-xl"
+                  ? "bg-[var(--neutral-400)] cursor-not-allowed"
+                  : "bg-[var(--primary)] hover:bg-[var(--primary-dark)] hover:shadow-xl"
               }`}
             >
               {isSubmitting ? (
@@ -230,13 +230,13 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
               postulanteId={postulanteId}
               examNumber={
                 initialResponses.evaluacion.examenes.findIndex(
-                  (e) => e._id === currentExam._id,
+                  (e) => e.id === currentExam.id,
                 ) + 1
               }
               disabled
-              comment={examObservaciones[currentExam._id] || ""}
+              comment={examObservaciones[currentExam.id] || ""}
               onCommentChange={(observacion) =>
-                handleObservacionChange(currentExam._id, observacion)
+                handleObservacionChange(currentExam.id, observacion)
               }
             />
           )}

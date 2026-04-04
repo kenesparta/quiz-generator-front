@@ -5,8 +5,8 @@ export default function EvaluacionPage() {
       value: 12,
       trend: "+2 esta semana",
       trendUp: true,
-      bgColor: "bg-blue-50",
-      iconColor: "text-blue-500",
+      bgColor: "bg-[var(--primary-light)]",
+      iconColor: "text-[var(--primary)]",
       icon: (
         <svg
           aria-hidden="true"
@@ -27,8 +27,8 @@ export default function EvaluacionPage() {
       value: 45,
       trend: "+8 este mes",
       trendUp: true,
-      bgColor: "bg-green-50",
-      iconColor: "text-green-500",
+      bgColor: "bg-[var(--success-light)]",
+      iconColor: "text-[var(--success)]",
       icon: (
         <svg
           aria-hidden="true"
@@ -50,8 +50,8 @@ export default function EvaluacionPage() {
       value: 8,
       trend: "-3 vs. semana pasada",
       trendUp: false,
-      bgColor: "bg-amber-50",
-      iconColor: "text-amber-500",
+      bgColor: "bg-[var(--warning-light)]",
+      iconColor: "text-[var(--warning)]",
       icon: (
         <svg
           aria-hidden="true"
@@ -72,12 +72,12 @@ export default function EvaluacionPage() {
 
   const activities = [
     {
-      color: "bg-green-500",
+      color: "bg-[var(--success-light)]0",
       text: "Evaluación de Matemáticas completada por Juan Pérez",
       time: "Hace 2 horas",
     },
     {
-      color: "bg-amber-400",
+      color: "bg-[var(--warning)]",
       text: "María García inició la Evaluación de Historia",
       time: "Hace 4 horas",
     },
@@ -87,12 +87,12 @@ export default function EvaluacionPage() {
       time: "Hace 6 horas",
     },
     {
-      color: "bg-green-500",
+      color: "bg-[var(--success-light)]0",
       text: "Carlos López finalizó su evaluación",
       time: "Ayer",
     },
     {
-      color: "bg-gray-400",
+      color: "bg-[var(--neutral-400)]",
       text: "Evaluación de Geografía programada para revisión",
       time: "Ayer",
     },
@@ -135,7 +135,7 @@ export default function EvaluacionPage() {
             <div className="mt-2 flex items-center gap-1">
               <svg
                 aria-hidden="true"
-                className={`w-3 h-3 ${metric.trendUp ? "text-green-500" : "text-red-500"}`}
+                className={`w-3 h-3 ${metric.trendUp ? "text-[var(--success)]" : "text-[var(--danger)]"}`}
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={2}

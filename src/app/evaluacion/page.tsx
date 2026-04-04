@@ -22,11 +22,11 @@ const getSubFromJWT = (token: string | null): string | null => {
 const getEstadoDot = (estado: string) => {
   const config: Record<string, { color: string; label: string }> = {
     creado: { color: "bg-[var(--primary)]", label: "Pendiente" },
-    en_progreso: { color: "bg-amber-400", label: "En Progreso" },
-    completado: { color: "bg-green-500", label: "Completado" },
+    en_progreso: { color: "bg-[var(--warning)]", label: "En Progreso" },
+    completado: { color: "bg-[var(--success)]", label: "Completado" },
   };
   const { color, label } = config[estado] || {
-    color: "bg-gray-400",
+    color: "bg-[var(--neutral-400)]",
     label: estado,
   };
   return (
@@ -81,7 +81,7 @@ export default function EvaluacionesPage() {
       <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
         <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)]">
           <div className="text-center">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-50 mb-4">
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-[var(--danger-light)] mb-4">
               <svg
                 aria-hidden="true"
                 className="h-6 w-6 text-[var(--danger)]"
@@ -186,7 +186,7 @@ export default function EvaluacionesPage() {
           <div className="bg-white rounded-lg p-12 text-center shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)]">
             <svg
               aria-hidden="true"
-              className="w-12 h-12 text-gray-300 mx-auto mb-4"
+              className="w-12 h-12 text-[var(--neutral-300)] mx-auto mb-4"
               fill="none"
               stroke="currentColor"
               strokeWidth={1.5}
@@ -214,7 +214,7 @@ export default function EvaluacionesPage() {
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-start gap-4 flex-1">
-                    <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-[var(--primary)] shrink-0 mt-0.5">
+                    <div className="w-10 h-10 rounded-lg bg-[var(--primary-light)] flex items-center justify-center text-[var(--primary)] shrink-0 mt-0.5">
                       <svg
                         aria-hidden="true"
                         className="w-5 h-5"
@@ -247,7 +247,7 @@ export default function EvaluacionesPage() {
                       <button
                         type="button"
                         disabled
-                        className="px-4 py-2 bg-gray-100 text-[var(--text-tertiary)] rounded-md cursor-not-allowed text-sm"
+                        className="px-4 py-2 bg-[var(--neutral-100)] text-[var(--text-tertiary)] rounded-md cursor-not-allowed text-sm"
                       >
                         Completado
                       </button>
@@ -257,7 +257,7 @@ export default function EvaluacionesPage() {
                         onClick={() =>
                           router.push(`/evaluacion/${evaluacion.respuesta_id}`)
                         }
-                        className="px-4 py-2 bg-white border border-[var(--warning)] text-amber-700 rounded-md hover:bg-amber-50 transition-colors text-sm font-medium"
+                        className="px-4 py-2 bg-white border border-[var(--warning)] text-[var(--warning-text)] rounded-md hover:bg-[var(--warning-light)] transition-colors text-sm font-medium"
                       >
                         Continuar
                       </button>

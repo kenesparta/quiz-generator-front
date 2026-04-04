@@ -4,13 +4,13 @@ export default function ExamenPage() {
       name: "Examen de Matemáticas",
       description: "20 preguntas - Duración: 60 min",
       status: "Activo",
-      dotColor: "bg-green-500",
+      dotColor: "bg-[var(--success)]",
     },
     {
       name: "Examen de Historia",
       description: "15 preguntas - Duración: 45 min",
       status: "Borrador",
-      dotColor: "bg-amber-400",
+      dotColor: "bg-[var(--warning)]",
     },
   ];
 
@@ -34,7 +34,7 @@ export default function ExamenPage() {
             className="bg-white rounded-lg p-6 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)] hover:shadow-md transition-shadow"
           >
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500 shrink-0">
+              <div className="w-12 h-12 rounded-lg bg-[var(--primary-light)] flex items-center justify-center text-[var(--primary)] shrink-0">
                 <svg
                   aria-hidden="true"
                   className="w-6 h-6"

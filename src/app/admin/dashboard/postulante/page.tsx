@@ -133,7 +133,7 @@ export default function PostulantePage() {
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-[var(--danger)] px-4 py-3 rounded-md mb-6 text-sm">
+        <div className="flex items-center gap-2 bg-[var(--danger-light)] border border-[var(--danger-border)] text-[var(--danger)] px-4 py-3 rounded-md mb-6 text-sm">
           <svg
             aria-hidden="true"
             className="w-4 h-4 shrink-0"
@@ -311,7 +311,7 @@ export default function PostulantePage() {
                 disabled={isCreating}
                 className={`px-4 py-2 rounded-md text-white transition-colors text-sm font-medium ${
                   isCreating
-                    ? "bg-gray-400 cursor-not-allowed"
+                    ? "bg-[var(--neutral-400)] cursor-not-allowed"
                     : "bg-[var(--primary)] hover:bg-[var(--primary-dark)]"
                 }`}
               >
@@ -357,7 +357,7 @@ export default function PostulantePage() {
           <div className="text-center py-12">
             <svg
               aria-hidden="true"
-              className="w-12 h-12 text-gray-300 mx-auto mb-3"
+              className="w-12 h-12 text-[var(--neutral-300)] mx-auto mb-3"
               fill="none"
               stroke="currentColor"
               strokeWidth={1.5}

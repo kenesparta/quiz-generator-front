@@ -29,7 +29,7 @@ export const ExamSection = ({
   onCommentChange,
 }: ExamSectionProps) => {
   const answeredQuestions = exam.preguntas.filter(
-    (q) => responses[q._id] && responses[q._id].length > 0,
+    (q) => responses[q.id] && responses[q.id].length > 0,
   ).length;
 
   const totalQuestions = exam.preguntas.length;
@@ -80,7 +80,7 @@ export const ExamSection = ({
         {disabled && (
           <div className="bg-white/10 rounded-lg p-3">
             <label
-              htmlFor={`comments-${exam._id}`}
+              htmlFor={`comments-${exam.id}`}
               className="flex items-center text-sm font-medium mb-2"
             >
               <svg
@@ -98,7 +98,7 @@ export const ExamSection = ({
               Observaciones:
             </label>
             <textarea
-              id={`comments-${exam._id}`}
+              id={`comments-${exam.id}`}
               rows={4}
               value={comment}
               onChange={(e) => onCommentChange?.(e.target.value)}
@@ -113,11 +113,11 @@ export const ExamSection = ({
       <div>
         {exam.preguntas.map((question, index) => (
           <QuestionCard
-            key={question._id ?? index}
+            key={question.id ?? index}
             question={question}
-            response={responses[question._id] || []}
+            response={responses[question.id] || []}
             onResponseChange={(response) =>
-              onResponseChange(postulanteId, question._id, response)
+              onResponseChange(postulanteId, question.id, response)
             }
             questionNumber={index + 1}
             disabled={disabled}

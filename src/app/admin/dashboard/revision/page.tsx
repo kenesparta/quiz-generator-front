@@ -7,12 +7,12 @@ import { generatePDFReport } from "@/utils/pdfReportGenerator";
 
 const getEstadoDot = (estado: string) => {
   const config: Record<string, { color: string; label: string }> = {
-    sin_iniciar: { color: "bg-gray-400", label: "Sin Iniciar" },
-    en_proceso: { color: "bg-amber-400", label: "En Proceso" },
-    finalizada: { color: "bg-green-500", label: "Finalizada" },
+    sin_iniciar: { color: "bg-[var(--neutral-400)]", label: "Sin Iniciar" },
+    en_proceso: { color: "bg-[var(--warning)]", label: "En Proceso" },
+    finalizada: { color: "bg-[var(--success)]", label: "Finalizada" },
   };
   const { color, label } = config[estado] || {
-    color: "bg-gray-400",
+    color: "bg-[var(--neutral-400)]",
     label: estado,
   };
   return (
@@ -99,7 +99,7 @@ export default function RevisionPage() {
         <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)] text-center py-12">
           <svg
             aria-hidden="true"
-            className="w-12 h-12 text-gray-300 mx-auto mb-3"
+            className="w-12 h-12 text-[var(--neutral-300)] mx-auto mb-3"
             fill="none"
             stroke="currentColor"
             strokeWidth={1.5}
@@ -127,7 +127,7 @@ export default function RevisionPage() {
                 {/* Top row */}
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500 shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-[var(--primary-light)] flex items-center justify-center text-[var(--primary)] shrink-0">
                       <svg
                         aria-hidden="true"
                         className="w-5 h-5"
@@ -171,7 +171,7 @@ export default function RevisionPage() {
                       <button
                         type="button"
                         disabled
-                        className="px-3 py-1.5 bg-gray-100 text-[var(--text-tertiary)] rounded-md cursor-not-allowed text-sm"
+                        className="px-3 py-1.5 bg-[var(--neutral-100)] text-[var(--text-tertiary)] rounded-md cursor-not-allowed text-sm"
                       >
                         Revisar
                       </button>

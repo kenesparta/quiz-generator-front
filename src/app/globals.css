@@ -1,35 +1,69 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   THEME CONFIGURATION
+   ==========================================================================
+   To change the app's look and feel, modify the color values below.
+   All components reference these variables — no hardcoded colors anywhere.
+   ========================================================================== */
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
 
-  /* Ant Design Pro - Dashboard palette */
+  /* --- Primary (buttons, links, active states) --- */
+  --primary: #1677ff;
+  --primary-dark: #0958d9;
+  --primary-light: #e6f4ff;
+
+  /* --- Success (completed, confirmed) --- */
+  --success: #52c41a;
+  --success-dark: #389e0d;
+  --success-light: #f6ffed;
+  --success-text: #135200;
+
+  /* --- Warning (in-progress, caution) --- */
+  --warning: #faad14;
+  --warning-dark: #d48806;
+  --warning-light: #fffbe6;
+  --warning-text: #874d00;
+
+  /* --- Danger (errors, destructive actions) --- */
+  --danger: #ff4d4f;
+  --danger-dark: #cf1322;
+  --danger-light: #fff2f0;
+  --danger-border: #ffccc7;
+  --danger-text: #a8071a;
+
+  /* --- Neutrals (backgrounds, disabled, placeholder icons) --- */
+  --neutral-50: #fafafa;
+  --neutral-100: #f5f5f5;
+  --neutral-300: #d1d5db;
+  --neutral-400: #9ca3af;
+
+  /* --- Sidebar --- */
   --sidebar-bg: #001529;
   --sidebar-text: rgba(255, 255, 255, 0.65);
   --sidebar-text-active: #ffffff;
   --sidebar-active-bg: #1677ff;
   --sidebar-section-label: rgba(255, 255, 255, 0.35);
 
-  --primary: #1677ff;
-  --primary-dark: #0958d9;
+  /* --- Page structure --- */
   --page-bg: #f5f5f5;
   --card-bg: #ffffff;
 
-  --success: #52c41a;
-  --warning: #faad14;
-  --danger: #ff4d4f;
-
+  /* --- Text hierarchy --- */
   --text-primary: rgba(0, 0, 0, 0.88);
   --text-secondary: rgba(0, 0, 0, 0.65);
   --text-tertiary: rgba(0, 0, 0, 0.45);
 
+  /* --- Borders --- */
   --border-color: #d9d9d9;
   --border-color-light: #f0f0f0;
+
+  /* --- Table --- */
   --table-header-bg: #fafafa;
 }
-
-/* Dark mode variables can be added here when needed */
 
 body {
   background: var(--background);

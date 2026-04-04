@@ -1,5 +1,5 @@
 export interface EvaluationResponse {
-  _id: string;
+  id: string;
   fecha_tiempo_inicio: string;
   fecha_tiempo_transcurrido: number;
   fecha_tiempo_fin: string;
@@ -9,14 +9,14 @@ export interface EvaluationResponse {
 }
 
 export interface Evaluation {
-  _id: string;
+  id: string;
   nombre: string;
   descripcion: string;
   examenes: Exam[];
 }
 
 export interface Exam {
-  _id: string;
+  id: string;
   titulo: string;
   descripcion: string;
   instrucciones: string;
@@ -26,7 +26,7 @@ export interface Exam {
 }
 
 export interface Question {
-  _id: string;
+  id: string;
   contenido: string;
   tipo_de_pregunta: "alternativa_peso" | "alternativa_unica" | "sola_respuesta";
   etiqueta: string;
