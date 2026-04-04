@@ -135,7 +135,7 @@ export default function EvaluationPage({ params }: PageProps) {
 
   const getTotalAnswered = () => {
     return Object.values(responses).filter(
-      (response) => response && response.length > 0,
+      (response) => response && response.length > 0 && response.some((r) => r !== ""),
     ).length;
   };
 
@@ -146,7 +146,7 @@ export default function EvaluationPage({ params }: PageProps) {
     if (!exam) return { answered: 0, total: 0 };
 
     const answered = exam.preguntas.filter(
-      (q) => responses[q.id] && responses[q.id].length > 0,
+      (q) => responses[q.id] && responses[q.id].length > 0 && responses[q.id].some((r) => r !== ""),
     ).length;
     return { answered, total: exam.preguntas.length };
   };
@@ -353,46 +353,51 @@ export default function EvaluationPage({ params }: PageProps) {
           </div>
 
           {/* Progress Summary */}
-          <div className="p-4 border-b border-[var(--border-color-light)]">
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-[var(--text-tertiary)]">
-                  Total de preguntas:
-                </span>
-                <span className="font-medium text-[var(--text-primary)]">
+          <div className="p-4 border-b border-[var(--border-color)]">
+            <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-3">
+              Progreso
+            </h3>
+            <div className="grid grid-cols-3 gap-2 mb-3">
+              <div className="bg-[var(--neutral-50)] rounded-lg p-2.5 text-center border border-[var(--border-color-light)]">
+                <span className="block text-xl font-extrabold text-[var(--text-primary)]">
                   {getTotalQuestions()}
                 </span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-[var(--text-tertiary)]">
-                  Respondidas:
+                <span className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase tracking-wide">
+                  Total
                 </span>
-                <span className="font-medium text-[var(--success)]">
+              </div>
+              <div className="bg-[var(--primary-light)] rounded-lg p-2.5 text-center border border-[var(--primary)]">
+                <span className="block text-xl font-extrabold text-[var(--primary)]">
                   {getTotalAnswered()}
                 </span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-[var(--text-tertiary)]">Pendientes:</span>
-                <span className="font-medium text-[var(--warning)]">
-                  {getTotalQuestions() - getTotalAnswered()}
+                <span className="text-[10px] font-bold text-[var(--primary-dark)] uppercase tracking-wide">
+                  Respondidas
                 </span>
               </div>
-              <div className="w-full bg-[var(--border-color)] rounded-full h-2 mt-2">
-                <div
-                  className="bg-[var(--primary)] h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${progressPercent}%` }}
-                />
+              <div className="bg-[var(--warning-light)] rounded-lg p-2.5 text-center border border-[var(--warning)]">
+                <span className="block text-xl font-extrabold text-[var(--warning-text)]">
+                  {getTotalQuestions() - getTotalAnswered()}
+                </span>
+                <span className="text-[10px] font-bold text-[var(--warning-text)] uppercase tracking-wide">
+                  Pendientes
+                </span>
               </div>
-              <div className="text-center text-xs text-[var(--text-tertiary)] mt-1">
-                {progressPercent}% completado
-              </div>
+            </div>
+            <div className="w-full bg-[var(--border-color)] rounded-full h-2">
+              <div
+                className="bg-[var(--primary)] h-2 rounded-full transition-all duration-300"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+            <div className="text-center text-xs font-medium text-[var(--text-secondary)] mt-1.5">
+              {progressPercent}% completado
             </div>
           </div>
 
           {/* Exam List */}
           <div className="flex-1 overflow-y-auto">
             <div className="p-4">
-              <h3 className="font-medium text-[var(--text-primary)] mb-3 text-sm">
+              <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-3">
                 Exámenes
               </h3>
               <div className="space-y-2">
@@ -410,32 +415,52 @@ export default function EvaluationPage({ params }: PageProps) {
                     <button
                       type="button"
                       key={`exam-${exam.id}-${index}`}
-                      className={`w-full text-left border rounded-lg p-3 transition-all duration-200 ${
+                      className={`w-full text-left rounded-lg p-3 transition-all duration-200 ${
                         isSelected
-                          ? "border-[var(--primary)] bg-[var(--primary-light)]"
-                          : "border-[var(--border-color-light)] hover:border-[var(--border-color)] bg-white hover:bg-[var(--table-header-bg)]"
+                          ? "bg-[var(--sidebar-bg)] text-white border-l-4 border-l-[var(--primary)] border-y border-r border-y-transparent border-r-transparent"
+                          : "bg-white border border-[var(--border-color-light)] hover:border-[var(--border-color)] hover:bg-[var(--table-header-bg)]"
                       }`}
                       onClick={() => setSelectedExamId(exam.id)}
                     >
                       <div className="flex items-start justify-between mb-2">
-                        <h4 className="font-medium text-sm text-[var(--text-primary)] leading-tight">
+                        <h4
+                          className={`font-medium text-sm leading-tight ${
+                            isSelected
+                              ? "text-white"
+                              : "text-[var(--text-primary)]"
+                          }`}
+                        >
                           {exam.titulo}
                         </h4>
                         <span
                           className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                            progress.answered === progress.total
-                              ? "bg-[var(--success-light)] text-[var(--success-text)]"
-                              : progress.answered > 0
-                                ? "bg-[var(--warning-light)] text-[var(--warning-text)]"
-                                : "bg-[var(--neutral-100)] text-[var(--text-tertiary)]"
+                            isSelected
+                              ? progress.answered === progress.total
+                                ? "bg-white/20 text-white"
+                                : "bg-white/15 text-white/80"
+                              : progress.answered === progress.total
+                                ? "bg-[var(--success-light)] text-[var(--success-text)]"
+                                : progress.answered > 0
+                                  ? "bg-[var(--warning-light)] text-[var(--warning-text)]"
+                                  : "bg-[var(--neutral-100)] text-[var(--text-tertiary)]"
                           }`}
                         >
                           {progress.answered}/{progress.total}
                         </span>
                       </div>
-                      <div className="w-full bg-[var(--border-color)] rounded-full h-1.5">
+                      <div
+                        className={`w-full rounded-full h-1.5 ${
+                          isSelected
+                            ? "bg-white/20"
+                            : "bg-[var(--border-color)]"
+                        }`}
+                      >
                         <div
-                          className="bg-[var(--primary)] h-1.5 rounded-full transition-all duration-300"
+                          className={`h-1.5 rounded-full transition-all duration-300 ${
+                            isSelected
+                              ? "bg-[var(--primary)]"
+                              : "bg-[var(--primary)]"
+                          }`}
                           style={{ width: `${progressPct}%` }}
                         />
                       </div>
@@ -447,7 +472,7 @@ export default function EvaluationPage({ params }: PageProps) {
           </div>
 
           {/* Submit Button */}
-          <div className="p-4 border-t border-[var(--border-color-light)] bg-white">
+          <div className="p-4 border-t border-[var(--border-color)] bg-white">
             <button
               type="button"
               onClick={handleSubmit}

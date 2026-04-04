@@ -29,7 +29,7 @@ export const ExamSection = ({
   onCommentChange,
 }: ExamSectionProps) => {
   const answeredQuestions = exam.preguntas.filter(
-    (q) => responses[q.id] && responses[q.id].length > 0,
+    (q) => responses[q.id] && responses[q.id].length > 0 && responses[q.id].some((r) => r !== ""),
   ).length;
 
   const totalQuestions = exam.preguntas.length;

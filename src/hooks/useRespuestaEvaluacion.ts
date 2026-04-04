@@ -86,17 +86,17 @@ export const useRespuestaEvaluacion = (
 
     try {
       const requestBody = {
-        postulante_id: postulanteId,
-        evaluacion_id: initialResponses.evaluacion.id,
-        examen_id: exam.id,
-        pregunta_id: questionId,
+        // postulante_id: postulanteId,
+        // evaluacion_id: initialResponses.evaluacion.id,
+        // // examen_id: exam.id,
+        // pregunta_id: questionId,
         respuestas: response,
       };
       const token = localStorage.getItem("token");
       const apiResponse = await fetch(
-        `${BASE_URL}/respuestas/${initialResponses.id}`,
+        `${BASE_URL}/respuestas/${initialResponses.id}/examenes/${exam.id}/preguntas/${questionId}/contestaciones`,
         {
-          method: "PATCH",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
             ...(token && { Authorization: `Bearer ${token}` }),

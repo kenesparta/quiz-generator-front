@@ -72,16 +72,31 @@ export const QuestionCard = ({
     return null;
   };
 
+  const isAnswered = response.length > 0 && response[0] !== "";
+
   return (
-    <div className="bg-white rounded-lg border border-[var(--border-color-light)] p-6 mb-4 shadow-[0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-md transition-shadow">
+    <div
+      className={`rounded-lg border p-6 mb-4 transition-shadow ${
+        isAnswered
+          ? "bg-white border-[var(--border-color)] border-l-4 border-l-[var(--primary)] shadow-none"
+          : "bg-white border-[var(--border-color-light)] shadow-[0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-md"
+      }`}
+    >
       {/* Question header */}
       <div className="flex items-start gap-4 mb-4">
         <span className="flex-shrink-0 bg-[var(--sidebar-bg)] text-white w-7 h-7 rounded-md text-sm font-medium flex items-center justify-center">
           {questionNumber}
         </span>
         <div className="flex-1">
-          <div className="text-[var(--text-primary)] font-medium leading-relaxed text-base prose prose-base max-w-none">
-            <Markdown>{question.contenido}</Markdown>
+          <div className="flex items-start justify-between gap-3">
+            <div className="text-[var(--text-primary)] font-medium leading-relaxed text-base prose prose-base max-w-none">
+              <Markdown>{question.contenido}</Markdown>
+            </div>
+            {isAnswered && !disabled && (
+              <span className="flex-shrink-0 text-xs font-medium text-[var(--primary)] bg-white/80 border border-[var(--primary)] px-2 py-0.5 rounded-md">
+                Respondida
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -103,33 +118,13 @@ export const QuestionCard = ({
       )}
 
       {/* Footer */}
-      <div className="mt-4 flex justify-between items-center">
-        {response.length > 0 && (
-          <span className="text-[var(--success)] text-xs font-medium flex items-center gap-1">
-            <svg
-              aria-hidden="true"
-              className="w-3.5 h-3.5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9 12l2 2 4-4"
-              />
-              <circle cx="12" cy="12" r="10" />
-            </svg>
-            Respondida
-          </span>
-        )}
-        {disabled && (
+      {disabled && (
+        <div className="mt-4 flex justify-end">
           <span className="bg-[var(--table-header-bg)] text-[var(--primary)] px-3 py-1 rounded-full text-xs font-semibold">
             Puntaje: {question.puntos}
           </span>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
