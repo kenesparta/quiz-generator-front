@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { BASE_URL } from "@/config/api";
+import { BASE_URL, handleUnauthorized } from "@/config/api";
 
 interface PostulanteData {
   documento: string;
@@ -43,6 +43,7 @@ export const usePostulante = (
         },
       );
 
+      handleUnauthorized(response);
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }

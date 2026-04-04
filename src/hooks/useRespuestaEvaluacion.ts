@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { EvaluationResponse } from "@/types/evaluacion";
-import { BASE_URL } from "@/config/api";
+import { BASE_URL, handleUnauthorized } from "@/config/api";
 
 export const useRespuestaEvaluacion = (
   postulanteId: string | null,
@@ -40,6 +40,7 @@ export const useRespuestaEvaluacion = (
           },
         );
 
+        handleUnauthorized(response);
         if (!response.ok) {
           throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
@@ -104,6 +105,7 @@ export const useRespuestaEvaluacion = (
         },
       );
 
+      handleUnauthorized(apiResponse);
       if (!apiResponse.ok) {
         throw new Error(
           `Error ${apiResponse.status}: ${apiResponse.statusText}`,
@@ -160,6 +162,7 @@ export const useRespuestaEvaluacion = (
         },
       );
 
+      handleUnauthorized(response);
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }

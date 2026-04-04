@@ -113,7 +113,7 @@ export const ExamSection = ({
       <div>
         {exam.preguntas.map((question, index) => (
           <QuestionCard
-            key={question._id}
+            key={question._id ?? index}
             question={question}
             response={responses[question._id] || []}
             onResponseChange={(response) =>

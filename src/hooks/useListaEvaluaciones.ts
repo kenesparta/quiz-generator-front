@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BASE_URL } from "@/config/api";
+import { BASE_URL, handleUnauthorized } from "@/config/api";
 
 interface EvaluacionItem {
   id: string;
@@ -63,6 +63,7 @@ export const useListaEvaluaciones = (
           },
         );
 
+        handleUnauthorized(response);
         if (!response.ok) {
           throw new Error("Error al cargar las evaluaciones");
         }
@@ -103,6 +104,7 @@ export const useListaEvaluaciones = (
         },
       );
 
+      handleUnauthorized(response);
       if (!response.ok) {
         throw new Error("Error al iniciar la evaluación");
       }
