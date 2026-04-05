@@ -86,10 +86,6 @@ export const useRespuestaEvaluacion = (
 
     try {
       const requestBody = {
-        // postulante_id: postulanteId,
-        // evaluacion_id: initialResponses.evaluacion.id,
-        // // examen_id: exam.id,
-        // pregunta_id: questionId,
         respuestas: response,
       };
       const token = localStorage.getItem("token");

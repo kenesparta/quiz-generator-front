@@ -1,6 +1,7 @@
 "use client";
 
 import { ExamSection } from "@/components/ExamSection";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { useState } from "react";
 import { useRespuestaEvaluacion } from "@/hooks/useRespuestaEvaluacion";
 import { BASE_URL } from "@/config/api";
@@ -31,6 +32,24 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
   >({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resultado, setResultado] = useState<ResultadoTipo>("apto");
+  const [dialog, setDialog] = useState<{
+    open: boolean;
+    title: string;
+    message: string;
+    variant: "default" | "danger" | "success";
+    confirmLabel: string;
+    cancelLabel: string;
+    onConfirm: () => void;
+  }>({
+    open: false,
+    title: "",
+    message: "",
+    variant: "default",
+    confirmLabel: "Entendido",
+    cancelLabel: "",
+    onConfirm: () => {},
+  });
+  const closeDialog = () => setDialog((prev) => ({ ...prev, open: false }));
 
   const handleObservacionChange = (examId: string, observacion: string) => {
     setExamObservaciones((prev) => ({
@@ -39,23 +58,24 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
     }));
   };
 
-  const handleFinalize = async () => {
-    if (!initialResponses) {
-      alert("No se encontró la evaluación.");
-      return;
-    }
+  const showError = (message: string) => {
+    setDialog({
+      open: true,
+      title: "Error",
+      message,
+      variant: "danger",
+      confirmLabel: "Entendido",
+      cancelLabel: "",
+      onConfirm: closeDialog,
+    });
+  };
 
-    if (
-      !confirm(
-        "¿Estás seguro de que quieres finalizar la revisión? Las observaciones serán enviadas.",
-      )
-    ) {
-      return;
-    }
+  const doFinalize = async () => {
+    closeDialog();
+    if (!initialResponses) return;
 
     setIsSubmitting(true);
     try {
-      // Build the payload with observaciones for each exam
       const examenes = initialResponses.evaluacion.examenes.map((exam) => ({
         examen_id: exam.id,
         observacion: examObservaciones[exam.id] || "",
@@ -77,25 +97,53 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
       });
 
       if (response.status === 200) {
-        alert("Revisión finalizada correctamente!");
-        window.location.href = "/admin/dashboard/revision";
+        setDialog({
+          open: true,
+          title: "Revisión finalizada",
+          message: "La revisión se ha finalizado correctamente.",
+          variant: "success",
+          confirmLabel: "Aceptar",
+          cancelLabel: "",
+          onConfirm: () => {
+            closeDialog();
+            window.location.href = "/admin/dashboard/revision";
+          },
+        });
       } else if (response.status === 403) {
-        alert("No tienes permisos para finalizar esta revisión.");
+        showError("No tienes permisos para finalizar esta revisión.");
       } else if (response.status === 500) {
-        alert(
+        showError(
           "Error del servidor al finalizar la revisión. Por favor, inténtalo de nuevo.",
         );
       } else {
-        alert("Error inesperado. Por favor, inténtalo de nuevo.");
+        showError("Error inesperado. Por favor, inténtalo de nuevo.");
       }
     } catch (err) {
-      alert(
+      showError(
         "Error al enviar las observaciones. Por favor, inténtalo de nuevo.",
       );
       console.error("Error submitting revision:", err);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleFinalize = () => {
+    if (!initialResponses) {
+      showError("No se encontró la evaluación.");
+      return;
+    }
+
+    setDialog({
+      open: true,
+      title: "Finalizar revisión",
+      message:
+        "¿Estás seguro de que quieres finalizar la revisión? Las observaciones serán enviadas.",
+      variant: "default",
+      confirmLabel: "Finalizar",
+      cancelLabel: "Cancelar",
+      onConfirm: doFinalize,
+    });
   };
 
   if (loading) {
@@ -242,6 +290,17 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
           )}
         </div>
       </div>
+
+      <ConfirmDialog
+        open={dialog.open}
+        title={dialog.title}
+        message={dialog.message}
+        variant={dialog.variant}
+        confirmLabel={dialog.confirmLabel}
+        cancelLabel={dialog.cancelLabel}
+        onConfirm={dialog.onConfirm}
+        onCancel={closeDialog}
+      />
     </div>
   );
 };

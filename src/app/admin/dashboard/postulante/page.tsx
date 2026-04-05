@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { usePostulante } from "@/hooks/admin/usePostulante";
 import type {
   CreatePostulanteRequest,
@@ -28,6 +29,7 @@ export default function PostulantePage() {
     usePostulante();
   const [showForm, setShowForm] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [successDialog, setSuccessDialog] = useState(false);
   const [formData, setFormData] = useState<CreatePostulanteRequest>({
     documento: "",
     nombre: "",
@@ -60,7 +62,7 @@ export default function PostulantePage() {
     const success = await createPostulante(formData);
 
     if (success) {
-      alert("Postulante creado correctamente!");
+      setSuccessDialog(true);
       setShowForm(false);
       setFormData({
         documento: "",
@@ -425,6 +427,17 @@ export default function PostulantePage() {
           </div>
         )}
       </div>
+
+      <ConfirmDialog
+        open={successDialog}
+        title="Postulante creado"
+        message="El postulante se ha creado correctamente."
+        variant="success"
+        confirmLabel="Aceptar"
+        cancelLabel=""
+        onConfirm={() => setSuccessDialog(false)}
+        onCancel={() => setSuccessDialog(false)}
+      />
     </div>
   );
 }

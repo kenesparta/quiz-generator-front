@@ -2,6 +2,7 @@
 
 import { use, useEffect, useState } from "react";
 import { ExamSection } from "@/components/ExamSection";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { usePostulante } from "@/hooks/usePostulante";
 import { useRespuestaEvaluacion } from "@/hooks/useRespuestaEvaluacion";
 
@@ -51,6 +52,23 @@ export default function EvaluationPage({ params }: PageProps) {
   const [submitted, setSubmitted] = useState(false);
   const [selectedExamId, setSelectedExamId] = useState<string | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [dialog, setDialog] = useState<{
+    open: boolean;
+    title: string;
+    message: string;
+    variant: "default" | "danger" | "success";
+    confirmLabel: string;
+    cancelLabel: string;
+    onConfirm: () => void;
+  }>({
+    open: false,
+    title: "",
+    message: "",
+    variant: "default",
+    confirmLabel: "Confirmar",
+    cancelLabel: "Cancelar",
+    onConfirm: () => {},
+  });
 
   useEffect(() => {
     if (initialResponses?.fecha_tiempo_transcurrido) {
@@ -151,24 +169,52 @@ export default function EvaluationPage({ params }: PageProps) {
     return { answered, total: exam.preguntas.length };
   };
 
-  const handleSubmit = async () => {
-    if (getTotalAnswered() < getTotalQuestions()) {
-      if (
-        !confirm(
-          "Aún tienes preguntas sin responder. ¿Estás seguro de que quieres enviar la evaluación?",
-        )
-      ) {
-        return;
-      }
-    }
+  const closeDialog = () =>
+    setDialog((prev) => ({ ...prev, open: false }));
 
+  const doSubmit = async () => {
+    closeDialog();
     try {
       await submitEvaluation(postulanteId);
       setSubmitted(true);
-      alert("¡Evaluación enviada correctamente!");
     } catch {
-      alert("Error al enviar la evaluación. Por favor, inténtalo de nuevo.");
+      setDialog({
+        open: true,
+        title: "Error",
+        message:
+          "Error al enviar la evaluación. Por favor, inténtalo de nuevo.",
+        variant: "danger",
+        confirmLabel: "Entendido",
+        cancelLabel: "",
+        onConfirm: closeDialog,
+      });
     }
+  };
+
+  const handleSubmit = () => {
+    if (getTotalAnswered() < getTotalQuestions()) {
+      setDialog({
+        open: true,
+        title: "Preguntas sin responder",
+        message:
+          "Aún tienes preguntas sin responder. ¿Estás seguro de que quieres enviar la evaluación?",
+        variant: "danger",
+        confirmLabel: "Enviar de todos modos",
+        cancelLabel: "Cancelar",
+        onConfirm: doSubmit,
+      });
+      return;
+    }
+
+    setDialog({
+      open: true,
+      title: "Finalizar evaluación",
+      message: "¿Estás seguro de que quieres enviar la evaluación?",
+      variant: "default",
+      confirmLabel: "Enviar",
+      cancelLabel: "Cancelar",
+      onConfirm: doSubmit,
+    });
   };
 
   // Loading state
@@ -514,6 +560,17 @@ export default function EvaluationPage({ params }: PageProps) {
           )}
         </div>
       </div>
+
+      <ConfirmDialog
+        open={dialog.open}
+        title={dialog.title}
+        message={dialog.message}
+        variant={dialog.variant}
+        confirmLabel={dialog.confirmLabel}
+        cancelLabel={dialog.cancelLabel}
+        onConfirm={dialog.onConfirm}
+        onCancel={closeDialog}
+      />
     </div>
   );
 }
