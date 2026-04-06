@@ -13,15 +13,15 @@ Quiz Generator Front is a Next.js 15 application for managing online evaluations
 
 ### Running the Application
 ```bash
-npm run dev          # Start development server with Turbopack
-npm run build        # Build production bundle with Turbopack
-npm start            # Start production server
+pnpm dev             # Start development server with Turbopack
+pnpm build           # Build production bundle with Turbopack
+pnpm start           # Start production server
 ```
 
 ### Code Quality
 ```bash
-npm run lint         # Run Biome linter checks
-npm run fmt          # Format code with Biome
+pnpm lint            # Run Biome linter checks
+pnpm fmt             # Format code with Biome
 ```
 
 ## Architecture
