@@ -41,7 +41,7 @@ export function ErrorScreen({ error }: { error: string }) {
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="bg-(--primary) text-white px-4 py-2 rounded-md hover:bg-(--primary-dark) transition-colors text-sm font-medium"
+            className="bg-(--primary) text-white px-4 py-2 rounded-md hover:bg-(--primary-dark) transition-colors text-sm font-medium cursor-pointer"
           >
             Reintentar
           </button>

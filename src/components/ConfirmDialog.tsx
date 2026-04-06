@@ -111,7 +111,7 @@ export const ConfirmDialog = ({
               <button
                 type="button"
                 onClick={onCancel}
-                className="flex-1 px-4 py-2.5 text-sm font-medium border border-(--border-color) text-(--text-primary) rounded-md hover:bg-(--sidebar-bg) hover:text-white hover:border-(--sidebar-bg) transition-colors"
+                className="flex-1 px-4 py-2.5 text-sm font-medium border border-(--border-color) text-(--text-primary) rounded-md hover:bg-(--sidebar-bg) hover:text-white hover:border-(--sidebar-bg) transition-colors cursor-pointer"
               >
                 {cancelLabel}
               </button>
@@ -119,7 +119,7 @@ export const ConfirmDialog = ({
             <button
               type="button"
               onClick={onConfirm}
-              className={`flex-1 px-4 py-2.5 text-sm font-medium text-white rounded-md transition-colors ${styles.button}`}
+              className={`flex-1 px-4 py-2.5 text-sm font-medium text-white rounded-md transition-colors cursor-pointer ${styles.button}`}
             >
               {confirmLabel}
             </button>

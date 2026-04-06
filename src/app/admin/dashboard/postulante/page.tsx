@@ -108,7 +108,7 @@ export default function PostulantePage() {
         <button
           type="button"
           onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-2 px-4 py-2 bg-(--primary) text-white rounded-md hover:bg-(--primary-dark) transition-colors text-sm font-medium"
+          className="flex items-center gap-2 px-4 py-2 bg-(--primary) text-white rounded-md hover:bg-(--primary-dark) transition-colors text-sm font-medium cursor-pointer"
         >
           {showForm ? (
             "Cancelar"
@@ -304,7 +304,7 @@ export default function PostulantePage() {
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="px-4 py-2 border border-(--border-color) text-(--text-primary) rounded-md hover:bg-(--table-header-bg) transition-colors text-sm"
+                className="px-4 py-2 border border-(--border-color) text-(--text-primary) rounded-md hover:bg-(--table-header-bg) transition-colors text-sm cursor-pointer"
               >
                 Cancelar
               </button>
@@ -314,7 +314,7 @@ export default function PostulantePage() {
                 className={`px-4 py-2 rounded-md text-white transition-colors text-sm font-medium ${
                   isCreating
                     ? "bg-(--neutral-400) cursor-not-allowed"
-                    : "bg-(--primary) hover:bg-(--primary-dark)"
+                    : "bg-(--primary) hover:bg-(--primary-dark) cursor-pointer"
                 }`}
               >
                 {isCreating ? "Creando..." : "Crear Postulante"}

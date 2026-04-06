@@ -161,7 +161,7 @@ export default function RevisionPage() {
                         )
                       }
                       disabled={generatingPDF === revision.postulante_id}
-                      className="px-3 py-1.5 bg-white border border-(--border-color) text-(--text-primary) rounded-md hover:border-(--primary) hover:text-(--primary) transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-3 py-1.5 bg-white border border-(--border-color) text-(--text-primary) rounded-md hover:border-(--primary) hover:text-(--primary) transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     >
                       {generatingPDF === revision.postulante_id
                         ? "Generando..."

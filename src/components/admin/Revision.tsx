@@ -224,7 +224,7 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
                   <button
                     key={exam.id}
                     onClick={() => setSelectedExamId(exam.id)}
-                    className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-all duration-200 ${
+                    className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-all duration-200 cursor-pointer ${
                       isSelected
                         ? "border-(--success) bg-(--success-light) text-(--success-text)"
                         : "border-(--border-color) bg-white hover:border-(--border-color) hover:bg-(--page-bg)"
@@ -255,7 +255,7 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
               className={`w-full py-3 rounded-lg text-white font-semibold shadow-lg transition-all duration-300 ${
                 isSubmitting
                   ? "bg-(--neutral-400) cursor-not-allowed"
-                  : "bg-(--primary) hover:bg-(--primary-dark) hover:shadow-xl"
+                  : "bg-(--primary) hover:bg-(--primary-dark) hover:shadow-xl cursor-pointer"
               }`}
             >
               {isSubmitting ? (

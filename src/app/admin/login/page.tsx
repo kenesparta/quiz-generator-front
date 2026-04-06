@@ -169,7 +169,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center py-2.5 px-4 text-sm font-medium rounded-md text-white bg-(--primary) hover:bg-(--primary-dark) focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-(--primary) disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="w-full flex justify-center py-2.5 px-4 text-sm font-medium rounded-md text-white bg-(--primary) hover:bg-(--primary-dark) focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-(--primary) disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors"
               >
                 {isLoading ? (
                   <div className="flex items-center">

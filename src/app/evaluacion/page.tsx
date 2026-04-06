@@ -91,7 +91,7 @@ export default function EvaluacionesPage() {
             <button
               type="button"
               onClick={() => window.location.reload()}
-              className="bg-(--primary) text-white px-4 py-2 rounded-md hover:bg-(--primary-dark) transition-colors text-sm font-medium"
+              className="bg-(--primary) text-white px-4 py-2 rounded-md hover:bg-(--primary-dark) transition-colors text-sm font-medium cursor-pointer"
             >
               Reintentar
             </button>
@@ -145,7 +145,7 @@ export default function EvaluacionesPage() {
                 localStorage.removeItem("expires_in");
                 router.push("/login");
               }}
-              className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white/70 hover:text-white border border-white/20 rounded-md hover:bg-white/10 transition-colors"
+              className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white/70 hover:text-white border border-white/20 rounded-md hover:bg-white/10 transition-colors cursor-pointer"
             >
               <svg
                 aria-hidden="true"
@@ -244,7 +244,7 @@ export default function EvaluacionesPage() {
                         onClick={() =>
                           router.push(`/evaluacion/${evaluacion.respuesta_id}`)
                         }
-                        className="px-4 py-2 bg-white border border-(--warning) text-(--warning-text) rounded-md hover:bg-(--warning-light) transition-colors text-sm font-medium"
+                        className="px-4 py-2 bg-white border border-(--warning) text-(--warning-text) rounded-md hover:bg-(--warning-light) transition-colors text-sm font-medium cursor-pointer"
                       >
                         Continuar
                       </button>
@@ -255,7 +255,7 @@ export default function EvaluacionesPage() {
                           handleStartEvaluacion(evaluacion.respuesta_id)
                         }
                         disabled={isStarting}
-                        className="px-4 py-2 bg-(--primary) text-white rounded-md hover:bg-(--primary-dark) transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-4 py-2 bg-(--primary) text-white rounded-md hover:bg-(--primary-dark) transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                       >
                         {isStarting ? (
                           <span className="flex items-center">

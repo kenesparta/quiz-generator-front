@@ -214,7 +214,7 @@ export function EvaluationSidebar({
                   <button
                     type="button"
                     key={`exam-${exam.id}-${index}`}
-                    className={`w-full text-left rounded-lg p-3 transition-all duration-200 ${
+                    className={`w-full text-left rounded-lg p-3 cursor-pointer transition-all duration-200 ${
                       isSelected
                         ? "bg-(--sidebar-bg) text-white border-l-4 border-l-(--primary) border-y border-r border-y-transparent border-r-transparent"
                         : "bg-white border border-(--border-color-light) hover:border-(--border-color) hover:bg-(--table-header-bg)"
@@ -326,7 +326,7 @@ export function EvaluationSidebar({
             className={`w-full py-4 rounded-md text-white font-semibold text-lg transition-colors ${
               submitting
                 ? "bg-(--neutral-400) cursor-not-allowed"
-                : "bg-(--primary) hover:bg-(--primary-dark)"
+                : "bg-(--primary) hover:bg-(--primary-dark) cursor-pointer"
             }`}
           >
             {submitting ? (
