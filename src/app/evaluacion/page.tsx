@@ -4,20 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useListaEvaluaciones } from "@/hooks/useListaEvaluaciones";
 import { usePostulante } from "@/hooks/usePostulante";
-
-const getSubFromJWT = (token: string | null): string | null => {
-  if (!token) return null;
-
-  try {
-    const parts = token.split(".");
-    if (parts.length !== 3) return null;
-    const payload = JSON.parse(atob(parts[1]));
-    return payload.sub || null;
-  } catch (error) {
-    console.error("Error decoding JWT:", error);
-    return null;
-  }
-};
+import { getSubFromJWT } from "@/utils/jwt";
 
 const getEstadoDot = (estado: string) => {
   const config: Record<string, { color: string; label: string }> = {
