@@ -36,9 +36,7 @@ export const ResultadoDelExamen = ({
             onChange={() => onResultadoChange("no_apto")}
             className="w-4 h-4 text-(--primary) bg-(--neutral-100) focus:ring-(--primary) focus:ring-2"
           />
-          <span className="ml-2 text-sm text-(--text-primary)">
-            No Apto
-          </span>
+          <span className="ml-2 text-sm text-(--text-primary)">No Apto</span>
         </label>
 
         <label className="flex items-center cursor-pointer">

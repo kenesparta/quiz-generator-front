@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BASE_URL, handleUnauthorized } from "@/config/api";
 
 interface PostulanteData {
@@ -22,13 +22,14 @@ export const usePostulante = (
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchPostulante = async (): Promise<void> => {
+  const fetchPostulante = useCallback(async (): Promise<void> => {
     setIsLoading(true);
     setError(null);
 
     try {
       if (!postulanteId) {
-        throw new Error("No se encontró ID válido en el token");
+        setError("No se encontró ID válido en el token");
+        return;
       }
 
       const token = localStorage.getItem("token");
@@ -45,7 +46,8 @@ export const usePostulante = (
 
       handleUnauthorized(response);
       if (!response.ok) {
-        throw new Error(`Error ${response.status}: ${response.statusText}`);
+        setError(`Error ${response.status}: ${response.statusText}`);
+        return;
       }
 
       const data: PostulanteData = await response.json();
@@ -59,11 +61,11 @@ export const usePostulante = (
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [postulanteId]);
 
   useEffect(() => {
     void fetchPostulante();
-  }, [postulanteId]);
+  }, [fetchPostulante]);
 
   const refetch = async (): Promise<void> => {
     await fetchPostulante();

@@ -148,6 +148,33 @@ The project uses Biome for linting and formatting with:
 
 When making code changes, ensure they comply with Biome rules or update biome.json if intentional deviations are needed.
 
+### Error Handling Patterns
+
+**Never throw exceptions caught locally.** When an error condition is detected inside a `try/catch` block and the error is handled in the same function (e.g., via `setError`), use `setError()` + `return` instead of `throw`. Only use `throw` when the error needs to propagate to the caller.
+
+```ts
+// BAD — throw caught locally
+try {
+  if (!response.ok) {
+    throw new Error("failed");
+  }
+} catch (err) {
+  setError(err.message);
+}
+
+// GOOD — handle directly
+if (!response.ok) {
+  setError("failed");
+  return;
+}
+```
+
+**Additional rules:**
+- Remove unused variables, imports, and function parameters. Prefix intentionally unused params with `_` (e.g., `_postulanteId`).
+- Avoid redundant local variables. If a value is only assigned and immediately returned, return the expression directly (e.g., `return (await response.json()) as Type;` instead of `const data = await response.json(); return data;`).
+- Keep imports sorted alphabetically (Biome's `organizeImports` rule).
+- Always specify exhaustive dependencies in `useEffect`/`useCallback` hooks. Wrap stable functions in `useCallback` when referenced in dependency arrays.
+
 ### Component Patterns
 
 **Server Components vs Client Components:**

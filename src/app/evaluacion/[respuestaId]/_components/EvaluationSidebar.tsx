@@ -224,9 +224,7 @@ export function EvaluationSidebar({
                     <div className="flex items-start justify-between mb-2">
                       <h4
                         className={`font-medium text-sm leading-tight ${
-                          isSelected
-                            ? "text-white"
-                            : "text-(--text-primary)"
+                          isSelected ? "text-white" : "text-(--text-primary)"
                         }`}
                       >
                         {exam.titulo}
@@ -254,9 +252,7 @@ export function EvaluationSidebar({
                     >
                       <div
                         className={`h-1.5 rounded-full transition-all duration-300 ${
-                          isSelected
-                            ? "bg-(--primary)"
-                            : "bg-(--primary)"
+                          isSelected ? "bg-(--primary)" : "bg-(--primary)"
                         }`}
                         style={{ width: `${progressPct}%` }}
                       />
@@ -288,9 +284,7 @@ export function EvaluationSidebar({
                     ) : (
                       <div
                         className={`mt-2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide ${
-                          isSelected
-                            ? "text-white/60"
-                            : "text-(--warning-text)"
+                          isSelected ? "text-white/60" : "text-(--warning-text)"
                         }`}
                       >
                         <svg

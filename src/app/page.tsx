@@ -48,9 +48,7 @@ export default function Home() {
             <h1 className="text-4xl lg:text-5xl font-bold text-(--text-primary) leading-tight">
               Plataforma de
               <br />
-              <span className="text-(--primary)">
-                Evaluaciones en Linea
-              </span>
+              <span className="text-(--primary)">Evaluaciones en Linea</span>
             </h1>
             <p className="mt-5 text-lg text-(--text-secondary) max-w-lg mx-auto lg:mx-0">
               Accede a tus evaluaciones asignadas, completa los cuestionarios y

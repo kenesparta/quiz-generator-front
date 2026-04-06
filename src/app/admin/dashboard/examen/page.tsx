@@ -18,9 +18,7 @@ export default function ExamenPage() {
     <div className="p-6">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-(--text-primary)">
-          Examen
-        </h1>
+        <h1 className="text-2xl font-semibold text-(--text-primary)">Examen</h1>
         <p className="text-sm text-(--text-tertiary) mt-1">
           Administra los exámenes y cuestionarios.
         </p>
@@ -64,9 +62,7 @@ export default function ExamenPage() {
             <div className="flex items-center justify-between mt-4 pt-4 border-t border-(--border-color-light)">
               <span className="inline-flex items-center gap-1.5 text-sm">
                 <span className={`w-2 h-2 rounded-full ${exam.dotColor}`} />
-                <span className="text-(--text-secondary)">
-                  {exam.status}
-                </span>
+                <span className="text-(--text-secondary)">{exam.status}</span>
               </span>
             </div>
           </div>

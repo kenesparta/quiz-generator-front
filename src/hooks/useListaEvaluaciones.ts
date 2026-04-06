@@ -65,7 +65,8 @@ export const useListaEvaluaciones = (
 
         handleUnauthorized(response);
         if (!response.ok) {
-          throw new Error("Error al cargar las evaluaciones");
+          setError("Error al cargar las evaluaciones");
+          return;
         }
 
         const data: EvaluacionesResponse = await response.json();
@@ -106,7 +107,8 @@ export const useListaEvaluaciones = (
 
       handleUnauthorized(response);
       if (!response.ok) {
-        throw new Error("Error al iniciar la evaluación");
+        setError("Error al iniciar la evaluación");
+        return false;
       }
 
       return true;

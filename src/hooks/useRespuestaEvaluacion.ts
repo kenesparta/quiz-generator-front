@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { EvaluationResponse } from "@/types/evaluacion";
+import { useEffect, useState } from "react";
 import { BASE_URL, handleUnauthorized } from "@/config/api";
+import type { EvaluationResponse } from "@/types/evaluacion";
 
 export const useRespuestaEvaluacion = (
   postulanteId: string | null,
@@ -39,7 +39,8 @@ export const useRespuestaEvaluacion = (
 
         handleUnauthorized(response);
         if (!response.ok) {
-          throw new Error(`Error ${response.status}: ${response.statusText}`);
+          setError(`Error ${response.status}: ${response.statusText}`);
+          return;
         }
 
         const data: EvaluationResponse = await response.json();
@@ -63,10 +64,10 @@ export const useRespuestaEvaluacion = (
     };
 
     void loadEvaluation();
-  }, [postulanteId]);
+  }, [postulanteId, revisionId]);
 
   const updateResponse = async (
-    postulanteId: string | null,
+    _postulanteId: string | null,
     questionId: string,
     response: string[],
   ) => {
@@ -100,20 +101,17 @@ export const useRespuestaEvaluacion = (
 
       handleUnauthorized(apiResponse);
       if (!apiResponse.ok) {
-        throw new Error(
-          `Error ${apiResponse.status}: ${apiResponse.statusText}`,
-        );
+        setError(`Error ${apiResponse.status}: ${apiResponse.statusText}`);
+        return;
       }
 
       setResponses((prev) => ({
         ...prev,
         [questionId]: response,
       }));
-    } catch (error) {
-      console.error("Error updating response:", error);
-      setError(
-        error instanceof Error ? error.message : "Error updating response",
-      );
+    } catch (err) {
+      console.error("Error updating response:", err);
+      setError(err instanceof Error ? err.message : "Error updating response");
     }
   };
 
@@ -129,41 +127,27 @@ export const useRespuestaEvaluacion = (
     setError(null);
 
     try {
-      const updatedEvaluation = {
-        ...initialResponses,
-        fecha_tiempo_fin: new Date().toISOString(),
-        evaluacion: {
-          ...initialResponses.evaluacion,
-          examenes: initialResponses.evaluacion.examenes.map((exam) => ({
-            ...exam,
-            preguntas: exam.preguntas.map((question) => ({
-              ...question,
-              respuestas: responses[question.id] || [],
-            })),
-          })),
-        },
-      };
-
+      const token = localStorage.getItem("token");
       const response = await fetch(
-        `${BASE_URL}/respuesta/${initialResponses.id}/finalizar`,
+        `${BASE_URL}/respuestas/${initialResponses.id}/estado`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }),
           },
-          body: JSON.stringify(updatedEvaluation),
+          body: JSON.stringify({
+            accion: "finalizar",
+          }),
         },
       );
 
       handleUnauthorized(response);
       if (!response.ok) {
-        throw new Error(`Error ${response.status}: ${response.statusText}`);
+        const errorMsg = `Error ${response.status}: ${response.statusText}`;
+        setError(errorMsg);
+        throw new Error(errorMsg);
       }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Error al enviar la evaluación",
-      );
-      throw err;
     } finally {
       setSubmitting(false);
     }

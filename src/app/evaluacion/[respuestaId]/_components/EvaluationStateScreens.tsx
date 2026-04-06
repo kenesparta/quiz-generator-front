@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 export function LoadingScreen() {
   return (
     <div className="min-h-screen bg-(--page-bg) flex items-center justify-center">
@@ -62,6 +64,8 @@ export function NoDataScreen() {
 }
 
 export function SubmittedScreen() {
+  const router = useRouter();
+
   return (
     <div className="min-h-screen bg-(--page-bg) flex items-center justify-center">
       <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light)">
@@ -85,9 +89,16 @@ export function SubmittedScreen() {
           <h3 className="text-lg font-semibold text-(--text-primary) mb-2">
             ¡Evaluación Enviada!
           </h3>
-          <p className="text-(--text-secondary) text-sm">
+          <p className="text-(--text-secondary) text-sm mb-6">
             Tu evaluación ha sido enviada correctamente.
           </p>
+          <button
+            type="button"
+            onClick={() => router.push("/evaluacion")}
+            className="bg-(--primary) text-white px-6 py-2.5 rounded-md hover:bg-(--primary-dark) transition-colors text-sm font-medium cursor-pointer"
+          >
+            Volver a mis evaluaciones
+          </button>
         </div>
       </div>
     </div>

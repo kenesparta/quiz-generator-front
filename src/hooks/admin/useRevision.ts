@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BASE_URL } from "@/config/api";
 
 interface PostulanteData {
@@ -29,32 +29,32 @@ export const useRevision = (): UseRevisionReturn => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchPostulante = async (
-    postulanteId: string,
-  ): Promise<PostulanteData | null> => {
-    try {
-      const response = await fetch(
-        `${BASE_URL}/postulante?id=${postulanteId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
+  const fetchPostulante = useCallback(
+    async (postulanteId: string): Promise<PostulanteData | null> => {
+      try {
+        const response = await fetch(
+          `${BASE_URL}/postulante?id=${postulanteId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
           },
-        },
-      );
+        );
 
-      if (!response.ok) {
+        if (!response.ok) {
+          return null;
+        }
+
+        return (await response.json()) as PostulanteData;
+      } catch {
         return null;
       }
+    },
+    [],
+  );
 
-      const data: PostulanteData = await response.json();
-      return data;
-    } catch {
-      return null;
-    }
-  };
-
-  const fetchRevisions = async (): Promise<void> => {
+  const fetchRevisions = useCallback(async (): Promise<void> => {
     setIsLoading(true);
     setError(null);
 
@@ -68,7 +68,8 @@ export const useRevision = (): UseRevisionReturn => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || "Error al obtener las revisiones");
+        setError(errorData.message || "Error al obtener las revisiones");
+        return;
       }
 
       const data: RevisionItem[] = await response.json();
@@ -92,11 +93,11 @@ export const useRevision = (): UseRevisionReturn => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [fetchPostulante]);
 
   useEffect(() => {
     fetchRevisions();
-  }, []);
+  }, [fetchRevisions]);
 
   return {
     revisions,

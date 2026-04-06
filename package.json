@@ -13,6 +13,7 @@
     "fmt": "biome format --write"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.19",
     "jspdf": "4.2.1",
     "next": "16.1.7",
     "react": "19.1.3",

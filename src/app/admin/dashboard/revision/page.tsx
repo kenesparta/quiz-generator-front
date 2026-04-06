@@ -49,9 +49,7 @@ export default function RevisionPage() {
           </h1>
         </div>
         <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light) p-6">
-          <p className="text-(--text-secondary)">
-            Cargando evaluaciones...
-          </p>
+          <p className="text-(--text-secondary)">Cargando evaluaciones...</p>
         </div>
       </div>
     );

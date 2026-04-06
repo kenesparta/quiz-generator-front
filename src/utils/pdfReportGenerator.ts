@@ -1,8 +1,8 @@
 "use client";
 
 import jsPDF from "jspdf";
-import type { EvaluationResponse } from "@/types/evaluacion";
 import { BASE_URL } from "@/config/api";
+import type { EvaluationResponse } from "@/types/evaluacion";
 
 interface PostulanteData {
   documento: string;

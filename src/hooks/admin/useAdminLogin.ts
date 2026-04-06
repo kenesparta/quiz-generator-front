@@ -1,16 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { BASE_URL } from "@/config/api";
 
 interface LoginRequest {
   user_name: string;
   password: string;
-}
-
-interface LoginResponse {
-  token: string;
-  expires_in: number;
 }
 
 interface UseLoginReturn {
@@ -23,7 +17,7 @@ export const useAdminLogin = (): UseLoginReturn => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const login = async (credentials: LoginRequest): Promise<void> => {
+  const login = async (_credentials: LoginRequest): Promise<void> => {
     setIsLoading(true);
     setError(null);
 

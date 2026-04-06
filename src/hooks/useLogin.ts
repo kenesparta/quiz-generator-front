@@ -38,7 +38,8 @@ export const useLogin = (): UseLoginReturn => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || "Credenciales incorrectas");
+        setError(errorData.message || "Credenciales incorrectas");
+        return;
       }
 
       const data: LoginResponse = await response.json();

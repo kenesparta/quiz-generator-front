@@ -1,14 +1,14 @@
 "use client";
 
-import { ExamSection } from "@/components/ExamSection";
-import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { useState } from "react";
-import { useRespuestaEvaluacion } from "@/hooks/useRespuestaEvaluacion";
-import { BASE_URL } from "@/config/api";
 import {
   ResultadoDelExamen,
   type ResultadoTipo,
 } from "@/components/admin/ResultadoDelExamen";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { ExamSection } from "@/components/ExamSection";
+import { BASE_URL } from "@/config/api";
+import { useRespuestaEvaluacion } from "@/hooks/useRespuestaEvaluacion";
 
 interface RevisionProps {
   postulanteId: string;
@@ -16,15 +16,8 @@ interface RevisionProps {
 }
 
 export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
-  const {
-    initialResponses,
-    responses,
-    loading,
-    error,
-    submitting,
-    updateResponse,
-    submitEvaluation,
-  } = useRespuestaEvaluacion(postulanteId, revisionId);
+  const { initialResponses, responses, loading, updateResponse } =
+    useRespuestaEvaluacion(postulanteId, revisionId);
 
   const [selectedExamId, setSelectedExamId] = useState<string | null>(null);
   const [examObservaciones, setExamObservaciones] = useState<
@@ -160,9 +153,7 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
   if (!initialResponses) {
     return (
       <div className="min-h-screen bg-(--page-bg) flex items-center justify-center">
-        <p className="text-(--text-secondary)">
-          No se encontró la evaluación.
-        </p>
+        <p className="text-(--text-secondary)">No se encontró la evaluación.</p>
       </div>
     );
   }

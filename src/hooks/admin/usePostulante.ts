@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import type {
-  PostulanteListItem,
-  CreatePostulanteRequest,
-} from "@/types/postulante";
+import { useCallback, useEffect, useState } from "react";
 import { BASE_URL } from "@/config/api";
+import type {
+  CreatePostulanteRequest,
+  PostulanteListItem,
+} from "@/types/postulante";
 
 interface UsePostulanteReturn {
   postulantes: PostulanteListItem[];
@@ -31,7 +31,7 @@ export const usePostulante = (): UsePostulanteReturn => {
   const [error, setError] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
-  const fetchPostulantes = async (): Promise<void> => {
+  const fetchPostulantes = useCallback(async (): Promise<void> => {
     setIsLoading(true);
     setError(null);
 
@@ -45,9 +45,8 @@ export const usePostulante = (): UsePostulanteReturn => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          errorData.message || "Error al obtener los postulantes",
-        );
+        setError(errorData.message || "Error al obtener los postulantes");
+        return;
       }
 
       const data: PostulanteListItem[] = await response.json();
@@ -59,7 +58,7 @@ export const usePostulante = (): UsePostulanteReturn => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const createPostulante = async (
     data: CreatePostulanteRequest,
@@ -79,7 +78,8 @@ export const usePostulante = (): UsePostulanteReturn => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || "Error al crear el postulante");
+        setError(errorData.message || "Error al crear el postulante");
+        return false;
       }
 
       // Create respuesta for the new postulante
@@ -96,9 +96,10 @@ export const usePostulante = (): UsePostulanteReturn => {
 
       if (!respuestaResponse.ok) {
         const errorData = await respuestaResponse.json().catch(() => ({}));
-        throw new Error(
+        setError(
           errorData.message || "Error al crear la respuesta del postulante",
         );
+        return false;
       }
 
       // Refresh the list after creating
@@ -116,7 +117,7 @@ export const usePostulante = (): UsePostulanteReturn => {
 
   useEffect(() => {
     fetchPostulantes();
-  }, []);
+  }, [fetchPostulantes]);
 
   return {
     postulantes,
