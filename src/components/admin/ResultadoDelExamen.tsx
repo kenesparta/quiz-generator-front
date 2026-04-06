@@ -12,8 +12,8 @@ export const ResultadoDelExamen = ({
   onResultadoChange,
 }: ResultadoDelExamenProps) => {
   return (
-    <div className="p-4 border-t border-[var(--border-color)] bg-[var(--neutral-50)]">
-      <h3 className="font-medium text-[var(--text-primary)] mb-3 text-sm">
+    <div className="p-4 border-t border-(--border-color) bg-(--neutral-50)">
+      <h3 className="font-medium text-(--text-primary) mb-3 text-sm">
         Resultado del Examen
       </h3>
       <div className="space-y-3">
@@ -23,9 +23,9 @@ export const ResultadoDelExamen = ({
             name="resultado"
             checked={resultado === "apto"}
             onChange={() => onResultadoChange("apto")}
-            className="w-4 h-4 text-[var(--primary)] bg-[var(--neutral-100)] focus:ring-[var(--primary)] focus:ring-2"
+            className="w-4 h-4 text-(--primary) bg-(--neutral-100) focus:ring-(--primary) focus:ring-2"
           />
-          <span className="ml-2 text-sm text-[var(--text-primary)]">Apto</span>
+          <span className="ml-2 text-sm text-(--text-primary)">Apto</span>
         </label>
 
         <label className="flex items-center cursor-pointer">
@@ -34,9 +34,9 @@ export const ResultadoDelExamen = ({
             name="resultado"
             checked={resultado === "no_apto"}
             onChange={() => onResultadoChange("no_apto")}
-            className="w-4 h-4 text-[var(--primary)] bg-[var(--neutral-100)] focus:ring-[var(--primary)] focus:ring-2"
+            className="w-4 h-4 text-(--primary) bg-(--neutral-100) focus:ring-(--primary) focus:ring-2"
           />
-          <span className="ml-2 text-sm text-[var(--text-primary)]">
+          <span className="ml-2 text-sm text-(--text-primary)">
             No Apto
           </span>
         </label>
@@ -47,9 +47,9 @@ export const ResultadoDelExamen = ({
             name="resultado"
             checked={resultado === "evaluacion_especializada"}
             onChange={() => onResultadoChange("evaluacion_especializada")}
-            className="w-4 h-4 text-[var(--primary)] bg-[var(--neutral-100)] focus:ring-[var(--primary)] focus:ring-2"
+            className="w-4 h-4 text-(--primary) bg-(--neutral-100) focus:ring-(--primary) focus:ring-2"
           />
-          <span className="ml-2 text-sm text-[var(--text-primary)]">
+          <span className="ml-2 text-sm text-(--text-primary)">
             Evaluacion Especializada
           </span>
         </label>

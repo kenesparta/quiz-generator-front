@@ -211,12 +211,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   return (
-    <div className="flex min-h-screen bg-[var(--page-bg)]">
+    <div className="flex min-h-screen bg-(--page-bg)">
       {/* Sidebar */}
-      <aside className="w-64 bg-[var(--sidebar-bg)] fixed h-full flex flex-col z-20">
+      <aside className="w-64 bg-(--sidebar-bg) fixed h-full flex flex-col z-20">
         {/* Brand */}
         <div className="flex items-center gap-3 h-16 px-6 border-b border-white/10">
-          <div className="w-8 h-8 rounded-lg bg-[var(--sidebar-active-bg)] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-(--sidebar-active-bg) flex items-center justify-center">
             <svg
               aria-hidden="true"
               className="w-5 h-5 text-white"
@@ -253,7 +253,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   href={item.href}
                   className={`flex items-center gap-3 px-6 py-2.5 text-sm transition-colors duration-200 ${
                     isActive(item.href)
-                      ? "bg-[var(--sidebar-active-bg)] text-white font-medium"
+                      ? "bg-(--sidebar-active-bg) text-white font-medium"
                       : "text-white/65 hover:text-white hover:bg-white/8"
                   }`}
                 >
@@ -272,25 +272,25 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       </aside>
 
       {/* Top Bar */}
-      <header className="fixed top-0 left-64 right-0 h-16 bg-white border-b border-[var(--border-color-light)] flex items-center justify-between px-6 z-10">
+      <header className="fixed top-0 left-64 right-0 h-16 bg-white border-b border-(--border-color-light) flex items-center justify-between px-6 z-10">
         {/* Breadcrumbs */}
         <div className="flex items-center gap-1.5 text-sm">
           {breadcrumbs.map((crumb, index) => (
             <span key={crumb.label} className="flex items-center gap-1.5">
               {index > 0 && (
-                <span className="text-[var(--text-tertiary)]">
+                <span className="text-(--text-tertiary)">
                   <ChevronIcon />
                 </span>
               )}
               {crumb.href && index < breadcrumbs.length - 1 ? (
                 <Link
                   href={crumb.href}
-                  className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
+                  className="text-(--text-tertiary) hover:text-(--text-primary) transition-colors"
                 >
                   {crumb.label}
                 </Link>
               ) : (
-                <span className="text-[var(--text-primary)] font-medium">
+                <span className="text-(--text-primary) font-medium">
                   {crumb.label}
                 </span>
               )}
@@ -300,7 +300,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
         {/* Avatar */}
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-[var(--sidebar-active-bg)] flex items-center justify-center text-white text-sm font-medium">
+          <div className="w-8 h-8 rounded-full bg-(--sidebar-active-bg) flex items-center justify-center text-white text-sm font-medium">
             A
           </div>
         </div>

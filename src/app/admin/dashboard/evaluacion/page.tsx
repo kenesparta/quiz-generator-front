@@ -5,8 +5,8 @@ export default function EvaluacionPage() {
       value: 12,
       trend: "+2 esta semana",
       trendUp: true,
-      bgColor: "bg-[var(--primary-light)]",
-      iconColor: "text-[var(--primary)]",
+      bgColor: "bg-(--primary-light)",
+      iconColor: "text-(--primary)",
       icon: (
         <svg
           aria-hidden="true"
@@ -27,8 +27,8 @@ export default function EvaluacionPage() {
       value: 45,
       trend: "+8 este mes",
       trendUp: true,
-      bgColor: "bg-[var(--success-light)]",
-      iconColor: "text-[var(--success)]",
+      bgColor: "bg-(--success-light)",
+      iconColor: "text-(--success)",
       icon: (
         <svg
           aria-hidden="true"
@@ -50,8 +50,8 @@ export default function EvaluacionPage() {
       value: 8,
       trend: "-3 vs. semana pasada",
       trendUp: false,
-      bgColor: "bg-[var(--warning-light)]",
-      iconColor: "text-[var(--warning)]",
+      bgColor: "bg-(--warning-light)",
+      iconColor: "text-(--warning)",
       icon: (
         <svg
           aria-hidden="true"
@@ -72,27 +72,27 @@ export default function EvaluacionPage() {
 
   const activities = [
     {
-      color: "bg-[var(--success-light)]0",
+      color: "bg-(--success-light)0",
       text: "Evaluación de Matemáticas completada por Juan Pérez",
       time: "Hace 2 horas",
     },
     {
-      color: "bg-[var(--warning)]",
+      color: "bg-(--warning)",
       text: "María García inició la Evaluación de Historia",
       time: "Hace 4 horas",
     },
     {
-      color: "bg-[var(--primary)]",
+      color: "bg-(--primary)",
       text: "Nueva evaluación de Ciencias creada",
       time: "Hace 6 horas",
     },
     {
-      color: "bg-[var(--success-light)]0",
+      color: "bg-(--success-light)0",
       text: "Carlos López finalizó su evaluación",
       time: "Ayer",
     },
     {
-      color: "bg-[var(--neutral-400)]",
+      color: "bg-(--neutral-400)",
       text: "Evaluación de Geografía programada para revisión",
       time: "Ayer",
     },
@@ -102,10 +102,10 @@ export default function EvaluacionPage() {
     <div className="p-6">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-[var(--text-primary)]">
+        <h1 className="text-2xl font-semibold text-(--text-primary)">
           Evaluación
         </h1>
-        <p className="text-sm text-[var(--text-tertiary)] mt-1">
+        <p className="text-sm text-(--text-tertiary) mt-1">
           Gestiona las evaluaciones del sistema.
         </p>
       </div>
@@ -115,10 +115,10 @@ export default function EvaluacionPage() {
         {metrics.map((metric) => (
           <div
             key={metric.label}
-            className="bg-white rounded-lg p-6 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)]"
+            className="bg-white rounded-lg p-6 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light)"
           >
             <div className="flex justify-between items-start">
-              <span className="text-sm font-medium text-[var(--text-tertiary)]">
+              <span className="text-sm font-medium text-(--text-tertiary)">
                 {metric.label}
               </span>
               <div
@@ -128,14 +128,14 @@ export default function EvaluacionPage() {
               </div>
             </div>
             <div className="mt-3">
-              <span className="text-3xl font-bold text-[var(--text-primary)]">
+              <span className="text-3xl font-bold text-(--text-primary)">
                 {metric.value}
               </span>
             </div>
             <div className="mt-2 flex items-center gap-1">
               <svg
                 aria-hidden="true"
-                className={`w-3 h-3 ${metric.trendUp ? "text-[var(--success)]" : "text-[var(--danger)]"}`}
+                className={`w-3 h-3 ${metric.trendUp ? "text-(--success)" : "text-(--danger)"}`}
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={2}
@@ -147,7 +147,7 @@ export default function EvaluacionPage() {
                   d={metric.trendUp ? "M5 15l7-7 7 7" : "M19 9l-7 7-7-7"}
                 />
               </svg>
-              <span className="text-xs text-[var(--text-tertiary)]">
+              <span className="text-xs text-(--text-tertiary)">
                 {metric.trend}
               </span>
             </div>
@@ -156,13 +156,13 @@ export default function EvaluacionPage() {
       </div>
 
       {/* Activity Feed */}
-      <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)]">
-        <div className="px-6 py-4 border-b border-[var(--border-color-light)]">
-          <h2 className="text-base font-semibold text-[var(--text-primary)]">
+      <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light)">
+        <div className="px-6 py-4 border-b border-(--border-color-light)">
+          <h2 className="text-base font-semibold text-(--text-primary)">
             Actividad Reciente
           </h2>
         </div>
-        <div className="divide-y divide-[var(--border-color-light)]">
+        <div className="divide-y divide-(--border-color-light)">
           {activities.map((activity) => (
             <div
               key={activity.text}
@@ -172,10 +172,10 @@ export default function EvaluacionPage() {
                 className={`w-2 h-2 rounded-full ${activity.color} mt-1.5 shrink-0`}
               />
               <div>
-                <p className="text-sm text-[var(--text-primary)]">
+                <p className="text-sm text-(--text-primary)">
                   {activity.text}
                 </p>
-                <p className="text-xs text-[var(--text-tertiary)] mt-1">
+                <p className="text-xs text-(--text-tertiary) mt-1">
                   {activity.time}
                 </p>
               </div>

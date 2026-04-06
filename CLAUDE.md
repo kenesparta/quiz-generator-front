@@ -158,6 +158,7 @@ When making code changes, ensure they comply with Biome rules or update biome.js
 - Tailwind utility classes for all styling
 - No CSS modules or styled-components
 - Responsive design with mobile-first approach
+- **Tailwind v4 CSS variable syntax:** Always use `bg-(--my-var)` instead of `bg-[var(--my-var)]`. The parentheses shorthand is the modern Tailwind v4 way to reference CSS custom properties.
 
 ### Known Issues/TODOs
 

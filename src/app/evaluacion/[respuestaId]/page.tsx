@@ -116,7 +116,7 @@ export default function EvaluationPage({ params }: PageProps) {
     : initialResponses.evaluacion.examenes[0];
 
   return (
-    <div className="min-h-screen bg-[var(--page-bg)] flex">
+    <div className="min-h-screen bg-(--page-bg) flex">
       <EvaluationSidebar
         initialResponses={initialResponses}
         postulante={postulante}

@@ -148,10 +148,10 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
+      <div className="min-h-screen bg-(--page-bg) flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[var(--primary)] mx-auto mb-4"></div>
-          <p className="text-[var(--text-secondary)]">Cargando evaluación...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-(--primary) mx-auto mb-4"></div>
+          <p className="text-(--text-secondary)">Cargando evaluación...</p>
         </div>
       </div>
     );
@@ -159,8 +159,8 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
 
   if (!initialResponses) {
     return (
-      <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
-        <p className="text-[var(--text-secondary)]">
+      <div className="min-h-screen bg-(--page-bg) flex items-center justify-center">
+        <p className="text-(--text-secondary)">
           No se encontró la evaluación.
         </p>
       </div>
@@ -172,15 +172,15 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
     : initialResponses.evaluacion.examenes[0];
 
   return (
-    <div className="min-h-screen bg-[var(--page-bg)] flex">
+    <div className="min-h-screen bg-(--page-bg) flex">
       {/* Sticky Left Sidebar */}
-      <div className="w-64 bg-white shadow-lg border-r border-[var(--border-color)] fixed left-0 top-0 h-full z-10">
+      <div className="w-64 bg-white shadow-lg border-r border-(--border-color) fixed left-0 top-0 h-full z-10">
         <div className="flex flex-col h-full">
           {/* Return Button */}
-          <div className="p-4 border-b border-[var(--border-color)]">
+          <div className="p-4 border-b border-(--border-color)">
             <a
               href="/admin/dashboard/revision"
-              className="flex items-center text-sm text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors"
+              className="flex items-center text-sm text-(--text-secondary) hover:text-(--primary) transition-colors"
             >
               <svg
                 className="w-4 h-4 mr-2"
@@ -200,18 +200,18 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
           </div>
 
           {/* Header */}
-          <div className="p-4 border-b border-[var(--border-color)] bg-[var(--primary-light)]">
-            <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
+          <div className="p-4 border-b border-(--border-color) bg-(--primary-light)">
+            <h2 className="text-lg font-semibold text-(--text-primary) mb-2">
               Revisión
             </h2>
-            <div className="text-sm text-[var(--text-secondary)]">
+            <div className="text-sm text-(--text-secondary)">
               {initialResponses.evaluacion.nombre}
             </div>
           </div>
 
           {/* Exams List */}
           <div className="flex-1 overflow-y-auto p-4">
-            <h3 className="font-medium text-[var(--text-primary)] mb-3 text-sm">
+            <h3 className="font-medium text-(--text-primary) mb-3 text-sm">
               Exámenes
             </h3>
             <div className="space-y-2">
@@ -226,14 +226,14 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
                     onClick={() => setSelectedExamId(exam.id)}
                     className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-all duration-200 ${
                       isSelected
-                        ? "border-[var(--success)] bg-[var(--success-light)] text-[var(--success-text)]"
-                        : "border-[var(--border-color)] bg-white hover:border-[var(--border-color)] hover:bg-[var(--page-bg)]"
+                        ? "border-(--success) bg-(--success-light) text-(--success-text)"
+                        : "border-(--border-color) bg-white hover:border-(--border-color) hover:bg-(--page-bg)"
                     }`}
                   >
                     <div className="font-medium text-sm">
                       Examen {index + 1}
                     </div>
-                    <div className="text-xs text-[var(--text-secondary)] mt-1 truncate">
+                    <div className="text-xs text-(--text-secondary) mt-1 truncate">
                       {exam.titulo}
                     </div>
                   </button>
@@ -248,14 +248,14 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
           />
 
           {/* Finalizar Button */}
-          <div className="p-4 border-t border-[var(--border-color)] bg-white">
+          <div className="p-4 border-t border-(--border-color) bg-white">
             <button
               onClick={handleFinalize}
               disabled={isSubmitting}
               className={`w-full py-3 rounded-lg text-white font-semibold shadow-lg transition-all duration-300 ${
                 isSubmitting
-                  ? "bg-[var(--neutral-400)] cursor-not-allowed"
-                  : "bg-[var(--primary)] hover:bg-[var(--primary-dark)] hover:shadow-xl"
+                  ? "bg-(--neutral-400) cursor-not-allowed"
+                  : "bg-(--primary) hover:bg-(--primary-dark) hover:shadow-xl"
               }`}
             >
               {isSubmitting ? (

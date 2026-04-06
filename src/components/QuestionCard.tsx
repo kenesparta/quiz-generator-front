@@ -44,8 +44,8 @@ export const QuestionCard = ({
                 key={key}
                 className={`flex items-start space-x-3 cursor-pointer p-3 rounded-md border transition-colors ${
                   isSelected
-                    ? "border-[var(--primary)] bg-[var(--primary-light)]"
-                    : "border-[var(--border-color)] hover:bg-[var(--table-header-bg)] hover:border-[var(--primary)]"
+                    ? "border-(--primary) bg-(--primary-light)"
+                    : "border-(--border-color) hover:bg-(--table-header-bg) hover:border-(--primary)"
                 } ${disabled ? "cursor-default" : ""}`}
               >
                 <input
@@ -55,10 +55,10 @@ export const QuestionCard = ({
                   value={key}
                   checked={isSelected}
                   onChange={(e) => handleSingleChoice(e.target.value)}
-                  className="mt-0.5 h-4 w-4 text-[var(--primary)] border-[var(--border-color)] focus:ring-[var(--primary)] focus:ring-1"
+                  className="mt-0.5 h-4 w-4 text-(--primary) border-(--border-color) focus:ring-(--primary) focus:ring-1"
                 />
                 <div className="flex-1">
-                  <span className="text-base text-[var(--text-primary)]">
+                  <span className="text-base text-(--text-primary)">
                     {value}
                   </span>
                 </div>
@@ -78,22 +78,22 @@ export const QuestionCard = ({
     <div
       className={`rounded-lg border p-6 mb-4 transition-shadow ${
         isAnswered
-          ? "bg-white border-[var(--border-color)] border-l-4 border-l-[var(--primary)] shadow-none"
-          : "bg-white border-[var(--border-color-light)] shadow-[0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-md"
+          ? "bg-white border-(--border-color) border-l-4 border-l-(--primary) shadow-none"
+          : "bg-white border-(--border-color-light) shadow-[0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-md"
       }`}
     >
       {/* Question header */}
       <div className="flex items-start gap-4 mb-4">
-        <span className="flex-shrink-0 bg-[var(--sidebar-bg)] text-white w-7 h-7 rounded-md text-sm font-medium flex items-center justify-center">
+        <span className="flex-shrink-0 bg-(--sidebar-bg) text-white w-7 h-7 rounded-md text-sm font-medium flex items-center justify-center">
           {questionNumber}
         </span>
         <div className="flex-1">
           <div className="flex items-start justify-between gap-3">
-            <div className="text-[var(--text-primary)] font-medium leading-relaxed text-base prose prose-base max-w-none">
+            <div className="text-(--text-primary) font-medium leading-relaxed text-base prose prose-base max-w-none">
               <Markdown>{question.contenido}</Markdown>
             </div>
             {isAnswered && !disabled && (
-              <span className="flex-shrink-0 text-xs font-medium text-[var(--primary)] bg-white/80 border border-[var(--primary)] px-2 py-0.5 rounded-md">
+              <span className="flex-shrink-0 text-xs font-medium text-(--primary) bg-white/80 border border-(--primary) px-2 py-0.5 rounded-md">
                 Respondida
               </span>
             )}
@@ -110,7 +110,7 @@ export const QuestionCard = ({
             value={response[0] || ""}
             onChange={(e) => handleTextResponse(e.target.value)}
             placeholder="Escriba su respuesta aquí..."
-            className="w-full px-3 py-2.5 border border-[var(--border-color)] rounded-md text-sm focus:ring-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] outline-none transition-colors disabled:bg-[var(--table-header-bg)] disabled:text-[var(--text-secondary)]"
+            className="w-full px-3 py-2.5 border border-(--border-color) rounded-md text-sm focus:ring-1 focus:ring-(--primary) focus:border-(--primary) outline-none transition-colors disabled:bg-(--table-header-bg) disabled:text-(--text-secondary)"
           />
         </div>
       ) : (
@@ -120,7 +120,7 @@ export const QuestionCard = ({
       {/* Footer */}
       {disabled && (
         <div className="mt-4 flex justify-end">
-          <span className="bg-[var(--table-header-bg)] text-[var(--primary)] px-3 py-1 rounded-full text-xs font-semibold">
+          <span className="bg-(--table-header-bg) text-(--primary) px-3 py-1 rounded-full text-xs font-semibold">
             Puntaje: {question.puntos}
           </span>
         </div>

@@ -22,10 +22,10 @@ export default function Login() {
   return (
     <div className="min-h-screen flex">
       {/* Left decorative panel */}
-      <div className="hidden lg:flex lg:w-1/2 bg-[var(--sidebar-bg)] relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-(--sidebar-bg) relative overflow-hidden">
         <div className="flex flex-col justify-center px-16 relative z-10">
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-[var(--primary)] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-(--primary) flex items-center justify-center">
               <svg
                 aria-hidden="true"
                 className="w-6 h-6 text-white"
@@ -59,16 +59,16 @@ export default function Login() {
           </p>
         </div>
         {/* Decorative circles */}
-        <div className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full bg-[var(--primary)]/10" />
-        <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-[var(--primary)]/5" />
+        <div className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full bg-(--primary)/10" />
+        <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-(--primary)/5" />
       </div>
 
       {/* Right login form */}
-      <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 lg:px-16 bg-[var(--page-bg)]">
+      <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 lg:px-16 bg-(--page-bg)">
         <div className="w-full max-w-sm mx-auto">
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-[var(--primary)] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-(--primary) flex items-center justify-center">
               <svg
                 aria-hidden="true"
                 className="w-6 h-6 text-white"
@@ -89,24 +89,24 @@ export default function Login() {
                 />
               </svg>
             </div>
-            <span className="text-[var(--text-primary)] font-semibold text-xl">
+            <span className="text-(--text-primary) font-semibold text-xl">
               Quiz Admin
             </span>
           </div>
 
           <div className="mb-8">
-            <h2 className="text-2xl font-semibold text-[var(--text-primary)]">
+            <h2 className="text-2xl font-semibold text-(--text-primary)">
               Iniciar Sesión
             </h2>
-            <p className="mt-2 text-sm text-[var(--text-tertiary)]">
+            <p className="mt-2 text-sm text-(--text-tertiary)">
               Accede al Sistema de Administración
             </p>
           </div>
 
-          <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)] p-6">
+          <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light) p-6">
             <form className="space-y-5" onSubmit={handleSubmit}>
               {error && (
-                <div className="flex items-center gap-2 bg-[var(--danger-light)] border border-[var(--danger-border)] text-[var(--danger)] px-4 py-3 rounded-md text-sm">
+                <div className="flex items-center gap-2 bg-(--danger-light) border border-(--danger-border) text-(--danger) px-4 py-3 rounded-md text-sm">
                   <svg
                     aria-hidden="true"
                     className="w-4 h-4 shrink-0"
@@ -129,7 +129,7 @@ export default function Login() {
               <div>
                 <label
                   htmlFor="user_name"
-                  className="block text-sm font-medium text-[var(--text-primary)] mb-1.5"
+                  className="block text-sm font-medium text-(--text-primary) mb-1.5"
                 >
                   DNI
                 </label>
@@ -141,7 +141,7 @@ export default function Login() {
                   required
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border-color)] rounded-md text-sm placeholder-[var(--text-tertiary)] focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] outline-none transition-colors"
+                  className="w-full px-3 py-2 border border-(--border-color) rounded-md text-sm placeholder-(--text-tertiary) focus:border-(--primary) focus:ring-1 focus:ring-(--primary) outline-none transition-colors"
                   placeholder="123245678"
                 />
               </div>
@@ -149,7 +149,7 @@ export default function Login() {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-[var(--text-primary)] mb-1.5"
+                  className="block text-sm font-medium text-(--text-primary) mb-1.5"
                 >
                   Contraseña
                 </label>
@@ -161,7 +161,7 @@ export default function Login() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border-color)] rounded-md text-sm placeholder-[var(--text-tertiary)] focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] outline-none transition-colors"
+                  className="w-full px-3 py-2 border border-(--border-color) rounded-md text-sm placeholder-(--text-tertiary) focus:border-(--primary) focus:ring-1 focus:ring-(--primary) outline-none transition-colors"
                   placeholder="••••••••"
                 />
               </div>
@@ -169,7 +169,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center py-2.5 px-4 text-sm font-medium rounded-md text-white bg-[var(--primary)] hover:bg-[var(--primary-dark)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="w-full flex justify-center py-2.5 px-4 text-sm font-medium rounded-md text-white bg-(--primary) hover:bg-(--primary-dark) focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-(--primary) disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {isLoading ? (
                   <div className="flex items-center">

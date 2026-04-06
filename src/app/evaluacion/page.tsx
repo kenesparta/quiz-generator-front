@@ -8,16 +8,16 @@ import { getSubFromJWT } from "@/utils/jwt";
 
 const getEstadoDot = (estado: string) => {
   const config: Record<string, { color: string; label: string }> = {
-    creado: { color: "bg-[var(--primary)]", label: "Pendiente" },
-    en_progreso: { color: "bg-[var(--warning)]", label: "En Progreso" },
-    completado: { color: "bg-[var(--success)]", label: "Completado" },
+    creado: { color: "bg-(--primary)", label: "Pendiente" },
+    en_progreso: { color: "bg-(--warning)", label: "En Progreso" },
+    completado: { color: "bg-(--success)", label: "Completado" },
   };
   const { color, label } = config[estado] || {
-    color: "bg-[var(--neutral-400)]",
+    color: "bg-(--neutral-400)",
     label: estado,
   };
   return (
-    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--text-secondary)]">
+    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-(--text-secondary)">
       <span className={`w-2 h-2 rounded-full ${color}`} />
       {label}
     </span>
@@ -52,10 +52,10 @@ export default function EvaluacionesPage() {
 
   if (isLoading || postulanteLoading) {
     return (
-      <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
+      <div className="min-h-screen bg-(--page-bg) flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-2 border-[var(--border-color-light)] border-t-[var(--primary)] mx-auto mb-4" />
-          <p className="text-[var(--text-secondary)] text-sm">
+          <div className="animate-spin rounded-full h-12 w-12 border-2 border-(--border-color-light) border-t-(--primary) mx-auto mb-4" />
+          <p className="text-(--text-secondary) text-sm">
             Cargando evaluaciones...
           </p>
         </div>
@@ -65,13 +65,13 @@ export default function EvaluacionesPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
-        <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)]">
+      <div className="min-h-screen bg-(--page-bg) flex items-center justify-center">
+        <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light)">
           <div className="text-center">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-[var(--danger-light)] mb-4">
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-(--danger-light) mb-4">
               <svg
                 aria-hidden="true"
-                className="h-6 w-6 text-[var(--danger)]"
+                className="h-6 w-6 text-(--danger)"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -84,14 +84,14 @@ export default function EvaluacionesPage() {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
+            <h3 className="text-lg font-semibold text-(--text-primary) mb-2">
               Error
             </h3>
-            <p className="text-[var(--text-secondary)] text-sm mb-4">{error}</p>
+            <p className="text-(--text-secondary) text-sm mb-4">{error}</p>
             <button
               type="button"
               onClick={() => window.location.reload()}
-              className="bg-[var(--primary)] text-white px-4 py-2 rounded-md hover:bg-[var(--primary-dark)] transition-colors text-sm font-medium"
+              className="bg-(--primary) text-white px-4 py-2 rounded-md hover:bg-(--primary-dark) transition-colors text-sm font-medium"
             >
               Reintentar
             </button>
@@ -102,13 +102,13 @@ export default function EvaluacionesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--page-bg)]">
+    <div className="min-h-screen bg-(--page-bg)">
       {/* Top Bar */}
-      <header className="bg-[var(--sidebar-bg)] text-white">
+      <header className="bg-(--sidebar-bg) text-white">
         <div className="max-w-5xl mx-auto px-6 py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-9 h-9 rounded-lg bg-[var(--primary)] flex items-center justify-center">
+              <div className="w-9 h-9 rounded-lg bg-(--primary) flex items-center justify-center">
                 <svg
                   aria-hidden="true"
                   className="w-5 h-5 text-white"
@@ -170,10 +170,10 @@ export default function EvaluacionesPage() {
       {/* Content */}
       <div className="max-w-5xl mx-auto px-6 py-8">
         {evaluaciones.length === 0 ? (
-          <div className="bg-white rounded-lg p-12 text-center shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)]">
+          <div className="bg-white rounded-lg p-12 text-center shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light)">
             <svg
               aria-hidden="true"
-              className="w-12 h-12 text-[var(--neutral-300)] mx-auto mb-4"
+              className="w-12 h-12 text-(--neutral-300) mx-auto mb-4"
               fill="none"
               stroke="currentColor"
               strokeWidth={1.5}
@@ -185,10 +185,10 @@ export default function EvaluacionesPage() {
                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
-            <h3 className="text-base font-semibold text-[var(--text-primary)] mb-1">
+            <h3 className="text-base font-semibold text-(--text-primary) mb-1">
               No hay evaluaciones disponibles
             </h3>
-            <p className="text-sm text-[var(--text-tertiary)]">
+            <p className="text-sm text-(--text-tertiary)">
               No tienes evaluaciones asignadas en este momento.
             </p>
           </div>
@@ -197,11 +197,11 @@ export default function EvaluacionesPage() {
             {evaluaciones.map((evaluacion) => (
               <div
                 key={evaluacion.respuesta_id}
-                className="bg-white rounded-lg p-5 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)] hover:shadow-md transition-shadow"
+                className="bg-white rounded-lg p-5 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light) hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-start gap-4 flex-1">
-                    <div className="w-10 h-10 rounded-lg bg-[var(--primary-light)] flex items-center justify-center text-[var(--primary)] shrink-0 mt-0.5">
+                    <div className="w-10 h-10 rounded-lg bg-(--primary-light) flex items-center justify-center text-(--primary) shrink-0 mt-0.5">
                       <svg
                         aria-hidden="true"
                         className="w-5 h-5"
@@ -219,12 +219,12 @@ export default function EvaluacionesPage() {
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-1">
-                        <h2 className="text-base font-semibold text-[var(--text-primary)]">
+                        <h2 className="text-base font-semibold text-(--text-primary)">
                           {evaluacion.nombre_evaluacion}
                         </h2>
                         {getEstadoDot(evaluacion.estado)}
                       </div>
-                      <p className="text-sm text-[var(--text-tertiary)]">
+                      <p className="text-sm text-(--text-tertiary)">
                         {evaluacion.descripcion_evaluacion}
                       </p>
                     </div>
@@ -234,7 +234,7 @@ export default function EvaluacionesPage() {
                       <button
                         type="button"
                         disabled
-                        className="px-4 py-2 bg-[var(--neutral-100)] text-[var(--text-tertiary)] rounded-md cursor-not-allowed text-sm"
+                        className="px-4 py-2 bg-(--neutral-100) text-(--text-tertiary) rounded-md cursor-not-allowed text-sm"
                       >
                         Completado
                       </button>
@@ -244,7 +244,7 @@ export default function EvaluacionesPage() {
                         onClick={() =>
                           router.push(`/evaluacion/${evaluacion.respuesta_id}`)
                         }
-                        className="px-4 py-2 bg-white border border-[var(--warning)] text-[var(--warning-text)] rounded-md hover:bg-[var(--warning-light)] transition-colors text-sm font-medium"
+                        className="px-4 py-2 bg-white border border-(--warning) text-(--warning-text) rounded-md hover:bg-(--warning-light) transition-colors text-sm font-medium"
                       >
                         Continuar
                       </button>
@@ -255,7 +255,7 @@ export default function EvaluacionesPage() {
                           handleStartEvaluacion(evaluacion.respuesta_id)
                         }
                         disabled={isStarting}
-                        className="px-4 py-2 bg-[var(--primary)] text-white rounded-md hover:bg-[var(--primary-dark)] transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-4 py-2 bg-(--primary) text-white rounded-md hover:bg-(--primary-dark) transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {isStarting ? (
                           <span className="flex items-center">

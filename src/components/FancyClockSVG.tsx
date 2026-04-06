@@ -38,14 +38,14 @@ export const FancyClockSVG = ({ elapsedTime }: FancyClockSVGProps) => {
       </div>
       <div className="flex items-center justify-center gap-2 font-mono">
         <div className="text-center">
-          <span className="block bg-[var(--primary)] text-white text-lg font-bold px-3 py-1.5 rounded-md min-w-[3rem]">
+          <span className="block bg-(--primary) text-white text-lg font-bold px-3 py-1.5 rounded-md min-w-[3rem]">
             {time.hours}
           </span>
           <span className="text-[10px] text-white/50 mt-1 block">HRS</span>
         </div>
         <span className="text-white/60 text-lg font-bold pb-4">:</span>
         <div className="text-center">
-          <span className="block bg-[var(--primary)] text-white text-lg font-bold px-3 py-1.5 rounded-md min-w-[3rem]">
+          <span className="block bg-(--primary) text-white text-lg font-bold px-3 py-1.5 rounded-md min-w-[3rem]">
             {time.minutes}
           </span>
           <span className="text-[10px] text-white/50 mt-1 block">MIN</span>

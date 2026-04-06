@@ -40,17 +40,17 @@ export const ExamSection = ({
   return (
     <div className="mb-12">
       {/* Exam Header */}
-      <div className="bg-[var(--sidebar-bg)] text-white rounded-t-lg p-6 mb-6">
+      <div className="bg-(--sidebar-bg) text-white rounded-t-lg p-6 mb-6">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-xl font-bold">
             {examNumber}. {exam.titulo}
           </h2>
           <div className="flex items-center gap-3">
-            <span className="bg-[var(--primary)] text-white px-3 py-1 rounded-full text-sm font-semibold">
+            <span className="bg-(--primary) text-white px-3 py-1 rounded-full text-sm font-semibold">
               {answeredQuestions}/{totalQuestions}
             </span>
             {disabled && (
-              <span className="bg-white text-[var(--sidebar-bg)] px-3 py-1 rounded-full text-sm font-semibold">
+              <span className="bg-white text-(--sidebar-bg) px-3 py-1 rounded-full text-sm font-semibold">
                 Puntaje: {exam.puntos_obtenidos}
               </span>
             )}
@@ -105,7 +105,7 @@ export const ExamSection = ({
               rows={4}
               value={comment}
               onChange={(e) => onCommentChange?.(e.target.value)}
-              className="bg-white w-full px-3 py-2 text-[var(--text-primary)] border border-[var(--border-color)] rounded-md focus:ring-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] outline-none resize-none text-sm"
+              className="bg-white w-full px-3 py-2 text-(--text-primary) border border-(--border-color) rounded-md focus:ring-1 focus:ring-(--primary) focus:border-(--primary) outline-none resize-none text-sm"
               placeholder="Escribe tus observaciones aquí..."
             />
           </div>

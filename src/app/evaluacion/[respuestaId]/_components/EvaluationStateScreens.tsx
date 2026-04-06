@@ -2,10 +2,10 @@
 
 export function LoadingScreen() {
   return (
-    <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
+    <div className="min-h-screen bg-(--page-bg) flex items-center justify-center">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-2 border-[var(--border-color-light)] border-t-[var(--primary)] mx-auto mb-4" />
-        <p className="text-[var(--text-secondary)] text-sm">
+        <div className="animate-spin rounded-full h-12 w-12 border-2 border-(--border-color-light) border-t-(--primary) mx-auto mb-4" />
+        <p className="text-(--text-secondary) text-sm">
           Cargando evaluación...
         </p>
       </div>
@@ -15,13 +15,13 @@ export function LoadingScreen() {
 
 export function ErrorScreen({ error }: { error: string }) {
   return (
-    <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
-      <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)]">
+    <div className="min-h-screen bg-(--page-bg) flex items-center justify-center">
+      <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light)">
         <div className="text-center">
-          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-[var(--danger-light)] mb-4">
+          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-(--danger-light) mb-4">
             <svg
               aria-hidden="true"
-              className="h-6 w-6 text-[var(--danger)]"
+              className="h-6 w-6 text-(--danger)"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -34,14 +34,14 @@ export function ErrorScreen({ error }: { error: string }) {
               />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
+          <h3 className="text-lg font-semibold text-(--text-primary) mb-2">
             Error
           </h3>
-          <p className="text-[var(--text-secondary)] text-sm mb-4">{error}</p>
+          <p className="text-(--text-secondary) text-sm mb-4">{error}</p>
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="bg-[var(--primary)] text-white px-4 py-2 rounded-md hover:bg-[var(--primary-dark)] transition-colors text-sm font-medium"
+            className="bg-(--primary) text-white px-4 py-2 rounded-md hover:bg-(--primary-dark) transition-colors text-sm font-medium"
           >
             Reintentar
           </button>
@@ -53,8 +53,8 @@ export function ErrorScreen({ error }: { error: string }) {
 
 export function NoDataScreen() {
   return (
-    <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
-      <p className="text-[var(--text-secondary)] text-sm">
+    <div className="min-h-screen bg-(--page-bg) flex items-center justify-center">
+      <p className="text-(--text-secondary) text-sm">
         No se encontró la evaluación.
       </p>
     </div>
@@ -63,13 +63,13 @@ export function NoDataScreen() {
 
 export function SubmittedScreen() {
   return (
-    <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
-      <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)]">
+    <div className="min-h-screen bg-(--page-bg) flex items-center justify-center">
+      <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light)">
         <div className="text-center">
-          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-[var(--success-light)] mb-4">
+          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-(--success-light) mb-4">
             <svg
               aria-hidden="true"
-              className="h-6 w-6 text-[var(--success)]"
+              className="h-6 w-6 text-(--success)"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -82,10 +82,10 @@ export function SubmittedScreen() {
               />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
+          <h3 className="text-lg font-semibold text-(--text-primary) mb-2">
             ¡Evaluación Enviada!
           </h3>
-          <p className="text-[var(--text-secondary)] text-sm">
+          <p className="text-(--text-secondary) text-sm">
             Tu evaluación ha sido enviada correctamente.
           </p>
         </div>

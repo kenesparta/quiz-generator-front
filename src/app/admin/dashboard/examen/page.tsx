@@ -4,13 +4,13 @@ export default function ExamenPage() {
       name: "Examen de Matemáticas",
       description: "20 preguntas - Duración: 60 min",
       status: "Activo",
-      dotColor: "bg-[var(--success)]",
+      dotColor: "bg-(--success)",
     },
     {
       name: "Examen de Historia",
       description: "15 preguntas - Duración: 45 min",
       status: "Borrador",
-      dotColor: "bg-[var(--warning)]",
+      dotColor: "bg-(--warning)",
     },
   ];
 
@@ -18,10 +18,10 @@ export default function ExamenPage() {
     <div className="p-6">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-[var(--text-primary)]">
+        <h1 className="text-2xl font-semibold text-(--text-primary)">
           Examen
         </h1>
-        <p className="text-sm text-[var(--text-tertiary)] mt-1">
+        <p className="text-sm text-(--text-tertiary) mt-1">
           Administra los exámenes y cuestionarios.
         </p>
       </div>
@@ -31,10 +31,10 @@ export default function ExamenPage() {
         {exams.map((exam) => (
           <div
             key={exam.name}
-            className="bg-white rounded-lg p-6 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)] hover:shadow-md transition-shadow"
+            className="bg-white rounded-lg p-6 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light) hover:shadow-md transition-shadow"
           >
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-lg bg-[var(--primary-light)] flex items-center justify-center text-[var(--primary)] shrink-0">
+              <div className="w-12 h-12 rounded-lg bg-(--primary-light) flex items-center justify-center text-(--primary) shrink-0">
                 <svg
                   aria-hidden="true"
                   className="w-6 h-6"
@@ -53,18 +53,18 @@ export default function ExamenPage() {
                 </svg>
               </div>
               <div>
-                <h3 className="text-base font-semibold text-[var(--text-primary)]">
+                <h3 className="text-base font-semibold text-(--text-primary)">
                   {exam.name}
                 </h3>
-                <p className="text-sm text-[var(--text-tertiary)] mt-1">
+                <p className="text-sm text-(--text-tertiary) mt-1">
                   {exam.description}
                 </p>
               </div>
             </div>
-            <div className="flex items-center justify-between mt-4 pt-4 border-t border-[var(--border-color-light)]">
+            <div className="flex items-center justify-between mt-4 pt-4 border-t border-(--border-color-light)">
               <span className="inline-flex items-center gap-1.5 text-sm">
                 <span className={`w-2 h-2 rounded-full ${exam.dotColor}`} />
-                <span className="text-[var(--text-secondary)]">
+                <span className="text-(--text-secondary)">
                   {exam.status}
                 </span>
               </span>

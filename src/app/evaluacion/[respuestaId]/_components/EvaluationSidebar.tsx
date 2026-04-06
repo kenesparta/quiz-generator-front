@@ -35,12 +35,12 @@ export function EvaluationSidebar({
     totalQuestions > 0 ? Math.round((totalAnswered / totalQuestions) * 100) : 0;
 
   return (
-    <div className="w-80 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.06)] border-r border-[var(--border-color-light)] fixed left-0 top-0 h-full z-10">
+    <div className="w-80 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.06)] border-r border-(--border-color-light) fixed left-0 top-0 h-full z-10">
       <div className="flex flex-col h-full">
         {/* Header */}
-        <div className="p-5 border-b border-[var(--border-color-light)] bg-[var(--sidebar-bg)] text-white">
+        <div className="p-5 border-b border-(--border-color-light) bg-(--sidebar-bg) text-white">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 rounded-lg bg-[var(--primary)] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-(--primary) flex items-center justify-center">
               <svg
                 aria-hidden="true"
                 className="w-4 h-4 text-white"
@@ -107,43 +107,43 @@ export function EvaluationSidebar({
         </div>
 
         {/* Progress Summary */}
-        <div className="p-4 border-b border-[var(--border-color)]">
-          <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-3">
+        <div className="p-4 border-b border-(--border-color)">
+          <h3 className="text-xs font-bold text-(--text-secondary) uppercase tracking-wider mb-3">
             Progreso
           </h3>
           <div className="grid grid-cols-3 gap-2 mb-3">
-            <div className="bg-[var(--neutral-50)] rounded-lg p-2.5 text-center border border-[var(--border-color-light)]">
-              <span className="block text-xl font-extrabold text-[var(--text-primary)]">
+            <div className="bg-(--neutral-50) rounded-lg p-2.5 text-center border border-(--border-color-light)">
+              <span className="block text-xl font-extrabold text-(--text-primary)">
                 {totalQuestions}
               </span>
-              <span className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase tracking-wide">
+              <span className="text-[10px] font-bold text-(--text-tertiary) uppercase tracking-wide">
                 Total
               </span>
             </div>
-            <div className="bg-[var(--primary-light)] rounded-lg p-2.5 text-center border border-[var(--primary)]">
-              <span className="block text-xl font-extrabold text-[var(--primary)]">
+            <div className="bg-(--primary-light) rounded-lg p-2.5 text-center border border-(--primary)">
+              <span className="block text-xl font-extrabold text-(--primary)">
                 {totalAnswered}
               </span>
-              <span className="text-[10px] font-bold text-[var(--primary-dark)] uppercase tracking-wide">
+              <span className="text-[10px] font-bold text-(--primary-dark) uppercase tracking-wide">
                 Respondidas
               </span>
             </div>
-            <div className="bg-[var(--warning-light)] rounded-lg p-2.5 text-center border border-[var(--warning)]">
-              <span className="block text-xl font-extrabold text-[var(--warning-text)]">
+            <div className="bg-(--warning-light) rounded-lg p-2.5 text-center border border-(--warning)">
+              <span className="block text-xl font-extrabold text-(--warning-text)">
                 {totalQuestions - totalAnswered}
               </span>
-              <span className="text-[10px] font-bold text-[var(--warning-text)] uppercase tracking-wide">
+              <span className="text-[10px] font-bold text-(--warning-text) uppercase tracking-wide">
                 Pendientes
               </span>
             </div>
           </div>
-          <div className="w-full bg-[var(--border-color)] rounded-full h-2">
+          <div className="w-full bg-(--border-color) rounded-full h-2">
             <div
-              className="bg-[var(--primary)] h-2 rounded-full transition-all duration-300"
+              className="bg-(--primary) h-2 rounded-full transition-all duration-300"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
-          <div className="text-center text-xs font-medium text-[var(--text-secondary)] mt-1.5">
+          <div className="text-center text-xs font-medium text-(--text-secondary) mt-1.5">
             {progressPercent}% completado
           </div>
         </div>
@@ -151,7 +151,7 @@ export function EvaluationSidebar({
         {/* Exam List */}
         <div className="flex-1 overflow-y-auto">
           <div className="p-4">
-            <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-3">
+            <h3 className="text-xs font-bold text-(--text-secondary) uppercase tracking-wider mb-3">
               Exámenes
             </h3>
             <div className="space-y-2">
@@ -175,8 +175,8 @@ export function EvaluationSidebar({
                     key={`exam-${exam.id}-${index}`}
                     className={`w-full text-left rounded-lg p-3 transition-all duration-200 ${
                       isSelected
-                        ? "bg-[var(--sidebar-bg)] text-white border-l-4 border-l-[var(--primary)] border-y border-r border-y-transparent border-r-transparent"
-                        : "bg-white border border-[var(--border-color-light)] hover:border-[var(--border-color)] hover:bg-[var(--table-header-bg)]"
+                        ? "bg-(--sidebar-bg) text-white border-l-4 border-l-(--primary) border-y border-r border-y-transparent border-r-transparent"
+                        : "bg-white border border-(--border-color-light) hover:border-(--border-color) hover:bg-(--table-header-bg)"
                     }`}
                     onClick={() => onSelectExam(exam.id)}
                   >
@@ -185,7 +185,7 @@ export function EvaluationSidebar({
                         className={`font-medium text-sm leading-tight ${
                           isSelected
                             ? "text-white"
-                            : "text-[var(--text-primary)]"
+                            : "text-(--text-primary)"
                         }`}
                       >
                         {exam.titulo}
@@ -197,10 +197,10 @@ export function EvaluationSidebar({
                               ? "bg-white/20 text-white"
                               : "bg-white/15 text-white/80"
                             : progress.answered === progress.total
-                              ? "bg-[var(--success-light)] text-[var(--success-text)]"
+                              ? "bg-(--success-light) text-(--success-text)"
                               : progress.answered > 0
-                                ? "bg-[var(--warning-light)] text-[var(--warning-text)]"
-                                : "bg-[var(--neutral-100)] text-[var(--text-tertiary)]"
+                                ? "bg-(--warning-light) text-(--warning-text)"
+                                : "bg-(--neutral-100) text-(--text-tertiary)"
                         }`}
                       >
                         {progress.answered}/{progress.total}
@@ -208,14 +208,14 @@ export function EvaluationSidebar({
                     </div>
                     <div
                       className={`w-full rounded-full h-1.5 ${
-                        isSelected ? "bg-white/20" : "bg-[var(--border-color)]"
+                        isSelected ? "bg-white/20" : "bg-(--border-color)"
                       }`}
                     >
                       <div
                         className={`h-1.5 rounded-full transition-all duration-300 ${
                           isSelected
-                            ? "bg-[var(--primary)]"
-                            : "bg-[var(--primary)]"
+                            ? "bg-(--primary)"
+                            : "bg-(--primary)"
                         }`}
                         style={{ width: `${progressPct}%` }}
                       />
@@ -228,15 +228,15 @@ export function EvaluationSidebar({
         </div>
 
         {/* Submit Button */}
-        <div className="p-4 border-t border-[var(--border-color)] bg-white">
+        <div className="p-4 border-t border-(--border-color) bg-white">
           <button
             type="button"
             onClick={onSubmit}
             disabled={submitting}
             className={`w-full py-3 rounded-md text-white font-medium text-sm transition-colors ${
               submitting
-                ? "bg-[var(--neutral-400)] cursor-not-allowed"
-                : "bg-[var(--primary)] hover:bg-[var(--primary-dark)]"
+                ? "bg-(--neutral-400) cursor-not-allowed"
+                : "bg-(--primary) hover:bg-(--primary-dark)"
             }`}
           >
             {submitting ? (

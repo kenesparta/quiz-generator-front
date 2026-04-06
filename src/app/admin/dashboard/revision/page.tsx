@@ -7,16 +7,16 @@ import { generatePDFReport } from "@/utils/pdfReportGenerator";
 
 const getEstadoDot = (estado: string) => {
   const config: Record<string, { color: string; label: string }> = {
-    sin_iniciar: { color: "bg-[var(--neutral-400)]", label: "Sin Iniciar" },
-    en_proceso: { color: "bg-[var(--warning)]", label: "En Proceso" },
-    finalizada: { color: "bg-[var(--success)]", label: "Finalizada" },
+    sin_iniciar: { color: "bg-(--neutral-400)", label: "Sin Iniciar" },
+    en_proceso: { color: "bg-(--warning)", label: "En Proceso" },
+    finalizada: { color: "bg-(--success)", label: "Finalizada" },
   };
   const { color, label } = config[estado] || {
-    color: "bg-[var(--neutral-400)]",
+    color: "bg-(--neutral-400)",
     label: estado,
   };
   return (
-    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--text-secondary)]">
+    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-(--text-secondary)">
       <span className={`w-2 h-2 rounded-full ${color}`} />
       {label}
     </span>
@@ -44,12 +44,12 @@ export default function RevisionPage() {
     return (
       <div className="p-6">
         <div className="mb-6">
-          <h1 className="text-2xl font-semibold text-[var(--text-primary)]">
+          <h1 className="text-2xl font-semibold text-(--text-primary)">
             Lista de Evaluaciones
           </h1>
         </div>
-        <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)] p-6">
-          <p className="text-[var(--text-secondary)]">
+        <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light) p-6">
+          <p className="text-(--text-secondary)">
             Cargando evaluaciones...
           </p>
         </div>
@@ -61,12 +61,12 @@ export default function RevisionPage() {
     return (
       <div className="p-6">
         <div className="mb-6">
-          <h1 className="text-2xl font-semibold text-[var(--text-primary)]">
+          <h1 className="text-2xl font-semibold text-(--text-primary)">
             Lista de Evaluaciones
           </h1>
         </div>
-        <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)] p-6">
-          <p className="text-[var(--danger)]">{error}</p>
+        <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light) p-6">
+          <p className="text-(--danger)">{error}</p>
         </div>
       </div>
     );
@@ -78,16 +78,16 @@ export default function RevisionPage() {
       <div className="flex justify-between items-start mb-6">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-semibold text-[var(--text-primary)]">
+            <h1 className="text-2xl font-semibold text-(--text-primary)">
               Lista de Evaluaciones
             </h1>
             {revisions.length > 0 && (
-              <span className="px-2 py-0.5 text-xs font-medium bg-[var(--table-header-bg)] text-[var(--text-secondary)] rounded-full">
+              <span className="px-2 py-0.5 text-xs font-medium bg-(--table-header-bg) text-(--text-secondary) rounded-full">
                 {revisions.length}
               </span>
             )}
           </div>
-          <p className="text-sm text-[var(--text-tertiary)] mt-1">
+          <p className="text-sm text-(--text-tertiary) mt-1">
             Selecciona una evaluación para revisar las respuestas de los
             postulantes.
           </p>
@@ -96,10 +96,10 @@ export default function RevisionPage() {
 
       {/* Revision List */}
       {revisions.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)] text-center py-12">
+        <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light) text-center py-12">
           <svg
             aria-hidden="true"
-            className="w-12 h-12 text-[var(--neutral-300)] mx-auto mb-3"
+            className="w-12 h-12 text-(--neutral-300) mx-auto mb-3"
             fill="none"
             stroke="currentColor"
             strokeWidth={1.5}
@@ -111,7 +111,7 @@ export default function RevisionPage() {
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          <p className="text-[var(--text-tertiary)] text-sm">
+          <p className="text-(--text-tertiary) text-sm">
             No hay evaluaciones disponibles para revisar
           </p>
         </div>
@@ -122,12 +122,12 @@ export default function RevisionPage() {
             return (
               <div
                 key={revision.postulante_id}
-                className="bg-white rounded-lg p-5 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-[var(--border-color-light)] hover:shadow-md transition-shadow"
+                className="bg-white rounded-lg p-5 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light) hover:shadow-md transition-shadow"
               >
                 {/* Top row */}
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-[var(--primary-light)] flex items-center justify-center text-[var(--primary)] shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-(--primary-light) flex items-center justify-center text-(--primary) shrink-0">
                       <svg
                         aria-hidden="true"
                         className="w-5 h-5"
@@ -144,7 +144,7 @@ export default function RevisionPage() {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[var(--text-primary)]">
+                      <h3 className="font-semibold text-(--text-primary)">
                         {revision.nombre_evaluacion}
                       </h3>
                       {getEstadoDot(revision.estado_revision)}
@@ -161,7 +161,7 @@ export default function RevisionPage() {
                         )
                       }
                       disabled={generatingPDF === revision.postulante_id}
-                      className="px-3 py-1.5 bg-white border border-[var(--border-color)] text-[var(--text-primary)] rounded-md hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-3 py-1.5 bg-white border border-(--border-color) text-(--text-primary) rounded-md hover:border-(--primary) hover:text-(--primary) transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {generatingPDF === revision.postulante_id
                         ? "Generando..."
@@ -171,14 +171,14 @@ export default function RevisionPage() {
                       <button
                         type="button"
                         disabled
-                        className="px-3 py-1.5 bg-[var(--neutral-100)] text-[var(--text-tertiary)] rounded-md cursor-not-allowed text-sm"
+                        className="px-3 py-1.5 bg-(--neutral-100) text-(--text-tertiary) rounded-md cursor-not-allowed text-sm"
                       >
                         Revisar
                       </button>
                     ) : (
                       <Link
                         href={`/admin/dashboard/revision/${revision.revision_id}/${revision.postulante_id}`}
-                        className="px-3 py-1.5 bg-[var(--primary)] text-white rounded-md hover:bg-[var(--primary-dark)] transition-colors text-sm"
+                        className="px-3 py-1.5 bg-(--primary) text-white rounded-md hover:bg-(--primary-dark) transition-colors text-sm"
                       >
                         Revisar
                       </Link>
@@ -187,17 +187,17 @@ export default function RevisionPage() {
                 </div>
 
                 {/* Description */}
-                <p className="text-sm text-[var(--text-tertiary)] mt-2">
+                <p className="text-sm text-(--text-tertiary) mt-2">
                   {revision.descripcion_evaluacion}
                 </p>
 
                 {/* Postulante info */}
                 {revision.postulante && (
-                  <div className="flex gap-4 text-sm mt-3 pt-3 border-t border-[var(--border-color-light)]">
-                    <span className="flex items-center gap-1.5 text-[var(--text-secondary)]">
+                  <div className="flex gap-4 text-sm mt-3 pt-3 border-t border-(--border-color-light)">
+                    <span className="flex items-center gap-1.5 text-(--text-secondary)">
                       <svg
                         aria-hidden="true"
-                        className="w-4 h-4 text-[var(--text-tertiary)]"
+                        className="w-4 h-4 text-(--text-tertiary)"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth={2}
@@ -211,10 +211,10 @@ export default function RevisionPage() {
                       </svg>
                       {revision.postulante.nombre}
                     </span>
-                    <span className="flex items-center gap-1.5 text-[var(--text-secondary)]">
+                    <span className="flex items-center gap-1.5 text-(--text-secondary)">
                       <svg
                         aria-hidden="true"
-                        className="w-4 h-4 text-[var(--text-tertiary)]"
+                        className="w-4 h-4 text-(--text-tertiary)"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth={2}
