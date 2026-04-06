@@ -1,6 +1,7 @@
 # Quiz Generator Front
 
-Plataforma web de evaluaciones en linea construida con Next.js 16. Permite a postulantes completar evaluaciones asignadas y a administradores gestionar evaluaciones, examenes, postulantes y revisiones.
+Plataforma web de evaluaciones en linea construida con Next.js 16. Permite a postulantes completar evaluaciones
+asignadas y a administradores gestionar evaluaciones, examenes, postulantes y revisiones.
 
 ## Tech Stack
 
@@ -25,19 +26,19 @@ npm install
 
 ## Scripts
 
-| Comando          | Descripcion                           |
-| ---------------- | ------------------------------------- |
-| `npm run dev`    | Servidor de desarrollo con Turbopack  |
-| `npm run build`  | Build de produccion con Turbopack     |
-| `npm start`      | Servidor de produccion                |
-| `npm run lint`   | Verificar codigo con Biome            |
-| `npm run fmt`    | Formatear codigo con Biome            |
+| Comando         | Descripcion                          |
+|-----------------|--------------------------------------|
+| `npm run dev`   | Servidor de desarrollo con Turbopack |
+| `npm run build` | Build de produccion con Turbopack    |
+| `npm start`     | Servidor de produccion               |
+| `npm run lint`  | Verificar codigo con Biome           |
+| `npm run fmt`   | Formatear codigo con Biome           |
 
 ## Variables de entorno
 
-| Variable                    | Descripcion               | Default                  |
-| --------------------------- | ------------------------- | ------------------------ |
-| `NEXT_PUBLIC_API_BASE_URL`  | URL base del API backend  | `http://localhost:8008`  |
+| Variable                   | Descripcion              | Default                 |
+|----------------------------|--------------------------|-------------------------|
+| `NEXT_PUBLIC_API_BASE_URL` | URL base del API backend | `http://localhost:8008` |
 
 ## Estructura del proyecto
 
@@ -85,16 +86,16 @@ Todos los colores de la aplicacion se configuran en un solo lugar: `src/app/glob
 
 ```css
 :root {
-  --primary: #1677ff;        /* Botones, links, estados activos */
-  --primary-dark: #0958d9;   /* Hover de botones */
-  --primary-light: #e6f4ff;  /* Fondos de seleccion */
+    --primary: #1677ff; /* Botones, links, estados activos */
+    --primary-dark: #0958d9; /* Hover de botones */
+    --primary-light: #e6f4ff; /* Fondos de seleccion */
 
-  --success: #52c41a;        /* Completado, confirmado */
-  --warning: #faad14;        /* En progreso, precaucion */
-  --danger: #ff4d4f;         /* Errores, acciones destructivas */
+    --success: #52c41a; /* Completado, confirmado */
+    --warning: #faad14; /* En progreso, precaucion */
+    --danger: #ff4d4f; /* Errores, acciones destructivas */
 
-  --sidebar-bg: #001529;     /* Fondo del sidebar */
-  /* ... mas variables disponibles */
+    --sidebar-bg: #001529; /* Fondo del sidebar */
+    /* ... mas variables disponibles */
 }
 ```
 
@@ -114,10 +115,10 @@ Para cambiar el tema, modifica los valores hex en `:root`. Todos los componentes
 
 1. Login en `/admin/login`
 2. Dashboard con navegacion lateral:
-   - **Evaluacion**: metricas y actividad reciente
-   - **Examen**: lista de examenes
-   - **Postulante**: CRUD de postulantes
-   - **Revision**: revisar respuestas, agregar observaciones, generar PDF
+    - **Evaluacion**: metricas y actividad reciente
+    - **Examen**: lista de examenes
+    - **Postulante**: CRUD de postulantes
+    - **Revision**: revisar respuestas, agregar observaciones, generar PDF
 
 ## Autenticacion
 
@@ -127,13 +128,13 @@ Para cambiar el tema, modifica los valores hex en `:root`. Todos los componentes
 
 ## API Endpoints
 
-| Metodo  | Endpoint                                    | Descripcion                    |
-| ------- | ------------------------------------------- | ------------------------------ |
-| POST    | `/login/postulante`                         | Login de postulante            |
-| GET     | `/postulantes?id={id}`                      | Datos del postulante           |
-| GET     | `/respuestas?postulante_id={id}`            | Lista de evaluaciones          |
-| GET     | `/respuestas/{respuestaId}`                 | Detalle de evaluacion          |
-| PATCH   | `/respuestas/{respuestaId}`                 | Actualizar respuesta           |
-| PATCH   | `/respuestas/{respuestaId}/estado`          | Cambiar estado de evaluacion   |
-| PATCH   | `/respuesta/{respuestaId}/finalizar`        | Finalizar evaluacion           |
-| PATCH   | `/revision`                                 | Enviar revision                |
+| Metodo | Endpoint                             | Descripcion                  |
+|--------|--------------------------------------|------------------------------|
+| POST   | `/login/postulante`                  | Login de postulante          |
+| GET    | `/postulantes?id={id}`               | Datos del postulante         |
+| GET    | `/respuestas?postulante_id={id}`     | Lista de evaluaciones        |
+| GET    | `/respuestas/{respuestaId}`          | Detalle de evaluacion        |
+| PATCH  | `/respuestas/{respuestaId}`          | Actualizar respuesta         |
+| PATCH  | `/respuestas/{respuestaId}/estado`   | Cambiar estado de evaluacion |
+| PATCH  | `/respuesta/{respuestaId}/finalizar` | Finalizar evaluacion         |
+| PATCH  | `/revision`                          | Enviar revision              |

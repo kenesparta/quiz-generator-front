@@ -146,6 +146,47 @@ export function EvaluationSidebar({
           <div className="text-center text-xs font-medium text-(--text-secondary) mt-1.5">
             {progressPercent}% completado
           </div>
+          {progressPercent === 100 ? (
+            <div className="mt-3 flex items-center justify-center gap-2 bg-(--success-light) text-(--success-text) rounded-lg px-3 py-2 border border-(--success)">
+              <svg
+                aria-hidden="true"
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span className="text-xs font-bold uppercase tracking-wide">
+                Evaluación Completada
+              </span>
+            </div>
+          ) : (
+            <div className="mt-3 flex items-center justify-center gap-2 bg-(--warning-light) text-(--warning-text) rounded-lg px-3 py-2 border border-(--warning)">
+              <svg
+                aria-hidden="true"
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span className="text-xs font-bold uppercase tracking-wide">
+                En Progreso
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Exam List */}
@@ -220,6 +261,55 @@ export function EvaluationSidebar({
                         style={{ width: `${progressPct}%` }}
                       />
                     </div>
+                    {progressPct === 100 ? (
+                      <div
+                        className={`mt-2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide ${
+                          isSelected
+                            ? "text-(--success)"
+                            : "text-(--success-text)"
+                        }`}
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="w-3.5 h-3.5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        Finalizado
+                      </div>
+                    ) : (
+                      <div
+                        className={`mt-2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide ${
+                          isSelected
+                            ? "text-white/60"
+                            : "text-(--warning-text)"
+                        }`}
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="w-3.5 h-3.5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        En Progreso
+                      </div>
+                    )}
                   </button>
                 );
               })}
@@ -233,7 +323,7 @@ export function EvaluationSidebar({
             type="button"
             onClick={onSubmit}
             disabled={submitting}
-            className={`w-full py-3 rounded-md text-white font-medium text-sm transition-colors ${
+            className={`w-full py-4 rounded-md text-white font-semibold text-lg transition-colors ${
               submitting
                 ? "bg-(--neutral-400) cursor-not-allowed"
                 : "bg-(--primary) hover:bg-(--primary-dark)"
@@ -241,11 +331,27 @@ export function EvaluationSidebar({
           >
             {submitting ? (
               <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white mr-2" />
+                <div className="animate-spin rounded-full h-5 w-5 border-2 border-white/30 border-t-white mr-2" />
                 Enviando...
               </div>
             ) : (
-              "Finalizar Evaluación"
+              <div className="flex items-center justify-center gap-2">
+                <svg
+                  aria-hidden="true"
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                Finalizar
+              </div>
             )}
           </button>
         </div>
