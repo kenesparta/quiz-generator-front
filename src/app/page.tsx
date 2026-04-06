@@ -48,7 +48,9 @@ export default function Home() {
             <h1 className="text-4xl lg:text-5xl font-bold text-[var(--text-primary)] leading-tight">
               Plataforma de
               <br />
-              <span className="text-[var(--primary)]">Evaluaciones en Linea</span>
+              <span className="text-[var(--primary)]">
+                Evaluaciones en Linea
+              </span>
             </h1>
             <p className="mt-5 text-lg text-[var(--text-secondary)] max-w-lg mx-auto lg:mx-0">
               Accede a tus evaluaciones asignadas, completa los cuestionarios y
@@ -223,8 +225,8 @@ export default function Home() {
               Control de Tiempo
             </h3>
             <p className="text-sm text-[var(--text-secondary)]">
-              Cronometro integrado para gestionar el tiempo disponible durante la
-              evaluacion.
+              Cronometro integrado para gestionar el tiempo disponible durante
+              la evaluacion.
             </p>
           </div>
         </section>

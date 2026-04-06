@@ -29,16 +29,13 @@ export const useRespuestaEvaluacion = (
         setLoading(true);
 
         const token = localStorage.getItem("token");
-        const response = await fetch(
-          `${BASE_URL}/respuestas/${revisionId}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              ...(token && { Authorization: `Bearer ${token}` }),
-            },
+        const response = await fetch(`${BASE_URL}/respuestas/${revisionId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }),
           },
-        );
+        });
 
         handleUnauthorized(response);
         if (!response.ok) {

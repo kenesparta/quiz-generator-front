@@ -32,7 +32,9 @@ export const FancyClockSVG = ({ elapsedTime }: FancyClockSVGProps) => {
           <circle cx="12" cy="12" r="10" />
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
         </svg>
-        <span className="text-xs text-white/70 font-medium">Tiempo transcurrido</span>
+        <span className="text-xs text-white/70 font-medium">
+          Tiempo transcurrido
+        </span>
       </div>
       <div className="flex items-center justify-center gap-2 font-mono">
         <div className="text-center">

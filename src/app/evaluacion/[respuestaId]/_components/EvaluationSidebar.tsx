@@ -1,0 +1,255 @@
+"use client";
+
+import { FancyClockSVG } from "@/components/FancyClockSVG";
+import type { EvaluationResponse } from "@/types/evaluacion";
+import {
+  getExamProgress,
+  getTotalAnswered,
+  getTotalQuestions,
+} from "../_utils/progress";
+
+interface EvaluationSidebarProps {
+  initialResponses: EvaluationResponse;
+  postulante: { nombre: string; documento: string } | null;
+  responses: Record<string, string[]>;
+  elapsedTime: number;
+  selectedExamId: string | null;
+  submitting: boolean;
+  onSelectExam: (examId: string) => void;
+  onSubmit: () => void;
+}
+
+export function EvaluationSidebar({
+  initialResponses,
+  postulante,
+  responses,
+  elapsedTime,
+  selectedExamId,
+  submitting,
+  onSelectExam,
+  onSubmit,
+}: EvaluationSidebarProps) {
+  const totalQuestions = getTotalQuestions(initialResponses);
+  const totalAnswered = getTotalAnswered(responses);
+  const progressPercent =
+    totalQuestions > 0 ? Math.round((totalAnswered / totalQuestions) * 100) : 0;
+
+  return (
+    <div className="w-80 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.06)] border-r border-[var(--border-color-light)] fixed left-0 top-0 h-full z-10">
+      <div className="flex flex-col h-full">
+        {/* Header */}
+        <div className="p-5 border-b border-[var(--border-color-light)] bg-[var(--sidebar-bg)] text-white">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-8 h-8 rounded-lg bg-[var(--primary)] flex items-center justify-center">
+              <svg
+                aria-hidden="true"
+                className="w-4 h-4 text-white"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 12l-2 2 4-4"
+                />
+              </svg>
+            </div>
+            <h2 className="text-base font-semibold leading-tight">
+              {initialResponses.evaluacion.nombre}
+            </h2>
+          </div>
+          <div className="space-y-1.5 text-sm">
+            <div className="flex items-center gap-2 text-white/70">
+              <svg
+                aria-hidden="true"
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+              <span>{postulante?.nombre}</span>
+            </div>
+            <div className="flex items-center gap-2 text-white/70">
+              <svg
+                aria-hidden="true"
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0"
+                />
+              </svg>
+              <span>{postulante?.documento}</span>
+            </div>
+            <div className="pt-2">
+              <FancyClockSVG elapsedTime={elapsedTime} />
+            </div>
+          </div>
+        </div>
+
+        {/* Progress Summary */}
+        <div className="p-4 border-b border-[var(--border-color)]">
+          <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-3">
+            Progreso
+          </h3>
+          <div className="grid grid-cols-3 gap-2 mb-3">
+            <div className="bg-[var(--neutral-50)] rounded-lg p-2.5 text-center border border-[var(--border-color-light)]">
+              <span className="block text-xl font-extrabold text-[var(--text-primary)]">
+                {totalQuestions}
+              </span>
+              <span className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase tracking-wide">
+                Total
+              </span>
+            </div>
+            <div className="bg-[var(--primary-light)] rounded-lg p-2.5 text-center border border-[var(--primary)]">
+              <span className="block text-xl font-extrabold text-[var(--primary)]">
+                {totalAnswered}
+              </span>
+              <span className="text-[10px] font-bold text-[var(--primary-dark)] uppercase tracking-wide">
+                Respondidas
+              </span>
+            </div>
+            <div className="bg-[var(--warning-light)] rounded-lg p-2.5 text-center border border-[var(--warning)]">
+              <span className="block text-xl font-extrabold text-[var(--warning-text)]">
+                {totalQuestions - totalAnswered}
+              </span>
+              <span className="text-[10px] font-bold text-[var(--warning-text)] uppercase tracking-wide">
+                Pendientes
+              </span>
+            </div>
+          </div>
+          <div className="w-full bg-[var(--border-color)] rounded-full h-2">
+            <div
+              className="bg-[var(--primary)] h-2 rounded-full transition-all duration-300"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+          <div className="text-center text-xs font-medium text-[var(--text-secondary)] mt-1.5">
+            {progressPercent}% completado
+          </div>
+        </div>
+
+        {/* Exam List */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-4">
+            <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-3">
+              Exámenes
+            </h3>
+            <div className="space-y-2">
+              {initialResponses.evaluacion.examenes.map((exam, index) => {
+                const progress = getExamProgress(
+                  exam.id,
+                  initialResponses,
+                  responses,
+                );
+                const isSelected =
+                  selectedExamId === exam.id ||
+                  (selectedExamId === null && index === 0);
+                const progressPct =
+                  progress.total > 0
+                    ? (progress.answered / progress.total) * 100
+                    : 0;
+
+                return (
+                  <button
+                    type="button"
+                    key={`exam-${exam.id}-${index}`}
+                    className={`w-full text-left rounded-lg p-3 transition-all duration-200 ${
+                      isSelected
+                        ? "bg-[var(--sidebar-bg)] text-white border-l-4 border-l-[var(--primary)] border-y border-r border-y-transparent border-r-transparent"
+                        : "bg-white border border-[var(--border-color-light)] hover:border-[var(--border-color)] hover:bg-[var(--table-header-bg)]"
+                    }`}
+                    onClick={() => onSelectExam(exam.id)}
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <h4
+                        className={`font-medium text-sm leading-tight ${
+                          isSelected
+                            ? "text-white"
+                            : "text-[var(--text-primary)]"
+                        }`}
+                      >
+                        {exam.titulo}
+                      </h4>
+                      <span
+                        className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                          isSelected
+                            ? progress.answered === progress.total
+                              ? "bg-white/20 text-white"
+                              : "bg-white/15 text-white/80"
+                            : progress.answered === progress.total
+                              ? "bg-[var(--success-light)] text-[var(--success-text)]"
+                              : progress.answered > 0
+                                ? "bg-[var(--warning-light)] text-[var(--warning-text)]"
+                                : "bg-[var(--neutral-100)] text-[var(--text-tertiary)]"
+                        }`}
+                      >
+                        {progress.answered}/{progress.total}
+                      </span>
+                    </div>
+                    <div
+                      className={`w-full rounded-full h-1.5 ${
+                        isSelected ? "bg-white/20" : "bg-[var(--border-color)]"
+                      }`}
+                    >
+                      <div
+                        className={`h-1.5 rounded-full transition-all duration-300 ${
+                          isSelected
+                            ? "bg-[var(--primary)]"
+                            : "bg-[var(--primary)]"
+                        }`}
+                        style={{ width: `${progressPct}%` }}
+                      />
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Submit Button */}
+        <div className="p-4 border-t border-[var(--border-color)] bg-white">
+          <button
+            type="button"
+            onClick={onSubmit}
+            disabled={submitting}
+            className={`w-full py-3 rounded-md text-white font-medium text-sm transition-colors ${
+              submitting
+                ? "bg-[var(--neutral-400)] cursor-not-allowed"
+                : "bg-[var(--primary)] hover:bg-[var(--primary-dark)]"
+            }`}
+          >
+            {submitting ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white mr-2" />
+                Enviando...
+              </div>
+            ) : (
+              "Finalizar Evaluación"
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

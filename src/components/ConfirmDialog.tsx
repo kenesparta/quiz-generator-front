@@ -103,9 +103,7 @@ export const ConfirmDialog = ({
           </h3>
 
           {/* Message */}
-          <p className="text-sm text-[var(--text-secondary)] mb-6">
-            {message}
-          </p>
+          <p className="text-sm text-[var(--text-secondary)] mb-6">{message}</p>
 
           {/* Buttons */}
           <div className="flex gap-3 w-full">

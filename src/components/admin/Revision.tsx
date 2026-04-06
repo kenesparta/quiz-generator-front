@@ -160,7 +160,9 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
   if (!initialResponses) {
     return (
       <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center">
-        <p className="text-[var(--text-secondary)]">No se encontró la evaluación.</p>
+        <p className="text-[var(--text-secondary)]">
+          No se encontró la evaluación.
+        </p>
       </div>
     );
   }
@@ -209,7 +211,9 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
 
           {/* Exams List */}
           <div className="flex-1 overflow-y-auto p-4">
-            <h3 className="font-medium text-[var(--text-primary)] mb-3 text-sm">Exámenes</h3>
+            <h3 className="font-medium text-[var(--text-primary)] mb-3 text-sm">
+              Exámenes
+            </h3>
             <div className="space-y-2">
               {initialResponses.evaluacion.examenes.map((exam, index) => {
                 const isSelected =
