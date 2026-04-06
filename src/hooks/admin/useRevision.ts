@@ -96,7 +96,7 @@ export const useRevision = (): UseRevisionReturn => {
   }, [fetchPostulante]);
 
   useEffect(() => {
-    fetchRevisions();
+    void fetchRevisions();
   }, [fetchRevisions]);
 
   return {

@@ -86,7 +86,7 @@ export const useListaEvaluaciones = (
       }
     };
 
-    fetchEvaluaciones();
+    void fetchEvaluaciones();
   }, [postulanteId]);
 
   const startEvaluacion = async (respuestaId: string): Promise<boolean> => {

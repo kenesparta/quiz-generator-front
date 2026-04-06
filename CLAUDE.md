@@ -174,6 +174,7 @@ if (!response.ok) {
 - Avoid redundant local variables. If a value is only assigned and immediately returned, return the expression directly (e.g., `return (await response.json()) as Type;` instead of `const data = await response.json(); return data;`).
 - Keep imports sorted alphabetically (Biome's `organizeImports` rule).
 - Always specify exhaustive dependencies in `useEffect`/`useCallback` hooks. Wrap stable functions in `useCallback` when referenced in dependency arrays.
+- When calling an async function inside `useEffect` without awaiting it, prefix with `void` to explicitly discard the promise (e.g., `void fetchData();`).
 
 ### Component Patterns
 

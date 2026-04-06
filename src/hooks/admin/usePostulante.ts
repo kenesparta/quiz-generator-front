@@ -116,7 +116,7 @@ export const usePostulante = (): UsePostulanteReturn => {
   };
 
   useEffect(() => {
-    fetchPostulantes();
+    void fetchPostulantes();
   }, [fetchPostulantes]);
 
   return {
