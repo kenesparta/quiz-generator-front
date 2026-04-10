@@ -32,12 +32,14 @@ export const useRevision = (): UseRevisionReturn => {
   const fetchPostulante = useCallback(
     async (postulanteId: string): Promise<PostulanteData | null> => {
       try {
+        const token = localStorage.getItem("token");
         const response = await fetch(
           `${BASE_URL}/postulante?id=${postulanteId}`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+              ...(token && { Authorization: `Bearer ${token}` }),
             },
           },
         );
@@ -59,10 +61,12 @@ export const useRevision = (): UseRevisionReturn => {
     setError(null);
 
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(`${BASE_URL}/respuesta/revision`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
         },
       });
 

@@ -36,10 +36,12 @@ export const usePostulante = (): UsePostulanteReturn => {
     setError(null);
 
     try {
-      const response = await fetch(`${BASE_URL}/postulante`, {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${BASE_URL}/postulantes`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
         },
       });
 
@@ -67,11 +69,13 @@ export const usePostulante = (): UsePostulanteReturn => {
     setError(null);
 
     try {
+      const token = localStorage.getItem("token");
       const uuid = generateUUID();
       const response = await fetch(`${BASE_URL}/postulante/${uuid}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
         },
         body: JSON.stringify(data),
       });
@@ -87,6 +91,7 @@ export const usePostulante = (): UsePostulanteReturn => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
         },
         body: JSON.stringify({
           evaluacion_id: "2cf52b7a-0ee3-43a9-9b89-4a8baaa22250",

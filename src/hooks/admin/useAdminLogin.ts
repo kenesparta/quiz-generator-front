@@ -1,10 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { BASE_URL } from "@/config/api";
 
 interface LoginRequest {
   user_name: string;
   password: string;
+}
+
+interface LoginResponse {
+  token: string;
+  expires_in: number;
 }
 
 interface UseLoginReturn {
@@ -17,29 +23,29 @@ export const useAdminLogin = (): UseLoginReturn => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const login = async (_credentials: LoginRequest): Promise<void> => {
+  const login = async (credentials: LoginRequest): Promise<void> => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // const response = await fetch(`${BASE_URL}/login/postulante`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(credentials),
-      // });
-      //
-      // if (!response.ok) {
-      //   const errorData = await response.json().catch(() => ({}));
-      //   throw new Error(errorData.message || "Credenciales incorrectas");
-      // }
-      //
-      // const data: LoginResponse = await response.json();
-      //
-      // // Store token and expiration info
-      // localStorage.setItem("token", data.token);
-      // localStorage.setItem("expires_in", data.expires_in.toString());
+      const response = await fetch(`${BASE_URL}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        setError(errorData.message || "Credenciales incorrectas");
+        return;
+      }
+
+      const data: LoginResponse = await response.json();
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("expires_in", data.expires_in.toString());
 
       window.location.href = "/admin/dashboard";
     } catch (err) {
