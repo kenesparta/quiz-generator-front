@@ -28,7 +28,7 @@ export const useLogin = (): UseLoginReturn => {
     setError(null);
 
     try {
-      const response = await fetch(`${BASE_URL}/login/postulante`, {
+      const response = await fetch(`${BASE_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

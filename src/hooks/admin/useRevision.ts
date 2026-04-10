@@ -8,8 +8,29 @@ interface PostulanteData {
   nombre: string;
 }
 
-interface RevisionItem {
-  revision_id: string;
+interface RevisionItemResponse {
+  respuesta_id: string;
+  nombre_evaluacion: string;
+  descripcion_evaluacion: string;
+  estado_revision: "sin_iniciar" | "en_proceso" | "finalizada";
+  postulante_id: string;
+  _links: {
+    revisar: { href: string; method: string };
+    postulante: { href: string; method: string };
+    self: { href: string; method: string };
+    respuesta: { href: string; method: string };
+  };
+}
+
+interface RevisionesResponse {
+  _links: {
+    self: { href: string; method: string };
+  };
+  items: RevisionItemResponse[];
+}
+
+export interface RevisionItem {
+  respuesta_id: string;
   nombre_evaluacion: string;
   descripcion_evaluacion: string;
   estado_revision: "sin_iniciar" | "en_proceso" | "finalizada";
@@ -30,19 +51,16 @@ export const useRevision = (): UseRevisionReturn => {
   const [error, setError] = useState<string | null>(null);
 
   const fetchPostulante = useCallback(
-    async (postulanteId: string): Promise<PostulanteData | null> => {
+    async (href: string): Promise<PostulanteData | null> => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch(
-          `${BASE_URL}/postulante?id=${postulanteId}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              ...(token && { Authorization: `Bearer ${token}` }),
-            },
+        const response = await fetch(`${BASE_URL}${href}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }),
           },
-        );
+        });
 
         if (!response.ok) {
           return null;
@@ -62,7 +80,7 @@ export const useRevision = (): UseRevisionReturn => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`${BASE_URL}/respuesta/revision`, {
+      const response = await fetch(`${BASE_URL}/revisiones`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -76,14 +94,17 @@ export const useRevision = (): UseRevisionReturn => {
         return;
       }
 
-      const data: RevisionItem[] = await response.json();
+      const data: RevisionesResponse = await response.json();
 
-      // Fetch postulante details for each revision
       const revisionsWithPostulantes = await Promise.all(
-        data.map(async (revision) => {
-          const postulante = await fetchPostulante(revision.postulante_id);
+        data.items.map(async (item) => {
+          const postulante = await fetchPostulante(item._links.postulante.href);
           return {
-            ...revision,
+            respuesta_id: item.respuesta_id,
+            nombre_evaluacion: item.nombre_evaluacion,
+            descripcion_evaluacion: item.descripcion_evaluacion,
+            estado_revision: item.estado_revision,
+            postulante_id: item.postulante_id,
             postulante: postulante || undefined,
           };
         }),

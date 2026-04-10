@@ -14,7 +14,7 @@ export default function Login() {
     clearError();
 
     await login({
-      user_name: userName,
+      documento: userName,
       password,
     });
   };

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { BASE_URL } from "@/config/api";
 
 interface LoginRequest {
-  user_name: string;
+  documento: string;
   password: string;
 }
 

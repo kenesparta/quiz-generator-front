@@ -71,7 +71,7 @@ export const usePostulante = (): UsePostulanteReturn => {
     try {
       const token = localStorage.getItem("token");
       const uuid = generateUUID();
-      const response = await fetch(`${BASE_URL}/postulante/${uuid}`, {
+      const response = await fetch(`${BASE_URL}/postulantes/${uuid}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

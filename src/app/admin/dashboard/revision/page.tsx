@@ -153,7 +153,7 @@ export default function RevisionPage() {
                       type="button"
                       onClick={() =>
                         handleGeneratePDF(
-                          revision.revision_id,
+                          revision.respuesta_id,
                           revision.postulante_id,
                           revision.postulante,
                         )
@@ -175,7 +175,7 @@ export default function RevisionPage() {
                       </button>
                     ) : (
                       <Link
-                        href={`/admin/dashboard/revision/${revision.revision_id}/${revision.postulante_id}`}
+                        href={`/admin/dashboard/revision/${revision.respuesta_id}/${revision.postulante_id}`}
                         className="px-3 py-1.5 bg-(--primary) text-white rounded-md hover:bg-(--primary-dark) transition-colors text-sm"
                       >
                         Revisar

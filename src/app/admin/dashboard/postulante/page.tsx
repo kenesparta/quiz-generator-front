@@ -82,30 +82,24 @@ export default function PostulantePage() {
         </div>
         <button
           type="button"
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => setShowForm(true)}
           className="flex items-center gap-2 px-4 py-2 bg-(--primary) text-white rounded-md hover:bg-(--primary-dark) transition-colors text-sm font-medium cursor-pointer"
         >
-          {showForm ? (
-            "Cancelar"
-          ) : (
-            <>
-              <svg
-                aria-hidden="true"
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
-              Agregar Postulante
-            </>
-          )}
+          <svg
+            aria-hidden="true"
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          Agregar Postulante
         </button>
       </div>
 
@@ -130,15 +124,14 @@ export default function PostulantePage() {
         </div>
       )}
 
-      {showForm && (
-        <PostulanteForm
-          formData={formData}
-          isCreating={isCreating}
-          onInputChange={handleInputChange}
-          onSubmit={handleSubmit}
-          onCancel={() => setShowForm(false)}
-        />
-      )}
+      <PostulanteForm
+        open={showForm}
+        formData={formData}
+        isCreating={isCreating}
+        onInputChange={handleInputChange}
+        onSubmit={handleSubmit}
+        onCancel={() => setShowForm(false)}
+      />
 
       <PostulanteTable
         postulantes={postulantes}
