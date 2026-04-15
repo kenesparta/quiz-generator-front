@@ -8,7 +8,7 @@ import {
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { ExamSection } from "@/components/ExamSection";
 import { BASE_URL } from "@/config/api";
-import { useRespuestaEvaluacion } from "@/hooks/useRespuestaEvaluacion";
+import { useRevisionDetail } from "@/hooks/admin/useRevisionDetail";
 
 interface RevisionProps {
   postulanteId: string;
@@ -16,8 +16,7 @@ interface RevisionProps {
 }
 
 export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
-  const { initialResponses, responses, loading, updateResponse } =
-    useRespuestaEvaluacion(postulanteId, revisionId);
+  const { revisionData, responses, loading } = useRevisionDetail(revisionId);
 
   const [selectedExamId, setSelectedExamId] = useState<string | null>(null);
   const [examObservaciones, setExamObservaciones] = useState<
@@ -65,18 +64,18 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
 
   const doFinalize = async () => {
     closeDialog();
-    if (!initialResponses) return;
+    if (!revisionData) return;
 
     setIsSubmitting(true);
     try {
-      const examenes = initialResponses.evaluacion.examenes.map((exam) => ({
+      const examenes = revisionData.evaluacion.examenes.map((exam) => ({
         examen_id: exam.id,
         observacion: examObservaciones[exam.id] || "",
       }));
 
       const payload = {
-        respuesta_id: initialResponses.id,
-        evaluacion_id: initialResponses.evaluacion.id,
+        respuesta_id: revisionData.id,
+        evaluacion_id: revisionData.evaluacion.id,
         examenes: examenes,
         resultado: resultado,
       };
@@ -122,7 +121,7 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
   };
 
   const handleFinalize = () => {
-    if (!initialResponses) {
+    if (!revisionData) {
       showError("No se encontró la evaluación.");
       return;
     }
@@ -150,7 +149,7 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
     );
   }
 
-  if (!initialResponses) {
+  if (!revisionData) {
     return (
       <div className="min-h-screen bg-(--page-bg) flex items-center justify-center">
         <p className="text-(--text-secondary)">No se encontró la evaluación.</p>
@@ -159,13 +158,13 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
   }
 
   const currentExam = selectedExamId
-    ? initialResponses.evaluacion.examenes.find((e) => e.id === selectedExamId)
-    : initialResponses.evaluacion.examenes[0];
+    ? revisionData.evaluacion.examenes.find((e) => e.id === selectedExamId)
+    : revisionData.evaluacion.examenes[0];
 
   return (
-    <div className="min-h-screen bg-(--page-bg) flex">
-      {/* Sticky Left Sidebar */}
-      <div className="w-64 bg-white shadow-lg border-r border-(--border-color) fixed left-0 top-0 h-full z-10">
+    <div className="flex h-[calc(100vh-4rem)]">
+      {/* Sidebar */}
+      <div className="w-64 shrink-0 bg-white shadow-lg border-r border-(--border-color) overflow-y-auto">
         <div className="flex flex-col h-full">
           {/* Return Button */}
           <div className="p-4 border-b border-(--border-color)">
@@ -196,7 +195,7 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
               Revisión
             </h2>
             <div className="text-sm text-(--text-secondary)">
-              {initialResponses.evaluacion.nombre}
+              {revisionData.evaluacion.nombre}
             </div>
           </div>
 
@@ -206,7 +205,7 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
               Exámenes
             </h3>
             <div className="space-y-2">
-              {initialResponses.evaluacion.examenes.map((exam, index) => {
+              {revisionData.evaluacion.examenes.map((exam, index) => {
                 const isSelected =
                   selectedExamId === exam.id ||
                   (selectedExamId === null && index === 0);
@@ -217,7 +216,7 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
                     onClick={() => setSelectedExamId(exam.id)}
                     className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-all duration-200 cursor-pointer ${
                       isSelected
-                        ? "border-(--success) bg-(--success-light) text-(--success-text)"
+                        ? "border-(--primary) bg-(--primary-light) text-(--primary)"
                         : "border-(--border-color) bg-white hover:border-(--border-color) hover:bg-(--page-bg)"
                     }`}
                   >
@@ -262,17 +261,17 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
         </div>
       </div>
 
-      {/* Main Content - With left margin to account for fixed sidebar */}
+      {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-6 py-8">
           {currentExam && (
             <ExamSection
               exam={currentExam}
               responses={responses}
-              onResponseChange={updateResponse}
+              onResponseChange={() => {}}
               postulanteId={postulanteId}
               examNumber={
-                initialResponses.evaluacion.examenes.findIndex(
+                revisionData.evaluacion.examenes.findIndex(
                   (e) => e.id === currentExam.id,
                 ) + 1
               }

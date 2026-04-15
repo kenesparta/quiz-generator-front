@@ -87,25 +87,25 @@ export const usePostulante = (): UsePostulanteReturn => {
       }
 
       // Create respuesta for the new postulante
-      const respuestaResponse = await fetch(`${BASE_URL}/respuesta`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-        body: JSON.stringify({
-          evaluacion_id: "2cf52b7a-0ee3-43a9-9b89-4a8baaa22250",
-          postulante_id: uuid,
-        }),
-      });
+      // const respuestaResponse = await fetch(`${BASE_URL}/respuesta`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     ...(token && { Authorization: `Bearer ${token}` }),
+      //   },
+      //   body: JSON.stringify({
+      //     evaluacion_id: "2cf52b7a-0ee3-43a9-9b89-4a8baaa22250",
+      //     postulante_id: uuid,
+      //   }),
+      // });
 
-      if (!respuestaResponse.ok) {
-        const errorData = await respuestaResponse.json().catch(() => ({}));
-        setError(
-          errorData.message || "Error al crear la respuesta del postulante",
-        );
-        return false;
-      }
+      // if (!respuestaResponse.ok) {
+      //   const errorData = await respuestaResponse.json().catch(() => ({}));
+      //   setError(
+      //     errorData.message || "Error al crear la respuesta del postulante",
+      //   );
+      //   return false;
+      // }
 
       // Refresh the list after creating
       await fetchPostulantes();

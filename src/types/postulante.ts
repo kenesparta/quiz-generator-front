@@ -17,6 +17,7 @@ export interface PostulanteListItem {
   fecha_nacimiento: string;
   grado_instruccion: string;
   genero: string;
+  fecha_registro: string;
 }
 
 export interface CreatePostulanteRequest {

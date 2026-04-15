@@ -90,6 +90,9 @@ export function PostulanteTable({
                 <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-(--text-tertiary)">
                   Género
                 </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-(--text-tertiary)">
+                  Fecha de Registro
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -112,6 +115,9 @@ export function PostulanteTable({
                   </td>
                   <td className="px-6 py-4 text-sm text-(--text-secondary)">
                     {postulante.genero}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-(--text-secondary)">
+                    {postulante.fecha_registro}
                   </td>
                 </tr>
               ))}

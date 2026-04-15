@@ -50,8 +50,8 @@ export const ExamSection = ({
               {answeredQuestions}/{totalQuestions}
             </span>
             {disabled && (
-              <span className="bg-white text-(--sidebar-bg) px-3 py-1 rounded-full text-sm font-semibold">
-                Puntaje: {exam.puntos_obtenidos}
+              <span className="bg-white text-(--sidebar-bg) px-4 py-1.5 rounded-full text-sm font-bold">
+                {exam.puntos_obtenidos} pts
               </span>
             )}
           </div>

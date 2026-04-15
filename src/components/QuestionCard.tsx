@@ -120,8 +120,8 @@ export const QuestionCard = ({
       {/* Footer */}
       {disabled && (
         <div className="mt-4 flex justify-end">
-          <span className="bg-(--table-header-bg) text-(--primary) px-3 py-1 rounded-full text-xs font-semibold">
-            Puntaje: {question.puntos}
+          <span className="bg-(--primary) text-white px-4 py-1.5 rounded-full text-sm font-bold shadow-sm">
+            {question.puntos} pts
           </span>
         </div>
       )}
