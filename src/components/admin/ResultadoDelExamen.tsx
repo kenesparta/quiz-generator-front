@@ -41,9 +41,7 @@ export const ResultadoDelExamen = ({
             >
               <span
                 className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center ${
-                  isSelected
-                    ? "border-(--primary)"
-                    : "border-(--neutral-300)"
+                  isSelected ? "border-(--primary)" : "border-(--neutral-300)"
                 }`}
               >
                 {isSelected && (

@@ -1,7 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import type { CreatePostulanteRequest, Genero, GradoInstruccion } from "@/types/postulante";
+import type {
+  CreatePostulanteRequest,
+  Genero,
+  GradoInstruccion,
+} from "@/types/postulante";
 
 const calcularEdad = (fechaNacimiento: string): number | null => {
   if (!fechaNacimiento) return null;
@@ -27,30 +31,39 @@ const GRADO_INSTRUCCION_OPTIONS: { value: GradoInstruccion; label: string }[] =
 const GENERO_OPTIONS: { value: Genero; label: string }[] = [
   { value: "masculino", label: "Masculino" },
   { value: "femenino", label: "Femenino" },
-  { value: "no_binario", label: "No Binario" },
+  { value: "nobinario", label: "No Binario" },
 ];
 
 interface PostulanteFormProps {
   open: boolean;
   formData: CreatePostulanteRequest;
   isCreating: boolean;
+  isEditMode: boolean;
+  isSearching: boolean;
   onInputChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => void;
   onSubmit: (e: React.FormEvent) => void;
   onCancel: () => void;
+  onSearch: () => void;
 }
 
 export function PostulanteForm({
   open,
   formData,
   isCreating,
+  isEditMode,
+  isSearching,
   onInputChange,
   onSubmit,
   onCancel,
+  onSearch,
 }: PostulanteFormProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const edad = useMemo(() => calcularEdad(formData.fecha_nacimiento), [formData.fecha_nacimiento]);
+  const edad = useMemo(
+    () => calcularEdad(formData.fecha_nacimiento),
+    [formData.fecha_nacimiento],
+  );
   const esMenor = edad !== null && edad < 18;
 
   useEffect(() => {
@@ -83,7 +96,7 @@ export function PostulanteForm({
       <div className="bg-white rounded-lg shadow-xl border border-(--border-color-light) p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-(--text-primary)">
-            Nuevo Postulante
+            {isEditMode ? "Editar Postulante" : "Nuevo Postulante"}
           </h2>
           <button
             type="button"
@@ -116,15 +129,67 @@ export function PostulanteForm({
               >
                 Documento *
               </label>
-              <input
-                type="text"
-                id="documento"
-                name="documento"
-                value={formData.documento}
-                onChange={onInputChange}
-                required
-                className="w-full px-3 py-2 border border-(--border-color) rounded-md text-sm focus:ring-1 focus:ring-(--primary) focus:border-(--primary) outline-none transition-colors"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  id="documento"
+                  name="documento"
+                  value={formData.documento}
+                  onChange={onInputChange}
+                  required
+                  disabled={isEditMode}
+                  className="flex-1 px-3 py-2 border border-(--border-color) rounded-md text-sm focus:ring-1 focus:ring-(--primary) focus:border-(--primary) outline-none transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
+                />
+                <button
+                  type="button"
+                  onClick={onSearch}
+                  disabled={!formData.documento.trim() || isSearching}
+                  title="Buscar postulante por documento"
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    !formData.documento.trim() || isSearching
+                      ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                      : "bg-(--primary) text-white hover:bg-(--primary-dark) cursor-pointer"
+                  }`}
+                >
+                  {isSearching ? (
+                    <svg
+                      aria-hidden="true"
+                      className="w-4 h-4 animate-spin"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      aria-hidden="true"
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"
+                      />
+                    </svg>
+                  )}
+                </button>
+              </div>
             </div>
 
             <div>
@@ -198,7 +263,9 @@ export function PostulanteForm({
                 className="w-full px-3 py-2 border border-(--border-color) rounded-md text-sm focus:ring-1 focus:ring-(--primary) focus:border-(--primary) outline-none transition-colors"
               />
               {edad !== null && (
-                <p className={`text-xs mt-1 ${esMenor ? "text-(--danger)" : "text-(--text-tertiary)"}`}>
+                <p
+                  className={`text-xs mt-1 ${esMenor ? "text-(--danger)" : "text-(--text-tertiary)"}`}
+                >
                   Edad: {edad} {edad === 1 ? "año" : "años"}
                 </p>
               )}
@@ -273,7 +340,13 @@ export function PostulanteForm({
                   : "bg-(--primary) hover:bg-(--primary-dark) cursor-pointer"
               }`}
             >
-              {isCreating ? "Creando..." : "Crear Postulante"}
+              {isCreating
+                ? isEditMode
+                  ? "Actualizando..."
+                  : "Creando..."
+                : isEditMode
+                  ? "Actualizar Postulante"
+                  : "Crear Postulante"}
             </button>
           </div>
         </form>

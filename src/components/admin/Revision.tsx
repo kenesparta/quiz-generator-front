@@ -73,22 +73,23 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
         observacion: examObservaciones[exam.id] || "",
       }));
 
+      const token = localStorage.getItem("token");
       const payload = {
-        respuesta_id: revisionData.id,
         evaluacion_id: revisionData.evaluacion.id,
         examenes: examenes,
         resultado: resultado,
       };
 
-      const response = await fetch(`${BASE_URL}/revision`, {
+      const response = await fetch(`${BASE_URL}/revisiones/${revisionData.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
         },
         body: JSON.stringify(payload),
       });
 
-      if (response.status === 200) {
+      if (response.ok) {
         setDialog({
           open: true,
           title: "Revisión finalizada",

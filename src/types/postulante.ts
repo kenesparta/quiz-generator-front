@@ -5,7 +5,7 @@ export type GradoInstruccion =
   | "superior"
   | "posgrado";
 
-export type Genero = "masculino" | "femenino" | "no_binario";
+export type Genero = "masculino" | "femenino" | "nobinario";
 
 export interface PostulanteListItem {
   id: string;

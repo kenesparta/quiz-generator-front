@@ -13,38 +13,51 @@ interface RevisionData {
   resultado: "apto" | "no_apto" | "evaluacion_especializada";
 }
 
+const showErrorDialog = (message: string) => {
+  const dialog = document.createElement("dialog");
+  dialog.innerHTML = `
+    <form method="dialog" style="font-family:system-ui;padding:1.5rem;max-width:400px;border-radius:8px;">
+      <h3 style="margin:0 0 0.75rem;color:#dc3545;">Error</h3>
+      <p style="margin:0 0 1.25rem;color:#333;">${message}</p>
+      <button style="padding:0.5rem 1.25rem;background:#dc3545;color:#fff;border:none;border-radius:4px;cursor:pointer;float:right;">Cerrar</button>
+    </form>
+  `;
+  dialog.addEventListener("close", () => dialog.remove());
+  document.body.appendChild(dialog);
+  dialog.showModal();
+};
+
 export const generatePDFReport = async (
   revisionId: string,
-  postulanteId: string,
+  _postulanteId: string,
   postulante?: PostulanteData,
 ): Promise<void> => {
   try {
-    const [respuestaResponse, revisionResponse] = await Promise.all([
-      fetch(`${BASE_URL}/respuesta/${revisionId}/postulante/${postulanteId}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      }),
-      fetch(`${BASE_URL}/revision/${revisionId}/postulante/${postulanteId}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      }),
-    ]);
+    const token = localStorage.getItem("token");
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
+    };
 
-    if (!respuestaResponse.ok) {
-      throw new Error("Error al obtener los datos de la evaluación");
+    const response = await fetch(`${BASE_URL}/revisiones/${revisionId}`, {
+      method: "GET",
+      headers,
+    });
+
+    if (!response.ok) {
+      showErrorDialog("Error al obtener los datos de la revisión");
+      return;
     }
 
-    const data: EvaluationResponse = await respuestaResponse.json();
-    let revisionData: RevisionData | undefined;
-
-    if (revisionResponse.ok) {
-      revisionData = await revisionResponse.json();
-    }
+    const data = (await response.json()) as EvaluationResponse & RevisionData;
+    const revisionData: RevisionData | undefined = data.resultado
+      ? { resultado: data.resultado as RevisionData["resultado"] }
+      : undefined;
 
     createPDF(data, postulante, revisionData);
   } catch (error) {
     console.error("Error generating PDF:", error);
-    alert("Error al generar el reporte PDF");
+    showErrorDialog("Error al generar el reporte PDF");
   }
 };
 
@@ -183,7 +196,6 @@ const createPDF = (
   const tiempoMin = Math.floor((data.fecha_tiempo_transcurrido % 3600) / 60);
   const tiempoSeg = data.fecha_tiempo_transcurrido % 60;
   drawInfoRow("Tiempo:", `${tiempoHoras}h ${tiempoMin}m ${tiempoSeg}s`);
-  drawInfoRow("Resultado Final:", data.resultado);
   yPosition += 10;
 
   for (

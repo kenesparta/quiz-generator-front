@@ -7,20 +7,34 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { usePostulante } from "@/hooks/admin/usePostulante";
 import type { CreatePostulanteRequest } from "@/types/postulante";
 
+const emptyFormData: CreatePostulanteRequest = {
+  documento: "",
+  nombre: "",
+  primer_apellido: "",
+  segundo_apellido: "",
+  fecha_nacimiento: "",
+  grado_instruccion: "secundaria",
+  genero: "masculino",
+};
+
 export default function PostulantePage() {
-  const { postulantes, isLoading, error, isCreating, createPostulante } =
-    usePostulante();
+  const {
+    postulantes,
+    isLoading,
+    error,
+    isCreating,
+    isSearching,
+    isUpdating,
+    createPostulante,
+    updatePostulante,
+    searchByDocumento,
+  } = usePostulante();
   const [showForm, setShowForm] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [successDialog, setSuccessDialog] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [formData, setFormData] = useState<CreatePostulanteRequest>({
-    documento: "",
-    nombre: "",
-    primer_apellido: "",
-    segundo_apellido: "",
-    fecha_nacimiento: "",
-    grado_instruccion: "secundaria",
-    genero: "masculino",
+    ...emptyFormData,
   });
 
   const handleInputChange = (
@@ -33,23 +47,32 @@ export default function PostulantePage() {
     }));
   };
 
+  const handleSearch = async () => {
+    const result = await searchByDocumento(formData.documento.trim());
+    if (result) {
+      setFormData(result);
+      setIsEditMode(true);
+    }
+  };
+
+  const handleCancel = () => {
+    setShowForm(false);
+    setIsEditMode(false);
+    setFormData({ ...emptyFormData });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const success = await createPostulante(formData);
+    const success = isEditMode
+      ? await updatePostulante(formData)
+      : await createPostulante(formData);
 
     if (success) {
       setSuccessDialog(true);
       setShowForm(false);
-      setFormData({
-        documento: "",
-        nombre: "",
-        primer_apellido: "",
-        segundo_apellido: "",
-        fecha_nacimiento: "",
-        grado_instruccion: "secundaria",
-        genero: "masculino",
-      });
+      setIsEditMode(false);
+      setFormData({ ...emptyFormData });
     }
   };
 
@@ -127,10 +150,13 @@ export default function PostulantePage() {
       <PostulanteForm
         open={showForm}
         formData={formData}
-        isCreating={isCreating}
+        isCreating={isCreating || isUpdating}
+        isEditMode={isEditMode}
+        isSearching={isSearching}
         onInputChange={handleInputChange}
         onSubmit={handleSubmit}
-        onCancel={() => setShowForm(false)}
+        onCancel={handleCancel}
+        onSearch={handleSearch}
       />
 
       <PostulanteTable
@@ -141,8 +167,8 @@ export default function PostulantePage() {
 
       <ConfirmDialog
         open={successDialog}
-        title="Postulante creado"
-        message="El postulante se ha creado correctamente."
+        title="Operación exitosa"
+        message="El postulante se ha guardado correctamente."
         variant="success"
         confirmLabel="Aceptar"
         cancelLabel=""

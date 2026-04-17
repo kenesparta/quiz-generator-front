@@ -149,22 +149,24 @@ export default function RevisionPage() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleGeneratePDF(
-                          revision.respuesta_id,
-                          revision.postulante_id,
-                          revision.postulante,
-                        )
-                      }
-                      disabled={generatingPDF === revision.postulante_id}
-                      className="px-3 py-1.5 bg-white border border-(--border-color) text-(--text-primary) rounded-md hover:border-(--primary) hover:text-(--primary) transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                    >
-                      {generatingPDF === revision.postulante_id
-                        ? "Generando..."
-                        : "PDF"}
-                    </button>
+                    {isFinalized && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleGeneratePDF(
+                            revision.respuesta_id,
+                            revision.postulante_id,
+                            revision.postulante,
+                          )
+                        }
+                        disabled={generatingPDF === revision.postulante_id}
+                        className="px-3 py-1.5 bg-(--primary) text-white rounded-md hover:bg-(--primary-dark) transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      >
+                        {generatingPDF === revision.postulante_id
+                          ? "Generando..."
+                          : "Generar Informe"}
+                      </button>
+                    )}
                     {isFinalized ? (
                       <button
                         type="button"
