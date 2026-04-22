@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { ExamSection } from "@/components/ExamSection";
 import { usePostulante } from "@/hooks/usePostulante";
@@ -49,6 +49,10 @@ export default function EvaluationPage({ params }: PageProps) {
   const [selectedExamId, setSelectedExamId] = useState<string | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const { dialog, openDialog, closeDialog } = useConfirmDialog();
+  const handleSelectExam = useCallback((examId: string | null) => {
+    setSelectedExamId(examId);
+    window.scrollTo({ top: 0 });
+  }, []);
 
   useEffect(() => {
     if (initialResponses?.fecha_tiempo_transcurrido) {
@@ -124,7 +128,7 @@ export default function EvaluationPage({ params }: PageProps) {
         elapsedTime={elapsedTime}
         selectedExamId={selectedExamId}
         submitting={submitting}
-        onSelectExam={setSelectedExamId}
+        onSelectExam={handleSelectExam}
         onSubmit={handleSubmit}
       />
 

@@ -4,6 +4,8 @@ import jsPDF from "jspdf";
 import { BASE_URL } from "@/config/api";
 import type { EvaluationResponse } from "@/types/evaluacion";
 
+const CLINIC_NAME = "Policlínico Wari SAC";
+
 interface PostulanteData {
   documento: string;
   nombre: string;
@@ -12,8 +14,14 @@ interface PostulanteData {
   grado_instruccion: string;
 }
 
+interface PsicologoData {
+  nombre_completo: string;
+  colegiatura: string;
+}
+
 interface RevisionData {
   resultado: "apto" | "no_apto" | "evaluacion_especializada";
+  psicologo?: PsicologoData;
 }
 
 const showErrorDialog = (message: string) => {
@@ -52,9 +60,13 @@ export const generatePDFReport = async (
       return;
     }
 
-    const data = (await response.json()) as EvaluationResponse & RevisionData;
+    const data = (await response.json()) as EvaluationResponse &
+      RevisionData & { psicologo?: PsicologoData };
     const revisionData: RevisionData | undefined = data.resultado
-      ? { resultado: data.resultado as RevisionData["resultado"] }
+      ? {
+          resultado: data.resultado as RevisionData["resultado"],
+          psicologo: data.psicologo,
+        }
       : undefined;
 
     await createPDF(data, postulante, revisionData);
@@ -67,7 +79,8 @@ export const generatePDFReport = async (
 const stripHtml = (html: string): string => {
   const tmp = document.createElement("div");
   tmp.innerHTML = html;
-  return tmp.textContent || tmp.innerText || "";
+  const text = tmp.textContent || tmp.innerText || "";
+  return text.replace(/\*\*(.+?)\*\*/g, "$1");
 };
 
 const getResultadoLabel = (
@@ -85,7 +98,7 @@ const getResultadoLabel = (
   }
 };
 
-const loadImageAsBase64 = async (url: string): Promise<string | null> => {
+const loadAsBase64 = async (url: string): Promise<string | null> => {
   try {
     const response = await fetch(url);
     const blob = await response.blob();
@@ -100,49 +113,92 @@ const loadImageAsBase64 = async (url: string): Promise<string | null> => {
   }
 };
 
+const loadFontAsBinary = async (url: string): Promise<string | null> => {
+  try {
+    const response = await fetch(url);
+    const buffer = await response.arrayBuffer();
+    const bytes = new Uint8Array(buffer);
+    let binary = "";
+    for (let i = 0; i < bytes.length; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+  } catch {
+    return null;
+  }
+};
+
+const registerRobotoFonts = async (doc: jsPDF): Promise<boolean> => {
+  const [regular, bold, italic] = await Promise.all([
+    loadFontAsBinary("/fonts/Roboto-Regular.ttf"),
+    loadFontAsBinary("/fonts/Roboto-Bold.ttf"),
+    loadFontAsBinary("/fonts/Roboto-Italic.ttf"),
+  ]);
+
+  if (!regular || !bold || !italic) return false;
+
+  doc.addFileToVFS("Roboto-Regular.ttf", regular);
+  doc.addFont("Roboto-Regular.ttf", "Roboto", "normal");
+
+  doc.addFileToVFS("Roboto-Bold.ttf", bold);
+  doc.addFont("Roboto-Bold.ttf", "Roboto", "bold");
+
+  doc.addFileToVFS("Roboto-Italic.ttf", italic);
+  doc.addFont("Roboto-Italic.ttf", "Roboto", "italic");
+
+  return true;
+};
+
 const createPDF = async (
   data: EvaluationResponse,
   postulante?: PostulanteData,
   revisionData?: RevisionData,
 ): Promise<void> => {
-  const doc = new jsPDF();
+  const doc = new jsPDF({ format: "a4" });
   const pageWidth = doc.internal.pageSize.getWidth();
-  const margin = 15;
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 8;
   const contentWidth = pageWidth - margin * 2;
-  let yPosition = 15;
+  let yPosition = margin;
 
-  const logoBase64 = await loadImageAsBase64("/img/logo_reporte.png");
+  const useRoboto = await registerRobotoFonts(doc);
+  const fontFamily = useRoboto ? "Roboto" : "helvetica";
+  doc.setFont(fontFamily, "normal");
+
+  const logoBase64 = await loadAsBase64("/img/logo_reporte.png");
 
   const addNewPageIfNeeded = (requiredSpace: number) => {
-    if (yPosition + requiredSpace > 275) {
+    if (yPosition + requiredSpace > pageHeight - margin) {
       doc.addPage();
-      yPosition = 15;
+      yPosition = margin;
     }
   };
 
   const drawHeader = () => {
-    const headerHeight = 40;
+    const headerHeight = 50;
 
     doc.setFillColor(41, 65, 114);
     doc.rect(0, 0, pageWidth, headerHeight, "F");
 
     if (logoBase64) {
       const logoSize = 22;
-      doc.addImage(logoBase64, "PNG", margin, 9, logoSize, logoSize);
+      doc.addImage(logoBase64, "PNG", margin, 14, logoSize, logoSize);
     }
-
-    const textStartY = 18;
 
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(20);
-    doc.setFont("helvetica", "bold");
-    doc.text("REPORTE DE EVALUACION", pageWidth / 2, textStartY, {
+    doc.setFont(fontFamily, "bold");
+    doc.text(CLINIC_NAME, pageWidth / 2, 16, { align: "center" });
+
+    doc.setFontSize(13);
+    doc.setFont(fontFamily, "normal");
+    doc.text("REPORTE DE EVALUACION", pageWidth / 2, 28, {
       align: "center",
     });
 
     doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
-    doc.text(data.evaluacion.nombre, pageWidth / 2, textStartY + 12, {
+    doc.setFont(fontFamily, "normal");
+    doc.text(data.evaluacion.nombre, pageWidth / 2, 40, {
       align: "center",
     });
 
@@ -162,7 +218,7 @@ const createPDF = async (
 
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(11);
-    doc.setFont("helvetica", "bold");
+    doc.setFont(fontFamily, "bold");
     doc.text(label, pageWidth / 2, yPosition + 9, { align: "center" });
 
     doc.setTextColor(0, 0, 0);
@@ -180,7 +236,7 @@ const createPDF = async (
     doc.line(margin, yPosition - 4, margin, yPosition + 6);
 
     doc.setFontSize(11);
-    doc.setFont("helvetica", "bold");
+    doc.setFont(fontFamily, "bold");
     doc.setTextColor(41, 65, 114);
     doc.text(title, margin + 5, yPosition + 3);
 
@@ -190,11 +246,11 @@ const createPDF = async (
 
   const drawInfoRow = (label: string, value: string) => {
     doc.setFontSize(10);
-    doc.setFont("helvetica", "bold");
+    doc.setFont(fontFamily, "bold");
     doc.setTextColor(80, 80, 80);
     doc.text(label, margin + 5, yPosition);
 
-    doc.setFont("helvetica", "normal");
+    doc.setFont(fontFamily, "normal");
     doc.setTextColor(0, 0, 0);
     doc.text(value, margin + 55, yPosition);
 
@@ -247,14 +303,19 @@ const createPDF = async (
     const exam = data.evaluacion.examenes[examIndex];
     const observacion = exam.observacion;
 
-    addNewPageIfNeeded(35);
+    if (examIndex > 0) {
+      doc.addPage();
+      yPosition = margin;
+    } else {
+      addNewPageIfNeeded(35);
+    }
 
     doc.setFillColor(41, 65, 114);
     doc.rect(margin, yPosition, contentWidth, 12, "F");
 
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(11);
-    doc.setFont("helvetica", "bold");
+    doc.setFont(fontFamily, "bold");
     doc.text(
       `EXAMEN ${examIndex + 1}: ${exam.titulo.toUpperCase()}`,
       margin + 5,
@@ -263,6 +324,21 @@ const createPDF = async (
 
     doc.setTextColor(0, 0, 0);
     yPosition += 18;
+
+    // Exam score
+    addNewPageIfNeeded(12);
+    doc.setFillColor(230, 240, 250);
+    doc.rect(margin, yPosition, contentWidth, 10, "F");
+    doc.setFontSize(10);
+    doc.setFont(fontFamily, "bold");
+    doc.setTextColor(41, 65, 114);
+    doc.text(
+      `Puntaje del examen: ${exam.puntos_obtenidos}`,
+      margin + 5,
+      yPosition + 7,
+    );
+    doc.setTextColor(0, 0, 0);
+    yPosition += 14;
 
     if (observacion) {
       addNewPageIfNeeded(25);
@@ -277,11 +353,11 @@ const createPDF = async (
       doc.rect(margin, yPosition, contentWidth, obsHeight, "FD");
 
       doc.setFontSize(9);
-      doc.setFont("helvetica", "bold");
+      doc.setFont(fontFamily, "bold");
       doc.setTextColor(156, 110, 0);
       doc.text("OBSERVACION DEL EVALUADOR:", margin + 5, yPosition + 6);
 
-      doc.setFont("helvetica", "normal");
+      doc.setFont(fontFamily, "normal");
       doc.setTextColor(80, 60, 0);
       doc.text(obsLines, margin + 5, yPosition + 14);
 
@@ -292,7 +368,7 @@ const createPDF = async (
     if (exam.descripcion) {
       addNewPageIfNeeded(15);
       doc.setFontSize(9);
-      doc.setFont("helvetica", "italic");
+      doc.setFont(fontFamily, "italic");
       doc.setTextColor(100, 100, 100);
       const descripcionLines = doc.splitTextToSize(
         exam.descripcion,
@@ -309,16 +385,26 @@ const createPDF = async (
       addNewPageIfNeeded(30);
 
       doc.setFillColor(248, 249, 250);
-      doc.rect(margin, yPosition - 2, contentWidth, 8, "F");
+      doc.rect(margin, yPosition, contentWidth, 8, "F");
 
       doc.setFontSize(10);
-      doc.setFont("helvetica", "bold");
+      doc.setFont(fontFamily, "bold");
       doc.setTextColor(41, 65, 114);
-      doc.text(`Pregunta ${qIndex + 1}`, margin + 3, yPosition + 4);
-      doc.setTextColor(0, 0, 0);
-      yPosition += 10;
+      doc.text(`Pregunta ${qIndex + 1}`, margin + 3, yPosition + 6);
 
-      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setFont(fontFamily, "normal");
+      doc.setTextColor(100, 100, 100);
+      doc.text(
+        `Puntaje: ${pregunta.puntos}`,
+        pageWidth - margin - 3,
+        yPosition + 6,
+        { align: "right" },
+      );
+      doc.setTextColor(0, 0, 0);
+      yPosition += 12;
+
+      doc.setFont(fontFamily, "normal");
       doc.setFontSize(10);
       const contenidoClean = stripHtml(pregunta.contenido);
       const contenidoLines = doc.splitTextToSize(
@@ -326,7 +412,7 @@ const createPDF = async (
         contentWidth - 10,
       );
       doc.text(contenidoLines, margin + 5, yPosition);
-      yPosition += contenidoLines.length * 5 + 4;
+      yPosition += contenidoLines.length * 4 + 1;
 
       if (
         pregunta.tipo_de_pregunta === "alternativa_unica" ||
@@ -337,47 +423,49 @@ const createPDF = async (
           addNewPageIfNeeded(10);
           const isSelected = pregunta.respuestas.includes(key);
 
-          if (isSelected) {
-            doc.setFillColor(232, 245, 233);
-            doc.rect(margin + 8, yPosition - 3, contentWidth - 16, 6, "F");
-            doc.setTextColor(46, 125, 50);
-            doc.setFont("helvetica", "bold");
-          } else {
-            doc.setTextColor(80, 80, 80);
-            doc.setFont("helvetica", "normal");
-          }
-
           const marker = isSelected ? "[X]" : "[  ]";
           const alternativaText = `${marker} ${key}: ${value}`;
           const altLines = doc.splitTextToSize(
             alternativaText,
             contentWidth - 20,
           );
-          doc.text(altLines, margin + 10, yPosition);
-          yPosition += altLines.length * 4 + 3;
+          const altHeight = altLines.length * 4 + 2;
+
+          if (isSelected) {
+            doc.setFillColor(232, 245, 233);
+            doc.rect(margin + 8, yPosition, contentWidth - 16, altHeight, "F");
+            doc.setTextColor(46, 125, 50);
+            doc.setFont(fontFamily, "bold");
+          } else {
+            doc.setTextColor(80, 80, 80);
+            doc.setFont(fontFamily, "normal");
+          }
+
+          doc.text(altLines, margin + 10, yPosition + altHeight * 0.6);
+          yPosition += altHeight;
 
           doc.setTextColor(0, 0, 0);
-          doc.setFont("helvetica", "normal");
+          doc.setFont(fontFamily, "normal");
         }
       } else if (pregunta.tipo_de_pregunta === "sola_respuesta") {
         addNewPageIfNeeded(15);
 
         doc.setFillColor(232, 245, 233);
-        doc.rect(margin + 5, yPosition - 2, contentWidth - 10, 12, "F");
+        doc.rect(margin + 5, yPosition, contentWidth - 10, 10, "F");
 
         doc.setFontSize(9);
-        doc.setFont("helvetica", "bold");
+        doc.setFont(fontFamily, "bold");
         doc.setTextColor(46, 125, 50);
-        doc.text("Respuesta:", margin + 8, yPosition + 4);
+        doc.text("Respuesta:", margin + 6, yPosition + 6);
 
-        doc.setFont("helvetica", "normal");
+        doc.setFont(fontFamily, "normal");
         const respuestaText =
           pregunta.respuestas.length > 0
             ? pregunta.respuestas.join(", ")
             : "(Sin respuesta)";
         const respLines = doc.splitTextToSize(respuestaText, contentWidth - 40);
-        doc.text(respLines, margin + 35, yPosition + 4);
-        yPosition += 15;
+        doc.text(respLines, margin + 35, yPosition + 7);
+        yPosition += 14;
 
         doc.setTextColor(0, 0, 0);
       }
@@ -389,35 +477,52 @@ const createPDF = async (
   }
 
   // Signature box
-  addNewPageIfNeeded(70);
+  addNewPageIfNeeded(55);
   yPosition += 10;
 
-  const boxWidth = 90;
+  const boxWidth = 80;
   const boxX = (pageWidth - boxWidth) / 2;
+  const psicologo = revisionData?.psicologo;
 
   doc.setDrawColor(180, 180, 180);
   doc.setLineWidth(0.4);
-  doc.rect(boxX, yPosition, boxWidth, 55);
+  doc.rect(boxX, yPosition, boxWidth, 45);
 
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setFont(fontFamily, "bold");
   doc.setTextColor(41, 65, 114);
-  doc.text("FIRMA DEL PSICÓLOGO EVALUADOR", pageWidth / 2, yPosition + 8, {
-    align: "center",
-  });
 
   doc.setDrawColor(100, 100, 100);
   doc.setLineWidth(0.3);
-  doc.line(boxX + 10, yPosition + 40, boxX + boxWidth - 10, yPosition + 40);
+  doc.line(boxX + 10, yPosition + 28, boxX + boxWidth - 10, yPosition + 28);
 
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(128, 128, 128);
-  doc.text("Nombre y Sello", pageWidth / 2, yPosition + 47, {
-    align: "center",
-  });
+  if (psicologo) {
+    doc.setFontSize(8);
+    doc.setFont(fontFamily, "bold");
+    doc.setTextColor(60, 60, 60);
+    doc.text(psicologo.nombre_completo, pageWidth / 2, yPosition + 34, {
+      align: "center",
+    });
 
-  yPosition += 65;
+    doc.setFontSize(7);
+    doc.setFont(fontFamily, "normal");
+    doc.setTextColor(128, 128, 128);
+    doc.text(
+      `Colegiatura: ${psicologo.colegiatura}`,
+      pageWidth / 2,
+      yPosition + 40,
+      { align: "center" },
+    );
+  } else {
+    doc.setFontSize(8);
+    doc.setFont(fontFamily, "normal");
+    doc.setTextColor(128, 128, 128);
+    doc.text("Nombre y Sello", pageWidth / 2, yPosition + 34, {
+      align: "center",
+    });
+  }
+
+  yPosition += 50;
 
   // Footer
   doc.setDrawColor(200, 200, 200);

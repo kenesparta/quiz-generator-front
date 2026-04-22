@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
   ResultadoDelExamen,
   type ResultadoTipo,
@@ -19,6 +19,12 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
   const { revisionData, responses, loading } = useRevisionDetail(revisionId);
 
   const [selectedExamId, setSelectedExamId] = useState<string | null>(null);
+  const mainContentRef = useRef<HTMLDivElement>(null);
+
+  const handleSelectExam = useCallback((examId: string) => {
+    setSelectedExamId(examId);
+    mainContentRef.current?.scrollTo({ top: 0 });
+  }, []);
   const [examObservaciones, setExamObservaciones] = useState<
     Record<string, string>
   >({});
@@ -217,7 +223,7 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
                 return (
                   <button
                     key={exam.id}
-                    onClick={() => setSelectedExamId(exam.id)}
+                    onClick={() => handleSelectExam(exam.id)}
                     className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-all duration-200 cursor-pointer ${
                       isSelected
                         ? "border-(--primary) bg-(--primary-light) text-(--primary)"
@@ -266,7 +272,7 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div ref={mainContentRef} className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-6 py-8">
           {currentExam && (
             <ExamSection
