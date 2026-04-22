@@ -57,7 +57,7 @@ export const generatePDFReport = async (
       ? { resultado: data.resultado as RevisionData["resultado"] }
       : undefined;
 
-    createPDF(data, postulante, revisionData);
+    await createPDF(data, postulante, revisionData);
   } catch (error) {
     console.error("Error generating PDF:", error);
     showErrorDialog("Error al generar el reporte PDF");
@@ -85,16 +85,33 @@ const getResultadoLabel = (
   }
 };
 
-const createPDF = (
+const loadImageAsBase64 = async (url: string): Promise<string | null> => {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    return null;
+  }
+};
+
+const createPDF = async (
   data: EvaluationResponse,
   postulante?: PostulanteData,
   revisionData?: RevisionData,
-): void => {
+): Promise<void> => {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   const margin = 15;
   const contentWidth = pageWidth - margin * 2;
   let yPosition = 15;
+
+  const logoBase64 = await loadImageAsBase64("/img/logo_reporte.png");
 
   const addNewPageIfNeeded = (requiredSpace: number) => {
     if (yPosition + requiredSpace > 275) {
@@ -104,20 +121,33 @@ const createPDF = (
   };
 
   const drawHeader = () => {
+    const headerHeight = 40;
+
     doc.setFillColor(41, 65, 114);
-    doc.rect(0, 0, pageWidth, 40, "F");
+    doc.rect(0, 0, pageWidth, headerHeight, "F");
+
+    if (logoBase64) {
+      const logoSize = 22;
+      doc.addImage(logoBase64, "PNG", margin, 9, logoSize, logoSize);
+    }
+
+    const textStartY = 18;
 
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(20);
     doc.setFont("helvetica", "bold");
-    doc.text("REPORTE DE EVALUACION", pageWidth / 2, 18, { align: "center" });
+    doc.text("REPORTE DE EVALUACION", pageWidth / 2, textStartY, {
+      align: "center",
+    });
 
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
-    doc.text(data.evaluacion.nombre, pageWidth / 2, 30, { align: "center" });
+    doc.text(data.evaluacion.nombre, pageWidth / 2, textStartY + 12, {
+      align: "center",
+    });
 
     doc.setTextColor(0, 0, 0);
-    yPosition = 50;
+    yPosition = headerHeight + 10;
   };
 
   const drawResultadoBadge = () => {

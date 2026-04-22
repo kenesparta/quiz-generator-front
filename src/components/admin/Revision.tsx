@@ -80,14 +80,17 @@ export const Revision = ({ revisionId, postulanteId }: RevisionProps) => {
         resultado: resultado,
       };
 
-      const response = await fetch(`${BASE_URL}/revisiones/${revisionData.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token && { Authorization: `Bearer ${token}` }),
+      const response = await fetch(
+        `${BASE_URL}/revisiones/${revisionData.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }),
+          },
+          body: JSON.stringify(payload),
         },
-        body: JSON.stringify(payload),
-      });
+      );
 
       if (response.ok) {
         setDialog({

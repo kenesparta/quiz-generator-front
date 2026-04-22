@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
@@ -216,27 +217,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <aside className="w-64 bg-(--sidebar-bg) fixed h-full flex flex-col z-20">
         {/* Brand */}
         <div className="flex items-center gap-3 h-16 px-6 border-b border-white/10">
-          <div className="w-8 h-8 rounded-lg bg-(--sidebar-active-bg) flex items-center justify-center">
-            <svg
-              aria-hidden="true"
-              className="w-5 h-5 text-white"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 12l-2 2 4-4"
-              />
-            </svg>
-          </div>
+          <Image
+            src="/img/logo_reporte.png"
+            alt="Logo"
+            width={32}
+            height={32}
+            className="rounded-lg"
+          />
           <span className="text-white font-semibold text-lg">Quiz Admin</span>
         </div>
 
