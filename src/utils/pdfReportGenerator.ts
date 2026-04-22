@@ -7,6 +7,9 @@ import type { EvaluationResponse } from "@/types/evaluacion";
 interface PostulanteData {
   documento: string;
   nombre: string;
+  nombre_completo: string;
+  fecha_nacimiento: string;
+  grado_instruccion: string;
 }
 
 interface RevisionData {
@@ -175,8 +178,10 @@ const createPDF = (
   drawSectionTitle("Informacion del Postulante");
 
   if (postulante) {
-    drawInfoRow("Nombre:", postulante.nombre);
+    drawInfoRow("Nombre:", postulante.nombre_completo);
     drawInfoRow("Documento:", postulante.documento);
+    drawInfoRow("Fecha Nacimiento:", postulante.fecha_nacimiento);
+    drawInfoRow("Grado Instrucción:", postulante.grado_instruccion);
   }
   yPosition += 5;
 
@@ -347,8 +352,40 @@ const createPDF = (
     yPosition += 10;
   }
 
-  addNewPageIfNeeded(20);
+  // Signature box
+  addNewPageIfNeeded(70);
+  yPosition += 10;
+
+  const boxWidth = 90;
+  const boxX = (pageWidth - boxWidth) / 2;
+
+  doc.setDrawColor(180, 180, 180);
+  doc.setLineWidth(0.4);
+  doc.rect(boxX, yPosition, boxWidth, 55);
+
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(41, 65, 114);
+  doc.text("FIRMA DEL PSICÓLOGO EVALUADOR", pageWidth / 2, yPosition + 8, {
+    align: "center",
+  });
+
+  doc.setDrawColor(100, 100, 100);
+  doc.setLineWidth(0.3);
+  doc.line(boxX + 10, yPosition + 40, boxX + boxWidth - 10, yPosition + 40);
+
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(128, 128, 128);
+  doc.text("Nombre y Sello", pageWidth / 2, yPosition + 47, {
+    align: "center",
+  });
+
+  yPosition += 65;
+
+  // Footer
   doc.setDrawColor(200, 200, 200);
+  doc.setLineWidth(0.3);
   doc.line(margin, yPosition, pageWidth - margin, yPosition);
   yPosition += 8;
 

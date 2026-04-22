@@ -30,7 +30,13 @@ export default function RevisionPage() {
   const handleGeneratePDF = async (
     revisionId: string,
     postulanteId: string,
-    postulante?: { documento: string; nombre: string },
+    postulante?: {
+      documento: string;
+      nombre: string;
+      nombre_completo: string;
+      fecha_nacimiento: string;
+      grado_instruccion: string;
+    },
   ) => {
     setGeneratingPDF(postulanteId);
     try {
@@ -209,7 +215,7 @@ export default function RevisionPage() {
                           d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                         />
                       </svg>
-                      {revision.postulante.nombre}
+                      {revision.postulante.nombre_completo}
                     </span>
                     <span className="flex items-center gap-1.5 text-(--text-secondary)">
                       <svg

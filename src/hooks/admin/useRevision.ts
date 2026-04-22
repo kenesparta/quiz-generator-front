@@ -6,6 +6,9 @@ import { BASE_URL } from "@/config/api";
 interface PostulanteData {
   documento: string;
   nombre: string;
+  nombre_completo: string;
+  fecha_nacimiento: string;
+  grado_instruccion: string;
 }
 
 interface RevisionItemResponse {
