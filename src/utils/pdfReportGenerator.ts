@@ -197,10 +197,16 @@ const createPDF = (
     drawInfoRow("Fecha Fin:", fechaFin);
   }
 
-  const tiempoHoras = Math.floor(data.fecha_tiempo_transcurrido / 3600);
-  const tiempoMin = Math.floor((data.fecha_tiempo_transcurrido % 3600) / 60);
-  const tiempoSeg = data.fecha_tiempo_transcurrido % 60;
-  drawInfoRow("Tiempo:", `${tiempoHoras}h ${tiempoMin}m ${tiempoSeg}s`);
+  if (data.fecha_tiempo_inicio && data.fecha_tiempo_fin) {
+    const diffMs =
+      new Date(data.fecha_tiempo_fin).getTime() -
+      new Date(data.fecha_tiempo_inicio).getTime();
+    const diffSeg = Math.floor(diffMs / 1000);
+    const tiempoHoras = Math.floor(diffSeg / 3600);
+    const tiempoMin = Math.floor((diffSeg % 3600) / 60);
+    const tiempoSeg = diffSeg % 60;
+    drawInfoRow("Tiempo:", `${tiempoHoras}h ${tiempoMin}m ${tiempoSeg}s`);
+  }
   yPosition += 10;
 
   for (
@@ -398,6 +404,6 @@ const createPDF = (
     { align: "center" },
   );
 
-  const fileName = `reporte_evaluacion_${postulante?.documento || data.postulante_id}.pdf`;
+  const fileName = `reporte_evaluacion_${crypto.randomUUID()}.pdf`;
   doc.save(fileName);
 };
