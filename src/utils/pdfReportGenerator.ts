@@ -335,7 +335,7 @@ const createPDF = async (
     doc.text(
       `Puntaje del examen: ${exam.puntos_obtenidos}`,
       margin + 5,
-      yPosition + 7,
+      yPosition + 6,
     );
     doc.setTextColor(0, 0, 0);
     yPosition += 14;
@@ -390,7 +390,7 @@ const createPDF = async (
       doc.setFontSize(10);
       doc.setFont(fontFamily, "bold");
       doc.setTextColor(41, 65, 114);
-      doc.text(`Pregunta ${qIndex + 1}`, margin + 3, yPosition + 6);
+      doc.text(`Pregunta ${qIndex + 1}`, margin + 3, yPosition + 5);
 
       doc.setFontSize(9);
       doc.setFont(fontFamily, "normal");
@@ -398,7 +398,7 @@ const createPDF = async (
       doc.text(
         `Puntaje: ${pregunta.puntos}`,
         pageWidth - margin - 3,
-        yPosition + 6,
+        yPosition + 5,
         { align: "right" },
       );
       doc.setTextColor(0, 0, 0);
@@ -477,30 +477,26 @@ const createPDF = async (
   }
 
   // Signature box
-  addNewPageIfNeeded(55);
-  yPosition += 10;
+  addNewPageIfNeeded(40);
+  yPosition += 8;
 
-  const boxWidth = 80;
+  const boxWidth = 70;
   const boxX = (pageWidth - boxWidth) / 2;
   const psicologo = revisionData?.psicologo;
 
   doc.setDrawColor(180, 180, 180);
-  doc.setLineWidth(0.4);
-  doc.rect(boxX, yPosition, boxWidth, 45);
-
-  doc.setFontSize(8);
-  doc.setFont(fontFamily, "bold");
-  doc.setTextColor(41, 65, 114);
+  doc.setLineWidth(0.3);
+  doc.rect(boxX, yPosition, boxWidth, 32);
 
   doc.setDrawColor(100, 100, 100);
   doc.setLineWidth(0.3);
-  doc.line(boxX + 10, yPosition + 28, boxX + boxWidth - 10, yPosition + 28);
+  doc.line(boxX + 10, yPosition + 18, boxX + boxWidth - 10, yPosition + 18);
 
   if (psicologo) {
     doc.setFontSize(8);
     doc.setFont(fontFamily, "bold");
     doc.setTextColor(60, 60, 60);
-    doc.text(psicologo.nombre_completo, pageWidth / 2, yPosition + 34, {
+    doc.text(psicologo.nombre_completo, pageWidth / 2, yPosition + 23, {
       align: "center",
     });
 
@@ -510,19 +506,19 @@ const createPDF = async (
     doc.text(
       `Colegiatura: ${psicologo.colegiatura}`,
       pageWidth / 2,
-      yPosition + 40,
+      yPosition + 28,
       { align: "center" },
     );
   } else {
     doc.setFontSize(8);
     doc.setFont(fontFamily, "normal");
     doc.setTextColor(128, 128, 128);
-    doc.text("Nombre y Sello", pageWidth / 2, yPosition + 34, {
+    doc.text("Nombre y Sello", pageWidth / 2, yPosition + 23, {
       align: "center",
     });
   }
 
-  yPosition += 50;
+  yPosition += 38;
 
   // Footer
   doc.setDrawColor(200, 200, 200);
