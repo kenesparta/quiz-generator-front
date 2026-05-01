@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import type React from "react";
 import { useState } from "react";
 import { useLogin } from "@/hooks/useLogin";
@@ -25,29 +26,17 @@ export default function Login() {
       <div className="hidden lg:flex lg:w-1/2 bg-(--sidebar-bg) relative overflow-hidden">
         <div className="flex flex-col justify-center px-16 relative z-10">
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-(--primary) flex items-center justify-center">
-              <svg
-                aria-hidden="true"
-                className="w-6 h-6 text-white"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 12l-2 2 4-4"
-                />
-              </svg>
+            <div className="w-12 h-12 rounded-lg bg-white flex items-center justify-center overflow-hidden">
+              <Image
+                src="/img/logo.jpeg"
+                alt="Policlínico WARI"
+                width={48}
+                height={48}
+                className="object-contain"
+              />
             </div>
             <span className="text-white font-semibold text-xl">
-              Quiz Generator
+              Policlínico WARI
             </span>
           </div>
           <h1 className="text-4xl font-bold text-white leading-tight mb-4">
@@ -70,29 +59,17 @@ export default function Login() {
         <div className="w-full max-w-sm mx-auto">
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-(--primary) flex items-center justify-center">
-              <svg
-                aria-hidden="true"
-                className="w-6 h-6 text-white"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 12l-2 2 4-4"
-                />
-              </svg>
+            <div className="w-12 h-12 rounded-lg bg-white flex items-center justify-center overflow-hidden">
+              <Image
+                src="/img/logo.jpeg"
+                alt="Policlínico WARI"
+                width={48}
+                height={48}
+                className="object-contain"
+              />
             </div>
             <span className="text-(--text-primary) font-semibold text-xl">
-              Quiz Generator
+              Policlínico WARI
             </span>
           </div>
 

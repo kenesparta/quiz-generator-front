@@ -98,6 +98,14 @@ export const QuestionCard = ({
               </span>
             )}
           </div>
+          {question.imagen_ref && (
+            // biome-ignore lint/performance/noImgElement: imagen_ref es un data URL base64 que no se beneficia de next/image
+            <img
+              src={question.imagen_ref}
+              alt="Imagen de la pregunta"
+              className="mt-3 max-w-full h-auto rounded-md border border-(--border-color)"
+            />
+          )}
         </div>
       </div>
 

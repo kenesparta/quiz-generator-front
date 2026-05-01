@@ -30,6 +30,7 @@ export interface Question {
   contenido: string;
   tipo_de_pregunta: "alternativa_peso" | "alternativa_unica" | "sola_respuesta";
   etiqueta: string;
+  imagen_ref?: string;
   alternativas: Record<string, string>;
   respuestas: string[];
   puntos: number;

@@ -113,6 +113,24 @@ const loadAsBase64 = async (url: string): Promise<string | null> => {
   }
 };
 
+const getImageDimensions = (
+  dataUrl: string,
+): Promise<{ width: number; height: number }> => {
+  return new Promise((resolve, reject) => {
+    const img = new window.Image();
+    img.onload = () => resolve({ width: img.width, height: img.height });
+    img.onerror = reject;
+    img.src = dataUrl;
+  });
+};
+
+const extractImageFormat = (dataUrl: string): string => {
+  const match = dataUrl.match(/^data:image\/([a-zA-Z0-9+]+);base64,/);
+  if (!match) return "PNG";
+  const fmt = match[1].toUpperCase();
+  return fmt === "JPG" ? "JPEG" : fmt;
+};
+
 const loadFontAsBinary = async (url: string): Promise<string | null> => {
   try {
     const response = await fetch(url);
@@ -165,7 +183,7 @@ const createPDF = async (
   const fontFamily = useRoboto ? "Roboto" : "helvetica";
   doc.setFont(fontFamily, "normal");
 
-  const logoBase64 = await loadAsBase64("/img/logo_reporte.png");
+  const logoBase64 = await loadAsBase64("/img/logo.jpeg");
 
   const addNewPageIfNeeded = (requiredSpace: number) => {
     if (yPosition + requiredSpace > pageHeight - margin) {
@@ -181,8 +199,8 @@ const createPDF = async (
     doc.rect(0, 0, pageWidth, headerHeight, "F");
 
     if (logoBase64) {
-      const logoSize = 22;
-      doc.addImage(logoBase64, "PNG", margin, 14, logoSize, logoSize);
+      const logoSize = 38;
+      doc.addImage(logoBase64, "JPEG", margin, 6, logoSize, logoSize);
     }
 
     doc.setTextColor(255, 255, 255);
@@ -413,6 +431,37 @@ const createPDF = async (
       );
       doc.text(contenidoLines, margin + 5, yPosition);
       yPosition += contenidoLines.length * 4 + 1;
+
+      if (pregunta.imagen_ref) {
+        try {
+          const { width: natW, height: natH } = await getImageDimensions(
+            pregunta.imagen_ref,
+          );
+          const maxW = 100;
+          const maxH = 70;
+          const aspectRatio = natW / natH;
+          let imgW = maxW;
+          let imgH = imgW / aspectRatio;
+          if (imgH > maxH) {
+            imgH = maxH;
+            imgW = imgH * aspectRatio;
+          }
+
+          addNewPageIfNeeded(imgH + 4);
+          const format = extractImageFormat(pregunta.imagen_ref);
+          doc.addImage(
+            pregunta.imagen_ref,
+            format,
+            margin + 5,
+            yPosition,
+            imgW,
+            imgH,
+          );
+          yPosition += imgH + 4;
+        } catch {
+          // Skip image rendering on error
+        }
+      }
 
       if (
         pregunta.tipo_de_pregunta === "alternativa_unica" ||

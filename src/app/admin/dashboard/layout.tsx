@@ -107,22 +107,6 @@ const LinkIcon = () => (
   </svg>
 );
 
-const GearIcon = () => (
-  <svg
-    aria-hidden="true"
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    viewBox="0 0 24 24"
-  >
-    <circle cx="12" cy="12" r="3" />
-    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1.08-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1.08 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001.08 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1.08z" />
-  </svg>
-);
-
 const ChevronIcon = () => (
   <svg
     aria-hidden="true"
@@ -179,17 +163,6 @@ const navGroups: NavGroup[] = [
       },
     ],
   },
-  {
-    label: "CONFIGURACIÓN",
-    items: [
-      {
-        id: "ajustes",
-        name: "Ajustes",
-        href: "#",
-        icon: <GearIcon />,
-      },
-    ],
-  },
 ];
 
 const labelMap: Record<string, string> = {
@@ -241,7 +214,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         {/* Brand */}
         <div className="flex items-center gap-3 h-16 px-6 border-b border-white/10">
           <Image
-            src="/img/logo_reporte.png"
+            src="/img/logo.jpeg"
             alt="Logo"
             width={32}
             height={32}
