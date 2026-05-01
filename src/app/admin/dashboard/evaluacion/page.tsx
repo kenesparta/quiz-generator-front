@@ -1,106 +1,65 @@
-export default function EvaluacionPage() {
-  const metrics = [
-    {
-      label: "Evaluaciones Activas",
-      value: 12,
-      trend: "+2 esta semana",
-      trendUp: true,
-      bgColor: "bg-(--primary-light)",
-      iconColor: "text-(--primary)",
-      icon: (
-        <svg
-          aria-hidden="true"
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          viewBox="0 0 24 24"
-        >
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-        </svg>
-      ),
-    },
-    {
-      label: "Completadas",
-      value: 45,
-      trend: "+8 este mes",
-      trendUp: true,
-      bgColor: "bg-(--success-light)",
-      iconColor: "text-(--success)",
-      icon: (
-        <svg
-          aria-hidden="true"
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          viewBox="0 0 24 24"
-        >
-          <path d="M9 12l2 2 4-4" />
-          <circle cx="12" cy="12" r="10" />
-        </svg>
-      ),
-    },
-    {
-      label: "Pendientes",
-      value: 8,
-      trend: "-3 vs. semana pasada",
-      trendUp: false,
-      bgColor: "bg-(--warning-light)",
-      iconColor: "text-(--warning)",
-      icon: (
-        <svg
-          aria-hidden="true"
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          viewBox="0 0 24 24"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <path d="M12 6v6l4 2" />
-        </svg>
-      ),
-    },
-  ];
+"use client";
 
-  const activities = [
-    {
-      color: "bg-(--success-light)0",
-      text: "Evaluación de Matemáticas completada por Juan Pérez",
-      time: "Hace 2 horas",
-    },
-    {
-      color: "bg-(--warning)",
-      text: "María García inició la Evaluación de Historia",
-      time: "Hace 4 horas",
-    },
-    {
-      color: "bg-(--primary)",
-      text: "Nueva evaluación de Ciencias creada",
-      time: "Hace 6 horas",
-    },
-    {
-      color: "bg-(--success-light)0",
-      text: "Carlos López finalizó su evaluación",
-      time: "Ayer",
-    },
-    {
-      color: "bg-(--neutral-400)",
-      text: "Evaluación de Geografía programada para revisión",
-      time: "Ayer",
-    },
-  ];
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useEvaluaciones } from "@/hooks/admin/useEvaluaciones";
+import { isAdminOrPsicologo } from "@/utils/jwt";
+
+const estadoStyles: Record<string, { color: string; label: string }> = {
+  publicado: { color: "bg-(--success)", label: "Publicado" },
+  borrador: { color: "bg-(--warning)", label: "Borrador" },
+};
+
+const formatEstado = (estado: string) => {
+  const key = estado.toLowerCase();
+  return (
+    estadoStyles[key] ?? {
+      color: "bg-(--text-tertiary)",
+      label: estado,
+    }
+  );
+};
+
+export default function EvaluacionPage() {
+  const router = useRouter();
+  const [authorized, setAuthorized] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/admin/login");
+      return;
+    }
+    if (!isAdminOrPsicologo(token)) {
+      setAuthorized(false);
+      return;
+    }
+    setAuthorized(true);
+  }, [router]);
+
+  const { evaluaciones, isLoading, error } = useEvaluaciones();
+
+  if (authorized === null) {
+    return null;
+  }
+
+  if (authorized === false) {
+    return (
+      <div className="p-6">
+        <div className="bg-white rounded-lg p-6 border border-(--border-color-light) text-center">
+          <h2 className="text-lg font-semibold text-(--text-primary)">
+            Acceso restringido
+          </h2>
+          <p className="text-sm text-(--text-tertiary) mt-2">
+            Esta sección solo está disponible para administradores y psicólogos.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
-      {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-semibold text-(--text-primary)">
           Evaluación
@@ -110,77 +69,81 @@ export default function EvaluacionPage() {
         </p>
       </div>
 
-      {/* Metric Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        {metrics.map((metric) => (
-          <div
-            key={metric.label}
-            className="bg-white rounded-lg p-6 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light)"
-          >
-            <div className="flex justify-between items-start">
-              <span className="text-sm font-medium text-(--text-tertiary)">
-                {metric.label}
-              </span>
-              <div
-                className={`w-10 h-10 rounded-full ${metric.bgColor} flex items-center justify-center ${metric.iconColor}`}
-              >
-                {metric.icon}
-              </div>
-            </div>
-            <div className="mt-3">
-              <span className="text-3xl font-bold text-(--text-primary)">
-                {metric.value}
-              </span>
-            </div>
-            <div className="mt-2 flex items-center gap-1">
-              <svg
-                aria-hidden="true"
-                className={`w-3 h-3 ${metric.trendUp ? "text-(--success)" : "text-(--danger)"}`}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d={metric.trendUp ? "M5 15l7-7 7 7" : "M19 9l-7 7-7-7"}
-                />
-              </svg>
-              <span className="text-xs text-(--text-tertiary)">
-                {metric.trend}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
+      {isLoading && (
+        <div className="text-sm text-(--text-tertiary)">
+          Cargando evaluaciones...
+        </div>
+      )}
 
-      {/* Activity Feed */}
-      <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light)">
-        <div className="px-6 py-4 border-b border-(--border-color-light)">
-          <h2 className="text-base font-semibold text-(--text-primary)">
-            Actividad Reciente
-          </h2>
+      {error && !isLoading && (
+        <div className="bg-white rounded-lg p-4 border border-(--border-color-light) text-sm text-(--danger)">
+          {error}
         </div>
-        <div className="divide-y divide-(--border-color-light)">
-          {activities.map((activity) => (
-            <div
-              key={activity.text}
-              className="px-6 py-4 flex items-start gap-3"
-            >
-              <span
-                className={`w-2 h-2 rounded-full ${activity.color} mt-1.5 shrink-0`}
-              />
-              <div>
-                <p className="text-sm text-(--text-primary)">{activity.text}</p>
-                <p className="text-xs text-(--text-tertiary) mt-1">
-                  {activity.time}
-                </p>
+      )}
+
+      {!isLoading && !error && evaluaciones.length === 0 && (
+        <div className="bg-white rounded-lg p-6 border border-(--border-color-light) text-center text-sm text-(--text-tertiary)">
+          No hay evaluaciones registradas.
+        </div>
+      )}
+
+      {!isLoading && !error && evaluaciones.length > 0 && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {evaluaciones.map((evaluacion) => {
+            const estado = formatEstado(evaluacion.estado);
+            return (
+              <div
+                key={evaluacion.id}
+                className="bg-white rounded-lg p-6 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light) hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-lg bg-(--primary-light) flex items-center justify-center text-(--primary) shrink-0">
+                    <svg
+                      aria-hidden="true"
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
+                      <path d="M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      <path d="M9 14l2 2 4-4" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base font-semibold text-(--text-primary) truncate">
+                      {evaluacion.nombre}
+                    </h3>
+                    <p className="text-sm text-(--text-tertiary) mt-1 line-clamp-2">
+                      {evaluacion.descripcion}
+                    </p>
+                    <p className="text-xs text-(--text-tertiary) mt-2">
+                      {evaluacion.cantidad_examenes}{" "}
+                      {evaluacion.cantidad_examenes === 1
+                        ? "examen"
+                        : "exámenes"}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between mt-4 pt-4 border-t border-(--border-color-light)">
+                  <span className="inline-flex items-center gap-1.5 text-sm">
+                    <span className={`w-2 h-2 rounded-full ${estado.color}`} />
+                    <span className="text-(--text-secondary)">
+                      {estado.label}
+                    </span>
+                  </span>
+                  <span className="text-xs text-(--text-tertiary) font-mono truncate max-w-[140px]">
+                    {evaluacion.id}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
-      </div>
+      )}
     </div>
   );
 }

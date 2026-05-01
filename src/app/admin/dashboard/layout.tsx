@@ -91,6 +91,22 @@ const CheckCircleIcon = () => (
   </svg>
 );
 
+const LinkIcon = () => (
+  <svg
+    aria-hidden="true"
+    className="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    viewBox="0 0 24 24"
+  >
+    <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
+    <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
+  </svg>
+);
+
 const GearIcon = () => (
   <svg
     aria-hidden="true"
@@ -144,6 +160,12 @@ const navGroups: NavGroup[] = [
         href: "/admin/dashboard/postulante",
         icon: <UsersIcon />,
       },
+      {
+        id: "asignar-evaluacion",
+        name: "Asignar Evaluación",
+        href: "/admin/dashboard/asignar-evaluacion",
+        icon: <LinkIcon />,
+      },
     ],
   },
   {
@@ -174,6 +196,7 @@ const labelMap: Record<string, string> = {
   evaluacion: "Evaluación",
   examen: "Examen",
   postulante: "Postulante",
+  "asignar-evaluacion": "Asignar Evaluación",
   revision: "Revisión",
 };
 
