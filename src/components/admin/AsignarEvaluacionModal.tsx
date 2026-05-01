@@ -1,21 +1,25 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAsignarEvaluacion } from "@/hooks/admin/useAsignarEvaluacion";
 import { useEvaluaciones } from "@/hooks/admin/useEvaluaciones";
 import { usePostulante } from "@/hooks/admin/usePostulante";
-import { isAdminOrPsicologo } from "@/utils/jwt";
 
-export default function AsignarEvaluacionPage() {
-  const router = useRouter();
-  const [authorized, setAuthorized] = useState<boolean | null>(null);
+interface AsignarEvaluacionModalProps {
+  open: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+}
 
+export function AsignarEvaluacionModal({
+  open,
+  onClose,
+  onSuccess,
+}: AsignarEvaluacionModalProps) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const [evaluacionId, setEvaluacionId] = useState("");
   const [postulanteId, setPostulanteId] = useState("");
   const [postulanteFilter, setPostulanteFilter] = useState("");
-  const [successOpen, setSuccessOpen] = useState(false);
 
   const {
     evaluaciones,
@@ -35,17 +39,36 @@ export default function AsignarEvaluacionPage() {
   } = useAsignarEvaluacion();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/admin/login");
-      return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    if (open && !dialog.open) {
+      dialog.showModal();
+    } else if (!open && dialog.open) {
+      dialog.close();
     }
-    if (!isAdminOrPsicologo(token)) {
-      setAuthorized(false);
-      return;
-    }
-    setAuthorized(true);
-  }, [router]);
+  }, [open]);
+
+  const resetForm = useCallback(() => {
+    setEvaluacionId("");
+    setPostulanteId("");
+    setPostulanteFilter("");
+    reset();
+  }, [reset]);
+
+  const handleClose = useCallback(() => {
+    resetForm();
+    onClose();
+  }, [onClose, resetForm]);
+
+  const handleBackdropClick = useCallback(
+    (e: React.MouseEvent<HTMLDialogElement>) => {
+      if (e.target === dialogRef.current) {
+        handleClose();
+      }
+    },
+    [handleClose],
+  );
 
   const filteredPostulantes = useMemo(() => {
     const query = postulanteFilter.trim().toLowerCase();
@@ -68,6 +91,11 @@ export default function AsignarEvaluacionPage() {
     [postulantes, postulanteId],
   );
 
+  const isLoading = loadingEvaluaciones || loadingPostulantes;
+  const loadError = errorEvaluaciones || errorPostulantes;
+  const canSubmit =
+    !!evaluacionId && !!postulanteId && !isAssigning && !isLoading;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!evaluacionId || !postulanteId) return;
@@ -76,52 +104,45 @@ export default function AsignarEvaluacionPage() {
       postulante_id: postulanteId,
     });
     if (ok) {
-      setSuccessOpen(true);
+      resetForm();
+      onSuccess();
     }
   };
 
-  const handleSuccessClose = () => {
-    setSuccessOpen(false);
-    setEvaluacionId("");
-    setPostulanteId("");
-    setPostulanteFilter("");
-    reset();
-  };
-
-  if (authorized === null) return null;
-
-  if (authorized === false) {
-    return (
-      <div className="p-6">
-        <div className="bg-white rounded-lg p-6 border border-(--border-color-light) text-center">
-          <h2 className="text-lg font-semibold text-(--text-primary)">
-            Acceso restringido
-          </h2>
-          <p className="text-sm text-(--text-tertiary) mt-2">
-            Esta sección solo está disponible para administradores y psicólogos.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  const isLoading = loadingEvaluaciones || loadingPostulantes;
-  const loadError = errorEvaluaciones || errorPostulantes;
-  const canSubmit =
-    !!evaluacionId && !!postulanteId && !isAssigning && !isLoading;
-
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-(--text-primary)">
-          Asignar Evaluación
-        </h1>
-        <p className="text-sm text-(--text-tertiary) mt-1">
-          Asigna una evaluación a un postulante para que pueda rendirla.
-        </p>
-      </div>
+    <dialog
+      ref={dialogRef}
+      onClick={handleBackdropClick}
+      onCancel={handleClose}
+      className="backdrop:bg-black/50 bg-transparent p-0 m-auto max-w-2xl w-full open:animate-[fadeIn_150ms_ease-out]"
+    >
+      <div className="bg-white rounded-lg shadow-xl border border-(--border-color-light) p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-(--text-primary)">
+            Asignar Evaluación
+          </h2>
+          <button
+            type="button"
+            onClick={handleClose}
+            className="text-(--text-tertiary) hover:text-(--text-primary) transition-colors cursor-pointer"
+          >
+            <svg
+              aria-hidden="true"
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
 
-      <div className="bg-white rounded-lg p-6 shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light) max-w-3xl">
         {isLoading && (
           <div className="text-sm text-(--text-tertiary) mb-4">
             Cargando datos...
@@ -229,6 +250,13 @@ export default function AsignarEvaluacionPage() {
 
           <div className="flex justify-end gap-3 pt-2">
             <button
+              type="button"
+              onClick={handleClose}
+              className="px-4 py-2 border border-(--border-color) text-(--text-primary) rounded-md hover:bg-(--table-header-bg) transition-colors text-sm cursor-pointer"
+            >
+              Cancelar
+            </button>
+            <button
               type="submit"
               disabled={!canSubmit}
               className={`px-4 py-2 rounded-md text-white transition-colors text-sm font-medium ${
@@ -242,17 +270,6 @@ export default function AsignarEvaluacionPage() {
           </div>
         </form>
       </div>
-
-      <ConfirmDialog
-        open={successOpen}
-        title="Evaluación asignada"
-        message="La evaluación se asignó correctamente al postulante."
-        variant="success"
-        confirmLabel="Aceptar"
-        cancelLabel=""
-        onConfirm={handleSuccessClose}
-        onCancel={handleSuccessClose}
-      />
-    </div>
+    </dialog>
   );
 }

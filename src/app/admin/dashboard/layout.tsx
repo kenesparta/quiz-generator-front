@@ -161,9 +161,9 @@ const navGroups: NavGroup[] = [
         icon: <UsersIcon />,
       },
       {
-        id: "asignar-evaluacion",
-        name: "Asignar Evaluación",
-        href: "/admin/dashboard/asignar-evaluacion",
+        id: "asignaciones",
+        name: "Asignaciones",
+        href: "/admin/dashboard/asignaciones",
         icon: <LinkIcon />,
       },
     ],
@@ -196,7 +196,7 @@ const labelMap: Record<string, string> = {
   evaluacion: "Evaluación",
   examen: "Examen",
   postulante: "Postulante",
-  "asignar-evaluacion": "Asignar Evaluación",
+  asignaciones: "Asignaciones",
   revision: "Revisión",
 };
 
