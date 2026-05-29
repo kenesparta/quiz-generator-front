@@ -3,7 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
+import { useLogout } from "@/hooks/admin/useLogout";
+import { getRolFromJWT } from "@/utils/jwt";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -14,11 +16,13 @@ interface NavItem {
   name: string;
   href: string;
   icon: ReactNode;
+  adminOnly?: boolean;
 }
 
 interface NavGroup {
   label: string;
   items: NavItem[];
+  adminOnly?: boolean;
 }
 
 const ClipboardIcon = () => (
@@ -107,6 +111,24 @@ const LinkIcon = () => (
   </svg>
 );
 
+const PsychologistIcon = () => (
+  <svg
+    aria-hidden="true"
+    className="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    viewBox="0 0 24 24"
+  >
+    <path d="M17 20h5v-2a4 4 0 00-3-3.87" />
+    <path d="M9 20H4v-2a4 4 0 013-3.87" />
+    <circle cx="9" cy="7" r="4" />
+    <circle cx="17" cy="7" r="4" />
+  </svg>
+);
+
 const ChevronIcon = () => (
   <svg
     aria-hidden="true"
@@ -163,6 +185,19 @@ const navGroups: NavGroup[] = [
       },
     ],
   },
+  {
+    label: "USUARIOS",
+    adminOnly: true,
+    items: [
+      {
+        id: "psicologo",
+        name: "Psicólogo",
+        href: "/admin/dashboard/psicologo",
+        icon: <PsychologistIcon />,
+        adminOnly: true,
+      },
+    ],
+  },
 ];
 
 const labelMap: Record<string, string> = {
@@ -171,6 +206,7 @@ const labelMap: Record<string, string> = {
   postulante: "Postulante",
   asignaciones: "Asignaciones",
   revision: "Revisión",
+  psicologo: "Psicólogo",
 };
 
 function getBreadcrumbs(pathname: string) {
@@ -196,6 +232,21 @@ function getBreadcrumbs(pathname: string) {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
   const breadcrumbs = getBreadcrumbs(pathname);
+  const [rol, setRol] = useState<string | null>(null);
+  const { logout, isLoggingOut } = useLogout();
+
+  useEffect(() => {
+    setRol(getRolFromJWT(localStorage.getItem("token")));
+  }, []);
+
+  const isAdmin = rol === "admin";
+  const visibleGroups = navGroups
+    .filter((g) => !g.adminOnly || isAdmin)
+    .map((g) => ({
+      ...g,
+      items: g.items.filter((i) => !i.adminOnly || isAdmin),
+    }))
+    .filter((g) => g.items.length > 0);
 
   const isActive = (href: string) => {
     if (
@@ -225,7 +276,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-4">
-          {navGroups.map((group) => (
+          {visibleGroups.map((group) => (
             <div key={group.label} className="mb-2">
               <div className="px-6 py-2 text-xs font-semibold uppercase tracking-wider text-white/35">
                 {group.label}
@@ -281,11 +332,38 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           ))}
         </div>
 
-        {/* Avatar */}
+        {/* Avatar + Logout */}
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-(--sidebar-active-bg) flex items-center justify-center text-white text-sm font-medium">
-            A
+            {rol ? rol.charAt(0).toUpperCase() : "A"}
           </div>
+          <button
+            type="button"
+            onClick={() => void logout()}
+            disabled={isLoggingOut}
+            title="Cerrar sesión"
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors border border-(--border-color) ${
+              isLoggingOut
+                ? "bg-(--neutral-100) text-(--text-tertiary) cursor-not-allowed"
+                : "text-(--text-primary) hover:bg-(--table-header-bg) cursor-pointer"
+            }`}
+          >
+            <svg
+              aria-hidden="true"
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            </svg>
+            <span>{isLoggingOut ? "Cerrando..." : "Cerrar sesión"}</span>
+          </button>
         </div>
       </header>
 

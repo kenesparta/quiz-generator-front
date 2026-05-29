@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useLogout } from "@/hooks/admin/useLogout";
 
 interface EvaluacionesHeaderProps {
   nombrePostulante?: string;
@@ -9,7 +9,7 @@ interface EvaluacionesHeaderProps {
 export function EvaluacionesHeader({
   nombrePostulante,
 }: EvaluacionesHeaderProps) {
-  const router = useRouter();
+  const { logout, isLoggingOut } = useLogout("/login");
 
   return (
     <header className="bg-(--sidebar-bg) text-white">
@@ -48,12 +48,13 @@ export function EvaluacionesHeader({
           </div>
           <button
             type="button"
-            onClick={() => {
-              localStorage.removeItem("token");
-              localStorage.removeItem("expires_in");
-              router.push("/login");
-            }}
-            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white/70 hover:text-white border border-white/20 rounded-md hover:bg-white/10 transition-colors cursor-pointer"
+            onClick={() => void logout()}
+            disabled={isLoggingOut}
+            className={`flex items-center gap-2 px-3 py-2 text-sm font-medium border rounded-md transition-colors ${
+              isLoggingOut
+                ? "border-white/10 text-white/40 cursor-not-allowed"
+                : "border-white/20 text-white/70 hover:text-white hover:bg-white/10 cursor-pointer"
+            }`}
           >
             <svg
               aria-hidden="true"
@@ -69,7 +70,7 @@ export function EvaluacionesHeader({
                 d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
               />
             </svg>
-            Cerrar sesión
+            {isLoggingOut ? "Cerrando..." : "Cerrar sesión"}
           </button>
         </div>
       </div>
