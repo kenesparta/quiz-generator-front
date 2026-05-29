@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CreatePsicologoRequest } from "@/types/psicologo";
 
 interface PsicologoFormProps {
@@ -35,23 +35,13 @@ export function PsicologoForm({
     }
   }, [open]);
 
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent<HTMLDialogElement>) => {
-      if (e.target === dialogRef.current) {
-        onCancel();
-      }
-    },
-    [onCancel],
-  );
-
   const passwordTooShort =
     formData.password.length > 0 && formData.password.length < 8;
 
   return (
     <dialog
       ref={dialogRef}
-      onClick={handleBackdropClick}
-      onCancel={onCancel}
+      onCancel={(e) => e.preventDefault()}
       className="backdrop:bg-black/50 bg-transparent p-0 m-auto max-w-2xl w-full open:animate-[fadeIn_150ms_ease-out]"
     >
       <div className="bg-white rounded-lg shadow-xl border border-(--border-color-light) p-6">

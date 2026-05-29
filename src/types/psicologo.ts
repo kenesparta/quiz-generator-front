@@ -7,3 +7,13 @@ export interface CreatePsicologoRequest {
   colegiatura: string;
   password: string;
 }
+
+export interface PsicologoListItem {
+  id: string;
+  documento: string;
+  nombre: string;
+  primer_apellido: string;
+  segundo_apellido: string;
+  especialidad: string;
+  colegiatura: string;
+}

@@ -61,15 +61,6 @@ export function AsignarEvaluacionModal({
     onClose();
   }, [onClose, resetForm]);
 
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent<HTMLDialogElement>) => {
-      if (e.target === dialogRef.current) {
-        handleClose();
-      }
-    },
-    [handleClose],
-  );
-
   const filteredPostulantes = useMemo(() => {
     const query = postulanteFilter.trim().toLowerCase();
     if (!query) return postulantes;
@@ -112,8 +103,7 @@ export function AsignarEvaluacionModal({
   return (
     <dialog
       ref={dialogRef}
-      onClick={handleBackdropClick}
-      onCancel={handleClose}
+      onCancel={(e) => e.preventDefault()}
       className="backdrop:bg-black/50 bg-transparent p-0 m-auto max-w-2xl w-full open:animate-[fadeIn_150ms_ease-out]"
     >
       <div className="bg-white rounded-lg shadow-xl border border-(--border-color-light) p-6">

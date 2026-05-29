@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PsicologoForm } from "@/components/admin/psicologo/PsicologoForm";
+import { PsicologoTable } from "@/components/admin/psicologo/PsicologoTable";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { usePsicologo } from "@/hooks/admin/usePsicologo";
 import type { CreatePsicologoRequest } from "@/types/psicologo";
@@ -21,8 +22,16 @@ const emptyFormData: CreatePsicologoRequest = {
 export default function PsicologoPage() {
   const router = useRouter();
   const [authorized, setAuthorized] = useState<boolean | null>(null);
-  const { isCreating, error, createPsicologo, clearError } = usePsicologo();
+  const {
+    psicologos,
+    isLoading,
+    isCreating,
+    error,
+    createPsicologo,
+    clearError,
+  } = usePsicologo();
   const [showForm, setShowForm] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [successDialog, setSuccessDialog] = useState(false);
   const [formData, setFormData] = useState<CreatePsicologoRequest>({
     ...emptyFormData,
@@ -85,8 +94,7 @@ export default function PsicologoPage() {
             Psicólogos
           </h1>
           <p className="text-sm text-(--text-tertiary) mt-1">
-            Solo los administradores pueden registrar psicólogos. El
-            administrador define la contraseña inicial.
+            Solo los administradores pueden registrar y listar psicólogos.
           </p>
         </div>
         <button
@@ -133,26 +141,19 @@ export default function PsicologoPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light) p-12 text-center">
-        <svg
-          aria-hidden="true"
-          className="w-12 h-12 text-(--neutral-300) mx-auto mb-3"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1.5}
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-5.13a4 4 0 11-8 0 4 4 0 018 0zm6 0a4 4 0 11-8 0 4 4 0 018 0z"
-          />
-        </svg>
-        <p className="text-(--text-secondary) text-sm">
-          Usa el botón "Agregar Psicólogo" para registrar un nuevo psicólogo en
-          el sistema.
-        </p>
-      </div>
+      {isLoading ? (
+        <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light) p-6">
+          <p className="text-(--text-secondary) text-sm">
+            Cargando psicólogos...
+          </p>
+        </div>
+      ) : (
+        <PsicologoTable
+          psicologos={psicologos}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+        />
+      )}
 
       <PsicologoForm
         open={showForm}

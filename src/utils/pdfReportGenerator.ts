@@ -3,6 +3,7 @@
 import jsPDF from "jspdf";
 import { BASE_URL } from "@/config/api";
 import type { EvaluationResponse } from "@/types/evaluacion";
+import { formatFecha } from "@/utils/date";
 
 const CLINIC_NAME = "Policlínico Wari SAC";
 
@@ -284,21 +285,17 @@ const createPDF = async (
   if (postulante) {
     drawInfoRow("Nombre:", postulante.nombre_completo);
     drawInfoRow("Documento:", postulante.documento);
-    drawInfoRow("Fecha Nacimiento:", postulante.fecha_nacimiento);
+    drawInfoRow("Fecha Nacimiento:", formatFecha(postulante.fecha_nacimiento));
     drawInfoRow("Grado Instrucción:", postulante.grado_instruccion);
   }
   yPosition += 5;
 
   drawSectionTitle("Informacion de la Evaluacion");
 
-  const fechaInicio = new Date(data.fecha_tiempo_inicio).toLocaleString(
-    "es-PE",
-  );
-  drawInfoRow("Fecha Inicio:", fechaInicio);
+  drawInfoRow("Fecha Inicio:", formatFecha(data.fecha_tiempo_inicio));
 
   if (data.fecha_tiempo_fin) {
-    const fechaFin = new Date(data.fecha_tiempo_fin).toLocaleString("es-PE");
-    drawInfoRow("Fecha Fin:", fechaFin);
+    drawInfoRow("Fecha Fin:", formatFecha(data.fecha_tiempo_fin));
   }
 
   if (data.fecha_tiempo_inicio && data.fecha_tiempo_fin) {
@@ -578,7 +575,7 @@ const createPDF = async (
   doc.setFontSize(8);
   doc.setTextColor(128, 128, 128);
   doc.text(
-    `Documento generado el ${new Date().toLocaleString("es-PE")}`,
+    `Documento generado el ${formatFecha(new Date())}`,
     pageWidth / 2,
     yPosition,
     { align: "center" },

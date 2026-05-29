@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -58,20 +58,10 @@ export const ConfirmDialog = ({
     }
   }, [open]);
 
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent<HTMLDialogElement>) => {
-      if (e.target === dialogRef.current) {
-        onCancel();
-      }
-    },
-    [onCancel],
-  );
-
   return (
     <dialog
       ref={dialogRef}
-      onClick={handleBackdropClick}
-      onCancel={onCancel}
+      onCancel={(e) => e.preventDefault()}
       className="backdrop:bg-black/50 bg-transparent p-0 m-auto max-w-md w-full open:animate-[fadeIn_150ms_ease-out]"
     >
       <div className="bg-white rounded-lg shadow-xl border border-(--border-color-light) p-6">

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRevision } from "@/hooks/admin/useRevision";
 import { generatePDFReport } from "@/utils/pdfReportGenerator";
 
@@ -26,6 +26,21 @@ const getEstadoDot = (estado: string) => {
 export default function RevisionPage() {
   const { revisions, isLoading, error } = useRevision();
   const [generatingPDF, setGeneratingPDF] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredRevisions = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return revisions;
+    return revisions.filter((revision) => {
+      const fields = [
+        revision.nombre_evaluacion,
+        revision.descripcion_evaluacion,
+        revision.postulante?.nombre_completo,
+        revision.postulante?.documento,
+      ];
+      return fields.some((value) => value?.toLowerCase().includes(query));
+    });
+  }, [revisions, searchQuery]);
 
   const handleGeneratePDF = async (
     revisionId: string,
@@ -98,6 +113,36 @@ export default function RevisionPage() {
         </div>
       </div>
 
+      {/* Search */}
+      {revisions.length > 0 && (
+        <div className="mb-4">
+          <div className="relative max-w-sm">
+            <svg
+              aria-hidden="true"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-(--text-tertiary)"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 21l-4.35-4.35"
+              />
+            </svg>
+            <input
+              type="text"
+              placeholder="Buscar por evaluación, postulante o documento..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 text-sm border border-(--border-color) rounded-md bg-(--table-header-bg) focus:bg-white focus:border-(--primary) focus:ring-1 focus:ring-(--primary) outline-none transition-colors"
+            />
+          </div>
+        </div>
+      )}
+
       {/* Revision List */}
       {revisions.length === 0 ? (
         <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light) text-center py-12">
@@ -119,9 +164,30 @@ export default function RevisionPage() {
             No hay evaluaciones disponibles para revisar
           </p>
         </div>
+      ) : filteredRevisions.length === 0 ? (
+        <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light) text-center py-12">
+          <svg
+            aria-hidden="true"
+            className="w-12 h-12 text-(--neutral-300) mx-auto mb-3"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.5}
+            viewBox="0 0 24 24"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M21 21l-4.35-4.35"
+            />
+          </svg>
+          <p className="text-(--text-tertiary) text-sm">
+            No se encontraron resultados
+          </p>
+        </div>
       ) : (
         <div className="space-y-3">
-          {revisions.map((revision) => {
+          {filteredRevisions.map((revision) => {
             const isFinalized = revision.estado_revision === "finalizada";
             return (
               <div

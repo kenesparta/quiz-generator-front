@@ -1,26 +1,29 @@
-import type { PostulanteListItem } from "@/types/postulante";
-import { formatFecha } from "@/utils/date";
+import type { PsicologoListItem } from "@/types/psicologo";
 
-interface PostulanteTableProps {
-  postulantes: PostulanteListItem[];
+interface PsicologoTableProps {
+  psicologos: PsicologoListItem[];
   searchQuery: string;
   onSearchChange: (query: string) => void;
 }
 
-export function PostulanteTable({
-  postulantes,
+export function PsicologoTable({
+  psicologos,
   searchQuery,
   onSearchChange,
-}: PostulanteTableProps) {
-  const filtered = postulantes.filter(
-    (p) =>
-      p.nombre_completo.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.documento.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+}: PsicologoTableProps) {
+  const filtered = psicologos.filter((p) => {
+    const nombreCompleto =
+      `${p.nombre} ${p.primer_apellido} ${p.segundo_apellido}`.toLowerCase();
+    const q = searchQuery.toLowerCase();
+    return (
+      nombreCompleto.includes(q) ||
+      p.documento.toLowerCase().includes(q) ||
+      p.colegiatura.toLowerCase().includes(q)
+    );
+  });
 
   return (
     <div className="bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.06)] border border-(--border-color-light)">
-      {/* Search */}
       <div className="px-6 py-4 border-b border-(--border-color-light)">
         <div className="relative max-w-sm">
           <svg
@@ -40,7 +43,7 @@ export function PostulanteTable({
           </svg>
           <input
             type="text"
-            placeholder="Buscar por nombre o documento..."
+            placeholder="Buscar por nombre, documento o colegiatura..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             className="w-full pl-10 pr-4 py-2 text-sm border border-(--border-color) rounded-md bg-(--table-header-bg) focus:bg-white focus:border-(--primary) focus:ring-1 focus:ring-(--primary) outline-none transition-colors"
@@ -48,7 +51,6 @@ export function PostulanteTable({
         </div>
       </div>
 
-      {/* Table */}
       {filtered.length === 0 ? (
         <div className="text-center py-12">
           <svg
@@ -62,13 +64,13 @@ export function PostulanteTable({
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+              d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-5.13a4 4 0 11-8 0 4 4 0 018 0zm6 0a4 4 0 11-8 0 4 4 0 018 0z"
             />
           </svg>
           <p className="text-(--text-tertiary) text-sm">
             {searchQuery
               ? "No se encontraron resultados"
-              : "No hay postulantes registrados"}
+              : "No hay psicólogos registrados"}
           </p>
         </div>
       ) : (
@@ -83,42 +85,30 @@ export function PostulanteTable({
                   Nombre Completo
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-(--text-tertiary)">
-                  Fecha de Nacimiento
+                  Especialidad
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-(--text-tertiary)">
-                  Grado de Instrucción
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-(--text-tertiary)">
-                  Género
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-(--text-tertiary)">
-                  Fecha de Registro
+                  Colegiatura
                 </th>
               </tr>
             </thead>
             <tbody>
-              {filtered.map((postulante) => (
+              {filtered.map((psicologo) => (
                 <tr
-                  key={postulante.id}
+                  key={psicologo.id}
                   className="border-b border-(--border-color-light) hover:bg-(--table-header-bg) transition-colors"
                 >
                   <td className="px-6 py-4 text-sm text-(--text-primary)">
-                    {postulante.documento}
+                    {psicologo.documento}
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-(--text-primary)">
-                    {postulante.nombre_completo}
+                    {`${psicologo.nombre} ${psicologo.primer_apellido} ${psicologo.segundo_apellido}`}
                   </td>
                   <td className="px-6 py-4 text-sm text-(--text-secondary)">
-                    {formatFecha(postulante.fecha_nacimiento)}
+                    {psicologo.especialidad}
                   </td>
                   <td className="px-6 py-4 text-sm text-(--text-secondary)">
-                    {postulante.grado_instruccion}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-(--text-secondary)">
-                    {postulante.genero}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-(--text-secondary)">
-                    {formatFecha(postulante.fecha_registro)}
+                    {psicologo.colegiatura}
                   </td>
                 </tr>
               ))}

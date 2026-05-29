@@ -6,6 +6,7 @@ import { AsignarEvaluacionModal } from "@/components/admin/AsignarEvaluacionModa
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { useAsignaciones } from "@/hooks/admin/useAsignaciones";
 import { useEvaluaciones } from "@/hooks/admin/useEvaluaciones";
+import { formatFecha } from "@/utils/date";
 import { isAdminOrPsicologo } from "@/utils/jwt";
 
 const estadoStyles: Record<string, { color: string; label: string }> = {
@@ -16,19 +17,6 @@ const estadoStyles: Record<string, { color: string; label: string }> = {
 
 const formatEstado = (estado: string) =>
   estadoStyles[estado] ?? { color: "bg-(--text-tertiary)", label: estado };
-
-const formatFecha = (iso: string): string => {
-  if (!iso) return "—";
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleString("es-PE", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
 
 export default function AsignacionesPage() {
   const router = useRouter();
