@@ -30,10 +30,12 @@ const showErrorDialog = (message: string) => {
   dialog.innerHTML = `
     <form method="dialog" style="font-family:system-ui;padding:1.5rem;max-width:400px;border-radius:8px;">
       <h3 style="margin:0 0 0.75rem;color:#dc3545;">Error</h3>
-      <p style="margin:0 0 1.25rem;color:#333;">${message}</p>
+      <p style="margin:0 0 1.25rem;color:#333;"></p>
       <button style="padding:0.5rem 1.25rem;background:#dc3545;color:#fff;border:none;border-radius:4px;cursor:pointer;float:right;">Cerrar</button>
     </form>
   `;
+  // The message is inserted as text, never parsed as markup.
+  dialog.querySelector("p")?.replaceChildren(message);
   dialog.addEventListener("close", () => dialog.remove());
   document.body.appendChild(dialog);
   dialog.showModal();
@@ -78,9 +80,11 @@ export const generatePDFReport = async (
 };
 
 const stripHtml = (html: string): string => {
-  const tmp = document.createElement("div");
-  tmp.innerHTML = html;
-  const text = tmp.textContent || tmp.innerText || "";
+  // DOMParser builds an inert document. Assigning innerHTML on an element of
+  // the live page would load <img> tags and run handlers such as onerror,
+  // executing script stored in the question content.
+  const text =
+    new DOMParser().parseFromString(html, "text/html").body.textContent ?? "";
   return text.replace(/\*\*(.+?)\*\*/g, "$1");
 };
 

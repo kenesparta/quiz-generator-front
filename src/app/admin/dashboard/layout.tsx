@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
 import { useLogout } from "@/hooks/admin/useLogout";
-import { getRolFromJWT } from "@/utils/jwt";
+import { getRolFromJWT, isAdminOrPsicologo } from "@/utils/jwt";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -231,13 +231,21 @@ function getBreadcrumbs(pathname: string) {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const breadcrumbs = getBreadcrumbs(pathname);
   const [rol, setRol] = useState<string | null>(null);
   const { logout, isLoggingOut } = useLogout();
 
+  // The API enforces permissions; this keeps the dashboard pages, and the
+  // requests they send on mount, away from sessions that are not staff.
   useEffect(() => {
-    setRol(getRolFromJWT(localStorage.getItem("token")));
-  }, []);
+    const token = localStorage.getItem("token");
+    if (!isAdminOrPsicologo(token)) {
+      router.replace("/admin/login");
+      return;
+    }
+    setRol(getRolFromJWT(token));
+  }, [router]);
 
   const isAdmin = rol === "admin";
   const visibleGroups = navGroups
@@ -369,7 +377,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Main Content */}
       <main className="flex-1 ml-64 mt-16 overflow-y-auto min-h-[calc(100vh-4rem)]">
-        {children}
+        {rol ? children : null}
       </main>
     </div>
   );

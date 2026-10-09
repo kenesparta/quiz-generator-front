@@ -1,3 +1,12 @@
+# pnpm 12 only reads auth and registry settings from .npmrc, so the
+# `ignore-scripts=true` there has no effect; this is the one it reads.
+ignoreScripts: true
+
 allowBuilds:
   core-js: false
   sharp: false
+
+overrides:
+  # GHSA-rj75-hqrm-r3gf: @tailwindcss/typography pins the vulnerable 6.0.10.
+  # Remove once typography itself depends on >=7.1.6.
+  "@tailwindcss/typography>postcss-selector-parser": 7.1.6

@@ -55,6 +55,9 @@ export const useRevision = (): UseRevisionReturn => {
 
   const fetchPostulante = useCallback(
     async (href: string): Promise<PostulanteData | null> => {
+      // Only follow API-relative links: "@host/..." appended to BASE_URL
+      // would become a userinfo prefix and send the token to that host.
+      if (!href.startsWith("/")) return null;
       try {
         const token = localStorage.getItem("token");
         const response = await fetch(`${BASE_URL}${href}`, {

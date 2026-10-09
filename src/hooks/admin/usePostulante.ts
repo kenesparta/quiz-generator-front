@@ -6,6 +6,7 @@ import type {
   CreatePostulanteRequest,
   PostulanteListItem,
 } from "@/types/postulante";
+import { generateUUID } from "@/utils/uuid";
 
 interface UsePostulanteReturn {
   postulantes: PostulanteListItem[];
@@ -21,15 +22,6 @@ interface UsePostulanteReturn {
   ) => Promise<CreatePostulanteRequest | null>;
   refetch: () => Promise<void>;
 }
-
-// Generate UUID v4
-const generateUUID = (): string => {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-};
 
 export const usePostulante = (): UsePostulanteReturn => {
   const [postulantes, setPostulantes] = useState<PostulanteListItem[]>([]);
@@ -116,7 +108,7 @@ export const usePostulante = (): UsePostulanteReturn => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `${BASE_URL}/postulantes?documento=${documento}`,
+        `${BASE_URL}/postulantes?documento=${encodeURIComponent(documento)}`,
         {
           method: "GET",
           headers: {
