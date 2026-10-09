@@ -34,6 +34,16 @@ npm install
 | `npm run lint`  | Verificar codigo con Biome           |
 | `npm run fmt`   | Formatear codigo con Biome           |
 
+## Pruebas end-to-end
+
+Pruebas con Playwright contra el frontend y el backend reales, con informe PDF de
+evidencias. Ver [`e2e/README.md`](e2e/README.md).
+
+```bash
+cd e2e && pnpm install && pnpm install-browsers
+pnpm test
+```
+
 ## Variables de entorno
 
 | Variable                   | Descripcion              | Default                 |

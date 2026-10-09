@@ -1,0 +1,7 @@
+# Its own workspace root, so the e2e dependencies get their own lockfile and
+# never mix with the app's. Same supply-chain settings as the app.
+ignoreScripts: true
+
+# pdfjs-dist only needs it to render pages; the tests just read text.
+ignoredOptionalDependencies:
+  - "@napi-rs/canvas"
