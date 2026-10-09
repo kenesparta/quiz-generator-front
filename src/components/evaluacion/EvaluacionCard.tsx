@@ -55,7 +55,7 @@ export function EvaluacionCard({
           </div>
         </div>
         <div className="ml-4 shrink-0">
-          {estado === "completado" ? (
+          {estado === "finalizado" ? (
             <button
               type="button"
               disabled
@@ -63,7 +63,7 @@ export function EvaluacionCard({
             >
               Completado
             </button>
-          ) : estado === "en_progreso" ? (
+          ) : estado === "en_proceso" ? (
             <button
               type="button"
               onClick={() => router.push(`/evaluacion/${respuestaId}`)}

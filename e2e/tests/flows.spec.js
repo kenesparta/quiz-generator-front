@@ -61,6 +61,17 @@ test.describe("Flujos principales", () => {
         await expect(contenido).toBeVisible();
       });
     }
+
+    await test.step("las asignaciones muestran la etiqueta de su estado", async () => {
+      // The API sends "creado"; the page used to expect "Creado" and showed the raw value.
+      await page
+        .getByRole("link", { name: "Asignaciones", exact: true })
+        .first()
+        .click();
+      await expect(
+        page.getByRole("cell", { name: "Creado", exact: true }),
+      ).toBeVisible();
+    });
   });
 
   test("el psicólogo no ve ni abre la página de psicólogos", async ({
@@ -182,6 +193,14 @@ test.describe("Flujos principales", () => {
 
     await test.step("inicia la evaluación asignada", async () => {
       await page.getByRole("button", { name: "Iniciar" }).click();
+      await expect(page).toHaveURL(/\/evaluacion\/[0-9a-f-]{36}$/);
+    });
+
+    await test.step("la evaluación iniciada se puede continuar", async () => {
+      // The API sends "en_proceso"; the card used to expect "en_progreso".
+      await page.goto("/evaluacion");
+      await expect(page.getByText("En Progreso")).toBeVisible();
+      await page.getByRole("button", { name: "Continuar" }).click();
       await expect(page).toHaveURL(/\/evaluacion\/[0-9a-f-]{36}$/);
     });
 

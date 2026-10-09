@@ -10,9 +10,9 @@ import { formatFecha } from "@/utils/date";
 import { isAdminOrPsicologo } from "@/utils/jwt";
 
 const estadoStyles: Record<string, { color: string; label: string }> = {
-  Creado: { color: "bg-(--warning)", label: "Creado" },
-  EnProceso: { color: "bg-(--primary)", label: "En proceso" },
-  Finalizado: { color: "bg-(--success)", label: "Finalizado" },
+  creado: { color: "bg-(--warning)", label: "Creado" },
+  en_proceso: { color: "bg-(--primary)", label: "En proceso" },
+  finalizado: { color: "bg-(--success)", label: "Finalizado" },
 };
 
 const formatEstado = (estado: string) =>

@@ -1,7 +1,7 @@
 const estadoConfig: Record<string, { color: string; label: string }> = {
   creado: { color: "bg-(--primary)", label: "Pendiente" },
-  en_progreso: { color: "bg-(--warning)", label: "En Progreso" },
-  completado: { color: "bg-(--success)", label: "Completado" },
+  en_proceso: { color: "bg-(--warning)", label: "En Progreso" },
+  finalizado: { color: "bg-(--success)", label: "Completado" },
 };
 
 interface EstadoDotProps {
