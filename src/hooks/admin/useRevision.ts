@@ -96,7 +96,7 @@ export const useRevision = (): UseRevisionReturn => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        setError(errorData.message || "Error al obtener las revisiones");
+        setError(errorData.error || "Error al obtener las revisiones");
         return;
       }
 

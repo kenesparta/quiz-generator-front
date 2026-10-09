@@ -47,7 +47,7 @@ export const usePostulante = (): UsePostulanteReturn => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        setError(errorData.message || "Error al obtener los postulantes");
+        setError(errorData.error || "Error al obtener los postulantes");
         return;
       }
 
@@ -82,7 +82,7 @@ export const usePostulante = (): UsePostulanteReturn => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        setError(errorData.message || "Error al crear el postulante");
+        setError(errorData.error || "Error al crear el postulante");
         return false;
       }
 
@@ -121,7 +121,7 @@ export const usePostulante = (): UsePostulanteReturn => {
       if (!response.ok) {
         if (response.status === 404) return null;
         const errorData = await response.json().catch(() => ({}));
-        setError(errorData.message || "Error al buscar el postulante");
+        setError(errorData.error || "Error al buscar el postulante");
         return null;
       }
 
@@ -165,7 +165,7 @@ export const usePostulante = (): UsePostulanteReturn => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        setError(errorData.message || "Error al actualizar el postulante");
+        setError(errorData.error || "Error al actualizar el postulante");
         return false;
       }
 

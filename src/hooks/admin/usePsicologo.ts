@@ -99,16 +99,8 @@ export const usePsicologo = (): UsePsicologoReturn => {
       });
 
       if (!response.ok) {
-        const errorBody = await response.text();
-        let message = "Error al crear el psicólogo";
-        try {
-          const parsed = JSON.parse(errorBody);
-          message =
-            typeof parsed === "string" ? parsed : parsed.message || message;
-        } catch {
-          if (errorBody) message = errorBody;
-        }
-        setError(message);
+        const errorData = await response.json().catch(() => ({}));
+        setError(errorData.error || "Error al crear el psicólogo");
         return false;
       }
 
