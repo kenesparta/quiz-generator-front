@@ -3,6 +3,9 @@
 import Markdown from "react-markdown";
 import type { Question } from "@/types/evaluacion";
 
+// The API rejects longer answers (MAX_CARACTERES_RESPUESTA in the backend).
+const MAX_CARACTERES_RESPUESTA = 2000;
+
 interface QuestionCardProps {
   question: Question;
   response: string[];
@@ -115,6 +118,7 @@ export const QuestionCard = ({
           <input
             disabled={disabled}
             type="text"
+            maxLength={MAX_CARACTERES_RESPUESTA}
             value={response[0] || ""}
             onChange={(e) => handleTextResponse(e.target.value)}
             placeholder="Escriba su respuesta aquí..."
